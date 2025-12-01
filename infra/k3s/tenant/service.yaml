@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tenant
+spec:
+  selector:
+    app: tenant
+  ports:
+    - port: 8888         # Porten som exponeras i klustret
+      targetPort: 8888   # Porten som containern lyssnar på
+  type: ClusterIP

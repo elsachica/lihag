@@ -1,0 +1,35 @@
+prometheusOperator:
+  admissionWebhooks:
+    enabled: false
+  tls:
+    enabled: false
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 100m
+  service:
+    type: ClusterIP  # We'll create a separate NodePort service
+
+alertmanager:
+  enabled: false
+
+grafana:
+  enabled: false
+
+kubeStateMetrics:
+  resources:
+    requests:
+      memory: 64Mi
+      cpu: 10m
+
+nodeExporter:
+  resources:
+    requests:
+      memory: 30Mi
+      cpu: 10m

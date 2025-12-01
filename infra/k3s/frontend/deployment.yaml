@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - name: frontend
+          # OBS! Byt ut nedan till er GitLab Container Registry-path, t.ex. registry.gitlab.com/<user>/<repo>/frontend:latest
+          image: registry.gitlab.com/<user>/<repo>/frontend:latest  # <-- GitLab Container Registry
+          ports:
+            - containerPort: 8888 # OBS! Uppdatera denna port då appen kommer att lyssna på en annan port. Glöm inte att även ändra i service.yaml.
+          envFrom:
+            - configMapRef:
+                name: frontend-config
