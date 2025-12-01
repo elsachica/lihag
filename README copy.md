@@ -40,9 +40,9 @@ A web-based housing management system for Lihag AB, designed to simplify rental 
 
 ### Microservices
 - **Auth Service:** Handles authentication and roles (admin/tenant), generates JWT tokens for the frontend.
-- **Admin Service:** Manages all admin functionality: apartments, tenants, maintenance requests, rent info, and statistics.
-- **Tenant Service:** Responsible for tenant views, such as their own apartments and maintenance requests. Reads and writes data via the Admin Service.
-- **Notification Service:** Asynchronously sends emails via RabbitMQ (e.g., rent reminders, maintenance updates).
+- **Property Service:** Manages apartments, tenants, maintenance requests, rent info, and statistics.
+- **Maintenance Service:** Handles maintenance requests and related workflows.
+- **Notification Service:** (Planned) Will asynchronously send emails via RabbitMQ (e.g., rent reminders, maintenance updates).
 
 ### Frontend
 A web application with different views (routes) for:
@@ -51,12 +51,13 @@ A web application with different views (routes) for:
 - **Admin panel:** Separate login and dashboard for administrators.
 
 ### Databases
-- **UserDB:** Stores usernames and hashed passwords.
-- **AdminDB:** Stores apartments, tenants, maintenance requests, history, and rents.
+- **authDB:** Stores user credentials and authentication data.
+- **propertyDB:** Stores apartments, tenants, contracts, rents, and property information.
+- **maintenanceDB:** Stores maintenance requests, work orders, status updates, and related messages.
 
 ### Communication
 - **REST API** between frontend and microservices
-- **RabbitMQ** for asynchronous communication between microservices (e.g., maintenance request → notification)
+- **RabbitMQ** (planned) for asynchronous communication between microservices
 
 ### Infrastructure
 - **GitLab CI/CD** pipelines for automatic build, test, and deployment
@@ -74,23 +75,22 @@ A web application with different views (routes) for:
 - Manages sessions and token validation
 - Uses Redis for session and cache management
 
-### Tenant Service
-- Provides tenant profile and apartment information
-- Allows tenants to submit and view maintenance requests
-- Sends events to RabbitMQ for notifications
-- Uses Redis for caching
-
-### Admin Service
+### Property Service
 - Manages CRUD operations for apartments and tenants
 - Handles maintenance requests and status updates
 - Provides rental and apartment statistics
-- Sends events to RabbitMQ for notifications
+- (Planned) Sends events to RabbitMQ for notifications
 - Uses Redis for caching
 
-### Notification Service
+### Maintenance Service
+- Handles maintenance requests and related workflows
+- (Planned) Sends events to RabbitMQ for notifications
+
+### Notification Service (Planned)
 - Listens to events from RabbitMQ
 - Sends emails to tenants and administrators (e.g., rent reminders, maintenance updates)
 - Integrates with email APIs (SMTP, SendGrid, Mailgun, etc.)
+
 
 ---
 
