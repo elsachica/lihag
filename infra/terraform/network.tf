@@ -126,6 +126,7 @@ resource "openstack_networking_floatingip_v2" "k3s_floatingip" {
 #
 
 resource "openstack_networking_floatingip_associate_v2" "k3s_floatingip_association" {
+  # The OpenStack provider expects the floating IP address here
   floating_ip = openstack_networking_floatingip_v2.k3s_floatingip.address
   port_id     = openstack_networking_port_v2.k3s_port.id
   depends_on = [

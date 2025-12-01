@@ -70,3 +70,8 @@ variable "worker_port_prefix" {
   default     = "k3s-worker-port-"
   
 }
+
+variable "ansible_files_relative_path" {
+  type = string
+  default = "../ansible"
+}
