@@ -1,1 +1,53 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
+
+# Ansible
+*.retry
+*.log
+*.vault
+*.secret
+
+# Kubernetes
+kubeconfig.yaml
+kubeconfig-external.yaml
+
+# Python (om ni använder det)
+__pycache__/
+*.pyc
+
+# Node.js (om ni har frontend)
+node_modules/
+dist/
+build/
+
+# MacOS
+.DS_Store
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+
+# Secrets/nycklar
+*.pem
+*.key
+*.crt
+
+# Logs
+*.log
+
+# System
+Thumbs.db
+
+# Ignore your own variable files
 myvars.auto.tfvars
