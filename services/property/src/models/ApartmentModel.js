@@ -1,7 +1,7 @@
 /**
  * @file Defines the Apartment model.
  * @module models/ApartmentModel
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 import mongoose from 'mongoose'
@@ -18,10 +18,18 @@ const schema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  property: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Property',
+  propertyId: {
+    type: String,
     required: true
+  },
+  area: {
+    type: String,
+    required: true // t.ex. "Söder om järnvägen", "Nybro", "Kalmar"
+  },
+  type: {
+    type: String,
+    enum: ['apartment', 'locale'],
+    default: 'apartment'
   },
   tenants: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -37,5 +45,3 @@ schema.add(BASE_SCHEMA)
 
 // Create a model using the schema.
 export const ApartmentModel = mongoose.model('Apartment', schema)
-
-// Du kan lägga till fler fält om du behöver, t.ex. status, våning, etc.
