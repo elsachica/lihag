@@ -1,0 +1,44 @@
+/**
+ * @file Defines the main application.
+ * @module src/index
+ * @author Elsa Gas Wikström
+ * @version 1.0.0
+ */
+
+import 'dotenv/config'
+import express from 'express'
+import { connectToDatabase } from './config/mongoose.js'
+import './config/rabbitmq.js'
+import { router } from './routes/router.js'
+import { morganLogger } from './config/morgan.js'
+import { logger } from './config/winston.js'
+
+const app = express()
+app.use(express.json())
+app.use(morganLogger)
+
+const port = process.env.PORT || 8888
+
+async function start() {
+  try {
+    await connectToDatabase(process.env.DB_CONNECTION_STRING)
+    logger.info('MongoDB connected')
+
+    app.use('/', router)
+
+    // Global error handler
+    app.use((err, req, res, next) => {
+      logger.error(err.message, { error: err })
+      res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' })
+    })
+
+    app.listen(port, () => {
+      logger.info(`Property service running on port ${port}`)
+    })
+  } catch (err) {
+    logger.error('Failed to start server:', { error: err })
+    process.exit(1)
+  }
+}
+
+start()

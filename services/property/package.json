@@ -16,12 +16,13 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^17.2.3",
     "express": "^4.21.0",
-    "mongoose": "^8.6.3",
-    "amqplib": "^0.10.3"
+    "mongoose": "^8.6.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7",
-    "eslint": "^8.56.0"
+    "eslint": "^8.56.0",
+    "nodemon": "^3.1.7"
   }
 }
