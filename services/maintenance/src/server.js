@@ -8,7 +8,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 // import { connectToDatabase } from '../config/db.js'
-// import { router } from './routes/maintenanceRouter.js'
+import { router } from './routes/maintenanceRouter.js'
 
 dotenv.config()
 
@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1) // trust first proxy
 }
 
-// app.use('/', router)
+app.use('/', router)
 
 // Error handler.
 app.use((err, req, res, next) => {
