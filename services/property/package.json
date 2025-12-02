@@ -1,0 +1,27 @@
+{
+  "name": "property-service",
+  "version": "1.0.0",
+  "description": "Microservice for managing properties, apartments, tenants, contracts, and rents.",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20.6.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon --inspect src/index.js",
+    "lint": "npx eslint ./src || exit 0",
+    "lint:fix": "npx eslint ./src --fix || exit 0"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.21.0",
+    "mongoose": "^8.6.3",
+    "amqplib": "^0.10.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7",
+    "eslint": "^8.56.0"
+  }
+}
