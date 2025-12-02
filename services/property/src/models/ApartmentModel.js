@@ -24,7 +24,7 @@ const schema = new mongoose.Schema({
   },
   area: {
     type: String,
-    required: true // t.ex. "Söder om järnvägen", "Nybro", "Kalmar"
+    required: true // t.ex. "Söder om järnvägen", "Nybro", "Kalmar", "Lindö"
   },
   type: {
     type: String,
