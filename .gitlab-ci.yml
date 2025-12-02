@@ -1,0 +1,73 @@
+stages:
+  - build
+  - test
+  - deploy-staging
+  - deploy-production
+
+
+# -----------------------------------------
+# BUILD
+# -----------------------------------------
+build:
+  stage: build
+  script:
+    - echo "Bygger applikationen..."
+    # docker build, npm build, dotnet build, etc.
+  artifacts:
+    paths:
+      - build/
+  only:
+    - main    # eller valfri gren
+
+
+# -----------------------------------------
+# TEST
+# -----------------------------------------
+test:
+  stage: test
+  script:
+    - echo "Kör tester..."
+    # pytest, npm test, junit etc.
+  dependencies:
+    - build
+  only:
+    - main
+
+
+# -----------------------------------------
+# DEPLOY TO STAGING (AUTOMATISKT)
+# -----------------------------------------
+deploy_staging:
+  stage: deploy-staging
+  script:
+    - echo "Deployar till STAGING..."
+    # exempel:
+    # kubectl apply -f k8s/staging/
+    # helm upgrade --install myapp ./chart --values values-staging.yaml
+  environment:
+    name: staging
+    url: https://staging.myapp.example
+  dependencies:
+    - build
+  only:
+    - main   # deploy automatiskt vid push till main
+
+
+# -----------------------------------------
+# DEPLOY TO PRODUCTION (MANUELLT)
+# -----------------------------------------
+deploy_production:
+  stage: deploy-production
+  script:
+    - echo "Deployar till PRODUCTION..."
+    # exempel:
+    # kubectl apply -f k8s/production/
+    # helm upgrade --install myapp ./chart --values values-production.yaml
+  environment:
+    name: production
+    url: https://myapp.example
+  when: manual        # manuellt steg
+  dependencies:
+    - build
+  only:
+    - main             # eller t.ex. tags
