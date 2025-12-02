@@ -19,7 +19,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "mongoose": "^6.13.8"
   },
   "devDependencies": {
     "@lnu/eslint-config": "^1.1.10",
