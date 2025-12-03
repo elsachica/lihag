@@ -33,3 +33,4 @@ nodeExporter:
     requests:
       memory: 30Mi
       cpu: 10m
+

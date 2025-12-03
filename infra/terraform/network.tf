@@ -126,12 +126,44 @@ resource "openstack_networking_floatingip_v2" "k3s_floatingip" {
 #
 
 resource "openstack_networking_floatingip_associate_v2" "k3s_floatingip_association" {
-  # The OpenStack provider expects the floating IP address here
   floating_ip = openstack_networking_floatingip_v2.k3s_floatingip.address
   port_id     = openstack_networking_port_v2.k3s_port.id
   depends_on = [
     openstack_networking_router_interface_v2.router_interface,
     openstack_networking_floatingip_v2.k3s_floatingip,
     openstack_networking_port_v2.k3s_port
+  ]
+}
+
+#--------------------------------------------------------------------
+# Resources for second k3s server
+
+resource "openstack_networking_port_v2" "k3s_server2_port" {
+  name       = "${local.port_name}-2"
+  network_id = openstack_networking_network_v2.network.id
+  security_group_ids = [
+    data.openstack_networking_secgroup_v2.secgroup_default.id,
+    openstack_networking_secgroup_v2.secgroup.id
+  ]
+  admin_state_up = "true"
+  fixed_ip {
+    subnet_id = openstack_networking_subnet_v2.subnet.id
+  }
+}
+
+resource "openstack_networking_floatingip_v2" "k3s_server2_floatingip" {
+  pool = var.external_network_name
+  depends_on = [
+    openstack_networking_router_interface_v2.router_interface
+  ]
+}
+
+resource "openstack_networking_floatingip_associate_v2" "k3s_server2_floatingip_association" {
+  floating_ip = openstack_networking_floatingip_v2.k3s_server2_floatingip.address
+  port_id     = openstack_networking_port_v2.k3s_server2_port.id
+  depends_on = [
+    openstack_networking_router_interface_v2.router_interface,
+    openstack_networking_floatingip_v2.k3s_server2_floatingip,
+    openstack_networking_port_v2.k3s_server2_port
   ]
 }

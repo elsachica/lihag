@@ -51,3 +51,14 @@ Thumbs.db
 
 # Ignore your own variable files
 myvars.auto.tfvars
+
+inventory-generated
+
+.terraform
+terraform/terraform.tfvars
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+tfplan
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl

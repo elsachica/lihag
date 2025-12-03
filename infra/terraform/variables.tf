@@ -41,7 +41,13 @@ variable "base_name" {
 variable "server_name" {
   description = "The name of the k3s server to create"
   type        = string
-  default     = "k3s-server"
+  default     = "k3s-server-deploy"
+}
+
+variable "server_name2" {
+  description = "The name of the k3s server to create"
+  type        = string
+  default     = "k3s-server-staging"
 }
 
 locals {
