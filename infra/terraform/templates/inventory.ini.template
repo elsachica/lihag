@@ -1,6 +1,6 @@
 [k3s_servers]
 ${K3S_SERVER_NAME} ansible_host=${K3S_SERVER_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${TF_VAR_identity_file}
-
+${K3S_SERVER2_NAME} ansible_host=${K3S_SERVER2_IP} ansible_user=ubuntu ansible_ssh_private_key_file=${TF_VAR_identity_file}
 
 
 

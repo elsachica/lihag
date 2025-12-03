@@ -14,7 +14,7 @@ build:
 deploy_staging:
   stage: deploy
   script:
-    - echo "$KUBE_CONFIG" > kubeconfig
+    - echo "$KUBE_CONFIG_STAGING" > kubeconfig
     - export KUBECONFIG=./kubeconfig
     - kubectl apply -f k3s/frontend/static-site.yaml
   environment:
