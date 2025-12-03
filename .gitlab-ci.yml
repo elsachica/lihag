@@ -1,3 +1,13 @@
+image: docker:24.0.5
+
+services:
+  - name: docker:24.0.5-dind
+    command: ["--tls=false"]
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
 stages:
   - build
   - deploy
@@ -13,6 +23,7 @@ build:
 
 deploy_staging:
   stage: deploy
+  image: bitnami/kubectl:latest        # kubectl finns inte i docker:xx imagen!
   script:
     - echo "$KUBE_CONFIG_STAGING" > kubeconfig
     - export KUBECONFIG=./kubeconfig
@@ -21,3 +32,4 @@ deploy_staging:
     name: staging
   only:
     - main
+
