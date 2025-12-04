@@ -23,7 +23,11 @@ if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1) // trust first proxy
 }
 
-app.use('/', router)
+app.get('/', (req, res) => {
+  res.send('Maintenance service is running')
+})
+
+app.use('/maintenance', router)
 
 // Error handler.
 app.use((err, req, res, next) => {
@@ -52,6 +56,8 @@ app.use((err, req, res, next) => {
 
 // Starts the HTTP server listening for connections.
 const server = app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server running at http://localhost:${server.address().port}`)
+  console.log(
+    `Server running at http://localhost:${server.address().port}/maintenance`
+  )
   console.log('Press Ctrl-C to terminate...')
 })

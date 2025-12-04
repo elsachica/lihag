@@ -33,12 +33,25 @@ export class MaintenanceController {
 
       const dto = reports.map((report) => ({
         id: report._id,
-        description: report.description,
-        category: report.category, // e.g. kitchen, appliance, plumbing, heating, etc.
-        // propertyId: report.propertyId, // not necessary, already in apartment?
         apartmentId: report.apartmentId, // One main tenant per apartment
+        category: report.category, // e.g. kitchen, appliance, plumbing, heating, etc.
+        description: report.description,
         status: report.status,
-        createdAt: report.createdAt
+        assignedTo: report.assignedTo || null,
+        priority: report.priority || null,
+        images: report.images || [],
+        createdAt: report.createdAt.toLocaleString('sv-SE', {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        }),
+        ...(report.updatedAt.getTime() !== report.createdAt.getTime()
+          ? {
+              updatedAt: report.updatedAt.toLocaleString('sv-SE', {
+                dateStyle: 'short',
+                timeStyle: 'short'
+              })
+            }
+          : {})
       }))
       return res.status(200).json({ data: dto })
     } catch (error) {

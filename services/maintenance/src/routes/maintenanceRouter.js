@@ -16,6 +16,6 @@ const maintenanceService = new MaintenanceService(maintenanceRepository)
 const maintenanceController = new MaintenanceController(maintenanceService)
 
 // Admin only
-router.get('/maintenance', (req, res) =>
+router.get('/', (req, res) =>
   maintenanceController.getAllMaintenanceReports(req, res)
 )

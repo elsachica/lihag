@@ -1,32 +1,69 @@
 import mongoose from 'mongoose'
 
 /**
- * Maintenance report schema representing a maintenance report with basic metadata.
+ * Maintenance report schema representing a maintenance report with basic metadata to be shown to tenants and/or admins.
  */
 const reportSchema = new mongoose.Schema(
   {
-    description: { type: String, required: true },
-    category: {
-      type: String,
-      enum: ['kitchen', 'appliance', 'plumbing', 'heating', 'other'],
-      required: true
-    },
     apartmentId: {
+      // by which property and tenant/reporter can be identified
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Apartment',
       required: true
     },
+    category: {
+      type: String,
+      enum: [
+        'Sovrum',
+        'Kök',
+        'Vardagsrum',
+        'Badrum',
+        'Klädkammare',
+        'Balkong',
+        'Hall',
+        'Vitvaror',
+        'Värme & ventilation',
+        'El',
+        'Vatten & avlopp',
+        'Hiss',
+        'Trapphus',
+        'Entré',
+        'Utegård',
+        'Tvättstuga',
+        'Miljörum',
+        'Fastighet',
+        'Parkering & garage',
+        'Cykelrum',
+        'Övrigt'
+      ],
+      required: true
+    },
+    description: {
+      type: String,
+      required: true,
+      maxlength: 500
+    },
+    // access: {
+    //   type: String,
+    //   enum: ['Nyckel i tub eller lås i serviceläge', 'Möter upp', 'Ej aktuellt - allmänt utrymme'],
+    //   required: true
+    // },
+    // pets: {
+    //   type: Boolean,
+    //   required: true
+    // },
     status: {
       type: String,
-      enum: ['open', 'in_progress', 'closed'],
-      default: 'open'
+      enum: ['Ny', 'Under behandling', 'Stängd'],
+      default: 'Ny'
     },
-    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // admin only. one of the responsible admins
     priority: {
+      // admin only
       type: String,
-      enum: ['low', 'medium', 'high', 'urgent'],
-      default: 'medium'
-    }
+      enum: ['Låg', 'Medium', 'Hög', 'Akut']
+    },
+    images: [{ type: String }] // array of image URLs
   },
   { timestamps: true }
 )
