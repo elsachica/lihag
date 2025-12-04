@@ -1,0 +1,36 @@
+/**
+ * @file Defines the maintenance repository for accessing maintenance data from the MongoDB database.
+ * @module repositories/MaintenanceRepository
+ * @author Liv Åberg
+ */
+
+import { ReportModel } from '../models/report.js'
+
+/**
+ * Repository for accessing maintenance report data.
+ */
+export class MaintenanceRepository {
+  /**
+   * Finds maintenance reports based on filter and pagination.
+   *
+   * @param {object} filter - The filter criteria for querying maintenance reports.
+   * @param {object} options - The pagination options, including limit and skip.
+   * @returns {Promise<Array>} - A promise that resolves to an array of maintenance report documents.
+   */
+  async getAllMaintenanceReports (filter = {}, options = {}) {
+    return ReportModel.find(filter)
+      .skip(options.skip || 0)
+      .limit(options.limit || 20)
+      .exec()
+  }
+
+  /**
+   * Counts the number of maintenance reports in the database that match the given filter criteria.
+   *
+   * @param {object} filter - The filter criteria for counting maintenance reports.
+   * @returns {Promise<number>} - A promise that resolves to the count of matching maintenance reports.
+   */
+  async count (filter = {}) {
+    return ReportModel.countDocuments(filter).exec()
+  }
+}

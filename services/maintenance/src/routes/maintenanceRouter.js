@@ -6,8 +6,8 @@
 
 import express from 'express'
 import { MaintenanceController } from '../controllers/MaintenanceController.js'
-import { MaintenanceService } from '../services/maintenanceService.js'
-import { MaintenanceRepository } from '../repositories/maintenanceRepository.js'
+import { MaintenanceService } from '../services/MaintenanceService.js'
+import { MaintenanceRepository } from '../repositories/MaintenanceRepository.js'
 
 export const router = express.Router()
 
