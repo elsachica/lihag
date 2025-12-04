@@ -43,12 +43,10 @@ export class MaintenanceController {
       return res.status(200).json({ data: dto })
     } catch (error) {
       console.error('Failed to fetch maintenance reports:', error)
-      return res
-        .status(500)
-        .json({
-          message: 'Failed to fetch maintenance reports.',
-          details: error.message
-        })
+      return res.status(500).json({
+        message: 'Failed to fetch maintenance reports.',
+        details: error.message
+      })
     }
   }
 }
