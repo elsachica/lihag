@@ -40,7 +40,7 @@ export class MaintenanceService {
     const skip = (page - 1) * limit
 
     // Fetch data
-    const reports = await this.maintenanceRepository.find(filter, { skip, limit })
+    const reports = await this.maintenanceRepository.getAllMaintenanceReports(filter, { skip, limit })
     return reports
   }
 }

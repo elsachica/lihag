@@ -7,13 +7,13 @@
 
 import express from 'express'
 import dotenv from 'dotenv'
-// import { connectToDatabase } from '../config/db.js'
+import { connectToDatabase } from '../config/db.js'
 import { router } from './routes/maintenanceRouter.js'
 
 dotenv.config()
 
 // Connect to MongoDB.
-// await connectToDatabase(process.env.DB_CONNECTION_STRING)
+await connectToDatabase(process.env.DB_CONNECTION_STRING)
 
 // Create an Express application.
 const app = express()
