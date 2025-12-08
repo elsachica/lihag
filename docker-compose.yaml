@@ -11,12 +11,8 @@ services:
       retries: 5
     volumes:
       - mongodb-data:/data/db
-      - ./infra/mongodb/init-databases.js:/docker-entrypoint-initdb.d/init.js:ro
     ports:
       - "27020:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
     networks:
       - lihag-network
     restart: unless-stopped
@@ -68,7 +64,7 @@ services:
   #   environment:
   #     NODE_ENV: development
   #     PORT: 8000
-  #     DB_CONNECTION_STRING: mongodb://auth_user:auth_password@mongodb:27017/authDB
+  #     DB_CONNECTION_STRING: mongodb://mongodb:27017/authDB
   #     RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
   #     REDIS_URL: redis://redis:6379
   #   volumes:
@@ -97,7 +93,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 8003
-      DB_CONNECTION_STRING: mongodb://property_user:property_password@mongodb:27017/propertyDB
+      DB_CONNECTION_STRING: mongodb://mongodb:27017/propertyDB
       RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
     volumes:
       - ./services/property:/usr/src/app
@@ -123,7 +119,7 @@ services:
   #   environment:
   #     NODE_ENV: development
   #     PORT: 8002
-  #     DB_CONNECTION_STRING: mongodb://maintenance_user:maintenance_password@mongodb:27017/maintenanceDB
+  #     DB_CONNECTION_STRING: mongodb://mongodb:27017/maintenanceDB
   #     RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
   #   volumes:
   #     - ./services/maintenance:/usr/src/app
