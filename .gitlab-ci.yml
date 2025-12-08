@@ -74,7 +74,7 @@ build_frontend:
       echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 
       IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
-      IMAGE="${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+      IMAGE="${CI_REGISTRY_IMAGE}/frontend:${IMAGE_TAG}"
 
       echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
       echo "IMAGE=${IMAGE}" >> build.env
@@ -110,7 +110,7 @@ deploy_k8s:
       echo "Creating ImagePullSecret for GitLab Container Registry..."
       # ensure IMAGE is defined in this job
       IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
-      IMAGE="${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+      IMAGE="${CI_REGISTRY_IMAGE}/frontend:${IMAGE_TAG}"
       echo "IMAGE=${IMAGE}"
       # recreate secret (use --dry-run to avoid accidental interactive errors)
       kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
