@@ -31,17 +31,11 @@ router.param('id', async (req, res, next, id) => {
 })
 
 // Admin only
-router.get('/', (req, res) =>
-  maintenanceController.getAllReports(req, res)
-)
+router.get('/', (req, res) => maintenanceController.getAllReports(req, res))
 
-router.get('/:id', (req, res) =>
-  maintenanceController.getReport(req, res)
-)
+router.get('/:id', (req, res) => maintenanceController.getReport(req, res))
 
-// router.post('/', (req, res) =>
-//   maintenanceController.createReport(req, res)
-// )
+router.post('/', (req, res) => maintenanceController.createReport(req, res))
 
 // router.patch('/:id', (req, res) =>
 //   maintenanceController.updateReport(req, res)
@@ -51,3 +45,8 @@ router.get('/:id', (req, res) =>
 // router.delete('/:id', (req, res) =>
 //   maintenanceController.deleteReport(req, res)
 // )
+
+// Catch 404 (ALWAYS keep this as the last route).
+router.use('*', (req, res, next) => {
+  res.status(404).json({ error: 'Not Found' })
+})

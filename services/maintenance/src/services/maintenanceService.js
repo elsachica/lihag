@@ -13,7 +13,7 @@ export class MaintenanceService {
    *
    * @param {object} maintenanceRepository - The repository for accessing maintenance data.
    */
-  constructor (maintenanceRepository) {
+  constructor(maintenanceRepository) {
     this.maintenanceRepository = maintenanceRepository
   }
 
@@ -23,7 +23,7 @@ export class MaintenanceService {
    * @param {object} query - The query parameters for filtering and pagination.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance reports.
    */
-  async getAllReports (query) {
+  async getAllReports(query) {
     const filter = {}
 
     // Example: filter by apartmentId or status if provided
@@ -40,7 +40,10 @@ export class MaintenanceService {
     const skip = (page - 1) * limit
 
     // Fetch data
-    const reports = await this.maintenanceRepository.getAllReports(filter, { skip, limit })
+    const reports = await this.maintenanceRepository.getAllReports(filter, {
+      skip,
+      limit
+    })
     return reports
   }
 
@@ -50,10 +53,19 @@ export class MaintenanceService {
    * @param {string} id - The ID of the maintenance report.
    * @returns {Promise<object|null>} - A promise that resolves to the maintenance report, or null if not found.
    */
-  async getReportById (id) {
+  async getReportById(id) {
     if (!id) throw new Error('Report ID is required')
 
     const report = await this.maintenanceRepository.getReportById(id)
     return report
+  }
+
+  async createReport(reportData) {
+    if (!reportData.apartmentId || !reportData.category) {
+      throw new Error('apartmentId and category are required')
+    }
+
+    const newReport = await this.maintenanceRepository.createReport(reportData)
+    return newReport
   }
 }

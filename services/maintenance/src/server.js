@@ -31,6 +31,9 @@ app.use(
   })
 )
 
+// Middleware för att tolka JSON-body
+app.use(express.json())
+
 // Setup and use session middleware (https://github.com/expressjs/session)
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1) // trust first proxy
