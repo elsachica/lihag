@@ -64,15 +64,15 @@ stages:
 #     - npm test || echo "No tests yet"
 
 # Frontend (commented out - not ready yet)
-# build_frontend:
-#   stage: build
-#   image:
-#     name: gcr.io/kaniko-project/executor:v1.9.0-debug
-#     entrypoint: [""]
-#   script:
-#     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
-#     - /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:${CI_COMMIT_REF_SLUG}"
-#     - echo "✓ Successfully built and pushed frontend:${CI_COMMIT_REF_SLUG}"
+build_frontend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:${CI_COMMIT_REF_SLUG}"
+    - echo "✓ Successfully built and pushed frontend:${CI_COMMIT_REF_SLUG}"
 
 # test_frontend:
 #   stage: test
@@ -90,7 +90,7 @@ deploy_k8s:
     name: bitnami/kubectl:latest
     entrypoint: ["/bin/sh", "-c"]
   script:
-    - echo "$KUBECONFIG_DATA" | base64 -d > kubeconfig.yaml
+    - echo "$KUBE_CONFIG_STAGING" | base64 -d > kubeconfig.yaml
     - export KUBECONFIG=$PWD/kubeconfig.yaml
 
     - echo "Creating ImagePullSecret for GitLab Container Registry..."
@@ -103,7 +103,7 @@ deploy_k8s:
     # - kubectl rollout status deployment/property || true
     # - kubectl rollout status deployment/auth || true
     # - kubectl rollout status deployment/maintenance || true
-    # - kubectl rollout status deployment/frontend || true
+    - kubectl rollout status deployment/frontend || true
     
     - echo "✓ Deployment complete!"
 
@@ -111,5 +111,6 @@ deploy_k8s:
     - main
     - master
     - deploy
+  when: manual
   environment:
     name: production
