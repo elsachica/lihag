@@ -10,6 +10,8 @@ terraform.tfvars
 terraform.tfvars.json
 *.auto.tfvars
 *.auto.tfvars.json
+infra/ansible/inventory.ini
+infra/ansible/inventory-generated
 
 # Ansible
 *.retry
@@ -24,11 +26,15 @@ kubeconfig-external.yaml
 # Python (om ni använder det)
 __pycache__/
 *.pyc
+venv/
+.env/
 
 # Node.js (om ni har frontend)
 node_modules/
 dist/
 build/
+yarn.lock
+package-lock.json.bak
 
 # MacOS
 .DS_Store
@@ -37,11 +43,13 @@ build/
 .vscode/
 .idea/
 *.swp
+*~
 
 # Secrets/nycklar
 *.pem
 *.key
 *.crt
+*.pfx
 
 # Logs
 *.log
@@ -52,13 +60,23 @@ Thumbs.db
 # Ignore your own variable files
 myvars.auto.tfvars
 
-inventory-generated
+*.env
+.env.local
+.env.*.local
 
-.terraform
-terraform/terraform.tfvars
-terraform/terraform.tfstate
-terraform/terraform.tfstate.backup
-tfplan
-terraform.tfstate
-terraform.tfstate.backup
-.terraform.lock.hcl
+# OS-specifika filer
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+
+# IDE-specifika
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Docker
+.docker/
+docker-compose.override.yml
