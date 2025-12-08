@@ -62,3 +62,6 @@ tfplan
 terraform.tfstate
 terraform.tfstate.backup
 .terraform.lock.hcl
+
+# Ignore environment variable files
+.env
