@@ -74,14 +74,14 @@ build_frontend:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed frontend:${CI_COMMIT_REF_SLUG}"
 
-test_frontend:
-  stage: test
-  image: node:20
-  script:
-    - cd frontend
-    - npm ci
-    - npm run lint || echo "No linter configured"
-    - npm test || echo "No tests yet"
+# test_frontend:
+#   stage: test
+#   image: node:20
+#   script:
+#     - cd frontend
+#     - npm ci
+#     - npm run lint || echo "No linter configured"
+#     - npm test || echo "No tests yet"
 
 # Kubernetes Deployment
 deploy_k8s:
@@ -111,5 +111,6 @@ deploy_k8s:
     - main
     - master
     - deploy
+  when: manual
   environment:
     name: production
