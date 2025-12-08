@@ -2,10 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: auth
+  labels:
+    app: auth
 spec:
+  type: NodePort
   selector:
     app: auth
   ports:
-    - port: 8000         # Porten som exponeras i klustret
-      targetPort: 8000   # Porten som containern lyssnar på
-  type: ClusterIP
+    - name: http
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 31000
