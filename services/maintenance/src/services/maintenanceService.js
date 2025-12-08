@@ -23,7 +23,7 @@ export class MaintenanceService {
    * @param {object} query - The query parameters for filtering and pagination.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance reports.
    */
-  async getAllMaintenanceReports (query) {
+  async getAllReports (query) {
     const filter = {}
 
     // Example: filter by apartmentId or status if provided
@@ -40,7 +40,20 @@ export class MaintenanceService {
     const skip = (page - 1) * limit
 
     // Fetch data
-    const reports = await this.maintenanceRepository.getAllMaintenanceReports(filter, { skip, limit })
+    const reports = await this.maintenanceRepository.getAllReports(filter, { skip, limit })
     return reports
+  }
+
+  /**
+   * Retrieves a single maintenance report by its ID.
+   *
+   * @param {string} id - The ID of the maintenance report.
+   * @returns {Promise<object|null>} - A promise that resolves to the maintenance report, or null if not found.
+   */
+  async getReportById (id) {
+    if (!id) throw new Error('Report ID is required')
+
+    const report = await this.maintenanceRepository.getReportById(id)
+    return report
   }
 }

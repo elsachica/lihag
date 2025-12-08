@@ -25,9 +25,9 @@ export class MaintenanceController {
    * @param {object} res - Express response object.
    * @returns {Promise<void>} - A promise that resolves when the operation is complete.
    */
-  async getAllMaintenanceReports (req, res) {
+  async getAllReports (req, res) {
     try {
-      const reports = await this.maintenanceService.getAllMaintenanceReports(
+      const reports = await this.maintenanceService.getAllReports(
         req.query
       )
 
@@ -53,6 +53,49 @@ export class MaintenanceController {
             }
           : {})
       }))
+      return res.status(200).json({ data: dto })
+    } catch (error) {
+      console.error('Failed to fetch maintenance reports:', error)
+      return res.status(500).json({
+        message: 'Failed to fetch maintenance reports.',
+        details: error.message
+      })
+    }
+  }
+
+  /**
+   * Retrieves a single maintenance report by ID.
+   *
+   * @param {object} req - Express request object.
+   * @param {object} res - Express response object.
+   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+   */
+  async getReport (req, res) {
+    try {
+      const report = req.doc
+
+      const dto = {
+        id: report._id,
+        apartmentId: report.apartmentId, // One main tenant per apartment
+        category: report.category, // e.g. kitchen, appliance, plumbing, heating, etc.
+        description: report.description,
+        status: report.status,
+        assignedTo: report.assignedTo || null,
+        priority: report.priority || null,
+        images: report.images || [],
+        createdAt: report.createdAt.toLocaleString('sv-SE', {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        }),
+        ...(report.updatedAt.getTime() !== report.createdAt.getTime()
+          ? {
+              updatedAt: report.updatedAt.toLocaleString('sv-SE', {
+                dateStyle: 'short',
+                timeStyle: 'short'
+              })
+            }
+          : {})
+      }
       return res.status(200).json({ data: dto })
     } catch (error) {
       console.error('Failed to fetch maintenance reports:', error)

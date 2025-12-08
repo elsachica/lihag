@@ -17,8 +17,9 @@ export class MaintenanceRepository {
    * @param {object} options - The pagination options, including limit and skip.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance report documents.
    */
-  async getAllMaintenanceReports (filter = {}, options = {}) {
+  async getAllReports (filter = {}, options = {}) {
     return ReportModel.find(filter)
+      .sort({ createdAt: -1 })
       .skip(options.skip || 0)
       .limit(options.limit || 20)
       .exec()
@@ -32,5 +33,15 @@ export class MaintenanceRepository {
    */
   async count (filter = {}) {
     return ReportModel.countDocuments(filter).exec()
+  }
+
+  /**
+   * Retrieves a maintenance report by its ID.
+   *
+   * @param {*} id - The ID of the maintenance report.
+   * @returns {Promise<object|null>} - A promise that resolves to the maintenance report document, or null if not found.
+   */
+  async getReportById (id) {
+    return ReportModel.findById(id)
   }
 }
