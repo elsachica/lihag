@@ -7,11 +7,6 @@ output "k3s_server" {
   }
 }
 
-output "k3s_worker_ips" {
-  description = "Private IP addresses of k3s worker nodes"
-  value       = [for w in openstack_compute_instance_v2.k3s_workers : w.access_ip_v4]
-}
-
 output "ssh_command" {
   description = "SSH command to connect to the k3s server"
   value       = "ssh -i ${var.identity_file} ubuntu@${openstack_networking_floatingip_v2.k3s_floatingip.address}"
@@ -22,14 +17,16 @@ output "ansible_inventory_info" {
   value = {
     server = {
       public_ip  = openstack_networking_floatingip_v2.k3s_floatingip.address
-      private_ip = openstack_compute_instance_v2.k3s_server.access_ip_v4
+      private_ip = openstack_networking_port_v2.k3s_port.fixed_ip[0].ip_address
     }
-    workers = [
-      for w in openstack_compute_instance_v2.k3s_workers : {
-        name       = w.name
-        private_ip = w.access_ip_v4
-      }
-    ]
+  }
+}
+
+output "public_ips" {
+  description = "Map of server name => public IP address for all created servers"
+  value = {
+    "${openstack_compute_instance_v2.k3s_server.name}"  = openstack_networking_floatingip_v2.k3s_floatingip.address
+    "${openstack_compute_instance_v2.k3s_server2.name}" = openstack_networking_floatingip_v2.k3s_server2_floatingip.address
   }
 }
 
