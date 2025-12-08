@@ -6,6 +6,6 @@ spec:
   selector:
     app: auth
   ports:
-    - port: 8888         # Porten som exponeras i klustret
-      targetPort: 8888   # Porten som containern lyssnar på
+    - port: 8000         # Porten som exponeras i klustret
+      targetPort: 8000   # Porten som containern lyssnar på
   type: ClusterIP
