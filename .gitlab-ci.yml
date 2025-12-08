@@ -97,7 +97,7 @@ deploy_k8s:
         kubectl create secret docker-registry regcred \
           --docker-server=gitlab.lnu.se:5050 \
           --docker-username="$CI_REGISTRY_USER" \
-          --docker-password="$CI_JOB_TOKEN" \
+          --docker-password="$CI_REGISTRY_PASSWORD" \
           --kubeconfig $KUBECONFIG \
 
 
