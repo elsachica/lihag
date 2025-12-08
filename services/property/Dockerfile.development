@@ -1,0 +1,42 @@
+# =============================================================================
+# Base stage - Install dependencies
+# =============================================================================
+
+FROM node:20.17.0-bookworm-slim AS base
+
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json /usr/src/app/
+
+# Install all dependencies (including dev dependencies)
+RUN npm install --ignore-scripts
+
+# =============================================================================
+# Final stage - Development image
+# =============================================================================
+
+FROM node:20.17.0-bookworm-slim
+
+# Create log directory
+RUN true \
+  && mkdir -p /var/log/lihag-property \
+  && chown -R node:node /var/log/lihag-property
+
+WORKDIR /usr/src/app
+
+# Copy dependencies from base (application code will be mounted as volume)
+COPY --from=base --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
+
+# Run as non-root user
+USER node
+
+# Expose port for Property Service
+ARG EXPRESS_APP_PORT=8003
+EXPOSE ${EXPRESS_APP_PORT}
+
+# Set PORT environment variable
+ENV PORT=$EXPRESS_APP_PORT
+
+# Start with nodemon for auto-reload on file changes
+CMD [ "npx", "nodemon", "-e", "js,json,ejs,html,css", "--inspect", "src/index.js" ]

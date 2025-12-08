@@ -15,11 +15,11 @@ router.param('id', (req, res, next, id) =>
   controller.loadApartmentDocument(req, res, next, id)
 )
 
-// Filtrering
-router.get('/', (req, res, next) => controller.index(req, res, next))
-
 // Statistik
 router.get('/statistics', (req, res, next) => controller.statistics(req, res, next))
+
+// Filtrering
+router.get('/', (req, res, next) => controller.index(req, res, next))
 
 // CRUD
 router.get('/:id', (req, res, next) => controller.show(req, res, next))
