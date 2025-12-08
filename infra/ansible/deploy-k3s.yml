@@ -72,12 +72,6 @@
     - name: Apply Kubernetes manifests
       command: kubectl apply -f /tmp/monitoring.yaml --kubeconfig /etc/rancher/k3s/k3s.yaml
 
-    - name: Create monitoring namespace
-        command: kubectl create namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
-        register: ns_result
-        failed_when: ns_result.rc != 0 and 'AlreadyExists' not in ns_result.stderr
-        changed_when: ns_result.rc == 0
-    
     - name: Deploy Prometheus stack
       command: >
         helm upgrade --install prometheus prometheus-community/kube-prometheus-stack
