@@ -93,8 +93,8 @@ deploy_k8s:
     - export KUBECONFIG=$PWD/kubeconfig.yaml
 
     - echo "Creating ImagePullSecret for GitLab Container Registry..."
-        kubectl delete secret gitlab-registry-secret -n "${NAMESPACE}" --ignore-not-found || true
-        kubectl create secret docker-registry gitlab-registry-secret \
+        kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
+        kubectl create secret docker-registry regcred \
           --docker-server=gitlab.lnu.se:5050 \
           --docker-username="$CI_REGISTRY_USER" \
           --docker-password="$CI_JOB_TOKEN" \
