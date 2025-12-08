@@ -91,7 +91,7 @@ deploy_k8s:
   variables:
     KUBECONFIG_PATH: "/root/.kube/config"
   before_script:
-    - mkdir -p "$(dirname "${KUBECONFIG_PATH}")"
+    - sudo mkdir -p "$(dirname "${KUBECONFIG_PATH}")"
     - 'test -f "${KUBE_CONFIG_STAGING}" && cp "${KUBE_CONFIG_STAGING}" "${KUBECONFIG_PATH}" || (printf "%s" "${KUBE_CONFIG_STAGING}" | base64 --decode > "${KUBECONFIG_PATH}" 2>/dev/null || printf "%s" "${KUBE_CONFIG_STAGING}" | base64 -D > "${KUBECONFIG_PATH}" 2>/dev/null || (echo "KUBE_CONFIG_STAGING is not a file path and not valid base64" >&2; exit 1))'
     - chmod 600 "${KUBECONFIG_PATH}"
     - kubectl version --client
