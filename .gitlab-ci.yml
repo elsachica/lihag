@@ -80,7 +80,7 @@ build_frontend:
       echo "IMAGE=${IMAGE}" >> build.env
 
 
-      /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
+      /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
 
 # test_frontend:
 #   stage: test
