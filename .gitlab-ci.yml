@@ -99,34 +99,32 @@ deploy_k8s:
     entrypoint: ['']
   variables:
     KUBECONFIG_PATH: "/root/.kube/config"
+    NAMESPACE: "default"
   before_script:
     - mkdir -p "$(dirname "${KUBECONFIG_PATH}")"
     - 'test -f "${KUBE_CONFIG_STAGING}" && cp "${KUBE_CONFIG_STAGING}" "${KUBECONFIG_PATH}" || (printf "%s" "${KUBE_CONFIG_STAGING}" | base64 --decode > "${KUBECONFIG_PATH}" 2>/dev/null || printf "%s" "${KUBE_CONFIG_STAGING}" | base64 -D > "${KUBECONFIG_PATH}" 2>/dev/null || (echo "KUBE_CONFIG_STAGING is not a file path and not valid base64" >&2; exit 1))'
     - chmod 600 "${KUBECONFIG_PATH}"
     - kubectl version --client
   script:
-    - echo "Creating ImagePullSecret for GitLab Container Registry..."
-        kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
-        kubectl create secret docker-registry regcred \
-          --docker-server=gitlab.lnu.se:5050 \
-          --docker-username="$CI_REGISTRY_USER" \
-          --docker-password="$CI_REGISTRY_PASSWORD" \
-          --kubeconfig $KUBECONFIG \
-
-
-    # - echo "Deploying to Kubernetes..."
-    # - kubectl apply -f infra/k3s/ --recursive
-
-    - skaffold deploy --profile production --images "${IMAGE}"
-    
-    - echo "Waiting for deployments to rollout..."
-    # - kubectl rollout status deployment/property || true
-    # - kubectl rollout status deployment/auth || true
-    # - kubectl rollout status deployment/maintenance || true
-    # - kubectl rollout status deployment/frontend || true
-    
-    - kubectl get deployments -n "${NAMESPACE}" || true
-    - kubectl get pods -n "${NAMESPACE}" -o wide || true
+    - |
+      echo "Creating ImagePullSecret for GitLab Container Registry..."
+      # ensure IMAGE is defined in this job
+      IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
+      IMAGE="${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+      echo "IMAGE=${IMAGE}"
+      # recreate secret (use --dry-run to avoid accidental interactive errors)
+      kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
+      kubectl create secret docker-registry regcred \
+        --docker-server=gitlab.lnu.se:5050 \
+        --docker-username="${CI_REGISTRY_USER}" \
+        --docker-password="${CI_REGISTRY_PASSWORD}" \
+        --docker-email="${GITLAB_USER_EMAIL:-you@example.com}" \
+        -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+      # deploy with skaffold (pass image built in pipeline)
+      skaffold deploy --profile production --images "${IMAGE}"
+      echo "Waiting for deployments to rollout..."
+      kubectl get deployments -n "${NAMESPACE}" || true
+      kubectl get pods -n "${NAMESPACE}" -o wide || true
 
 
     - echo "✓ Deployment complete!"
