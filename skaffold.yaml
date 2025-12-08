@@ -10,9 +10,9 @@ build:
         dockerfile: frontend/Dockerfile
 manifests:
   rawYaml:
-    - k3s/ingress.yaml
-    - k3s/mongodb/deployment.yaml
-    - k3s/frontend/deployment.yaml
+    - infra/k3s/ingress.yaml
+    - infra/k3s/mongodb/deployment.yaml
+    - infra/k3s/frontend/deployment.yaml
 deploy:
   kubectl: {}
 
