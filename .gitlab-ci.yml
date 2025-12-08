@@ -87,11 +87,15 @@ deploy_k8s:
   stage: deploy
   image:
     name: bitnami/kubectl:latest
-    entrypoint: ["/bin/sh", "-c"]
+    entrypoint: ['']
+  variables:
+    KUBECONFIG_PATH: "/root/.kube/config"
+  before_script:
+    - mkdir -p "$(dirname "${KUBECONFIG_PATH}")"
+    - 'test -f "${KUBE_CONFIG_STAGING}" && cp "${KUBE_CONFIG_STAGING}" "${KUBECONFIG_PATH}" || (printf "%s" "${KUBE_CONFIG_STAGING}" | base64 --decode > "${KUBECONFIG_PATH}" 2>/dev/null || printf "%s" "${KUBE_CONFIG_STAGING}" | base64 -D > "${KUBECONFIG_PATH}" 2>/dev/null || (echo "KUBE_CONFIG_STAGING is not a file path and not valid base64" >&2; exit 1))'
+    - chmod 600 "${KUBECONFIG_PATH}"
+    - kubectl version --client
   script:
-    - echo "$KUBE_CONFIG_STAGING" | base64 -d > kubeconfig.yaml
-    - export KUBECONFIG=$PWD/kubeconfig.yaml
-
     - echo "Creating ImagePullSecret for GitLab Container Registry..."
         kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
         kubectl create secret docker-registry regcred \
