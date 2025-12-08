@@ -92,11 +92,11 @@ deploy_k8s:
     - echo "$KUBE_CONFIG_STAGING" | base64 -d > kubeconfig.yaml
     - export KUBECONFIG=$PWD/kubeconfig.yaml
 
-    - echo "Docker login..."
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    # - echo "Docker login..."
+    # - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
-    - echo "Docker pull..."
-    - docker pull "${CI_REGISTRY_IMAGE}/frontend:main"
+    # - echo "Docker pull..."
+    # - docker pull "${CI_REGISTRY_IMAGE}/frontend:main"
 
     - echo "Creating ImagePullSecret for GitLab Container Registry..."
     - kubectl create secret docker-registry gitlab-registry-secret --docker-server=gitlab.lnu.se:5050 --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL --dry-run=client -o yaml | kubectl apply -f -
