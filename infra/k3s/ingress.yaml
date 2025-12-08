@@ -14,18 +14,19 @@ spec:
               service:
                 name: auth
                 port:
-                  number: 8888
+                  number: 8000
           - path: /property(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: property
                 port:
-                  number: 8888
+                  number: 8003
           - path: /maintenance(/|$)(.*)
             pathType: Prefix
             backend:
               service:
                 name: maintenance
                 port:
-                  number: 8888
+                  number: 8002
+# lägg till frontend i ingressen?

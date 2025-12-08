@@ -51,3 +51,5 @@ Thumbs.db
 
 # Ignore your own variable files
 myvars.auto.tfvars
+
+*.env

@@ -8,6 +8,8 @@
 !package-lock.json
 !package.json
 !_delthis.txt
+!seed/
+!seed/**
 
 node_modules
 npm-debug.log

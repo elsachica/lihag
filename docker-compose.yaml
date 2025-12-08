@@ -1,0 +1,98 @@
+services:
+  mongodb:
+    image: mongo:8.0.0
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27020:27017"
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  # auth:
+  #   build:
+  #     context: ./services/auth
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     - PORT=8000
+  #     - DB_CONNECTION_STRING=mongodb://mongodb:27017/authDB
+  #     - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     - mongodb
+  #     - rabbitmq
+  #     - redis
+
+  property:
+    build:
+      context: ./services/property
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+      - DB_CONNECTION_STRING=mongodb://mongodb:27017/propertyDB
+      - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  # maintenance:
+  #   build:
+  #     context: ./services/maintenance
+  #   ports:
+  #     - "8002:8002"
+  #   environment:
+  #     - PORT=8002
+  #     - DB_CONNECTION_STRING=mongodb://mongodb:27017/maintenanceDB
+  #     - RABBITMQ_URL=amqp://admin:password@rabbitmq:5672
+  #   depends_on:
+  #     - mongodb
+  #     - rabbitmq
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     - PORT=8001
+  #   depends_on:
+  #     - auth
+  #     - property
+  #     - maintenance
+
+volumes:
+  mongodb-data:
+  redis-data:
+  rabbitmq-data:
