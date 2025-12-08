@@ -8,6 +8,14 @@ spec:
   rules:
     - http:
         paths:
+        path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 8001
+          service:
           - path: /auth(/|$)(.*)
             pathType: Prefix
             backend:
