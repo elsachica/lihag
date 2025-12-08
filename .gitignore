@@ -60,23 +60,13 @@ Thumbs.db
 # Ignore your own variable files
 myvars.auto.tfvars
 
-*.env
-.env.local
-.env.*.local
+inventory-generated
 
-# OS-specifika filer
-.DS_Store
-.AppleDouble
-.LSOverride
-Thumbs.db
-ehthumbs.db
-
-# IDE-specifika
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Docker
-.docker/
-docker-compose.override.yml
+.terraform
+terraform/terraform.tfvars
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+tfplan
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
