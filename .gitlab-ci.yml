@@ -71,7 +71,8 @@ build_frontend:
     entrypoint: [""]
   script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:${CI_COMMIT_REF_SLUG}"
+    # - /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:${CI_COMMIT_REF_SLUG}"
+    - /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "Dockerfile" --destination "${CI_REGISTRY_IMAGE}/frontend:latest"
     - echo "✓ Successfully built and pushed frontend:${CI_COMMIT_REF_SLUG}"
 
 # test_frontend:
@@ -93,8 +94,14 @@ deploy_k8s:
     - echo "$KUBE_CONFIG_STAGING" | base64 -d > kubeconfig.yaml
     - export KUBECONFIG=$PWD/kubeconfig.yaml
 
+    - echo "Docker login..."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+
+    - echo "Docker pull..."
+    - docker pull "${CI_REGISTRY_IMAGE}/frontend:main"
+
     - echo "Creating ImagePullSecret for GitLab Container Registry..."
-    - kubectl create secret docker-registry gitlab-registry-secret --docker-server=gitlab.lnu.se:5050 --docker-username=$CI_REGISTRY_USER --docker-password=$CI_JOB_TOKEN --docker-email=$GITLAB_USER_EMAIL --dry-run=client -o yaml | kubectl apply -f -
+    - kubectl create secret docker-registry gitlab-registry-secret --docker-server=gitlab.lnu.se:5050 --docker-username=$CI_REGISTRY_USER --docker-password=$CI_REGISTRY_PASSWORD --docker-email=$GITLAB_USER_EMAIL --dry-run=client -o yaml | kubectl apply -f -
 
     - echo "Deploying to Kubernetes..."
     - kubectl apply -f infra/k3s/ --recursive
