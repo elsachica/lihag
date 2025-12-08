@@ -70,8 +70,17 @@ build_frontend:
     name: gcr.io/kaniko-project/executor:v1.9.0-debug
     entrypoint: [""]
   script:
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:${CI_COMMIT_REF_SLUG}"
+    - |
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
+
+      IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
+      IMAGE="${CI_REGISTRY_IMAGE}:${IMAGE_TAG}"
+
+      echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
+      echo "IMAGE=${IMAGE}" >> build.env
+
+
+      /kaniko/executor --context "${CI_PROJECT_DIR}" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
 
 # test_frontend:
 #   stage: test
@@ -105,14 +114,16 @@ deploy_k8s:
           --kubeconfig $KUBECONFIG \
 
 
-    - echo "Deploying to Kubernetes..."
-    - kubectl apply -f infra/k3s/ --recursive
+    # - echo "Deploying to Kubernetes..."
+    # - kubectl apply -f infra/k3s/ --recursive
+
+    - skaffold deploy --profile production --images "${IMAGE}"
     
     - echo "Waiting for deployments to rollout..."
     # - kubectl rollout status deployment/property || true
     # - kubectl rollout status deployment/auth || true
     # - kubectl rollout status deployment/maintenance || true
-    - kubectl rollout status deployment/frontend || true
+    # - kubectl rollout status deployment/frontend || true
     
     - kubectl get deployments -n "${NAMESPACE}" || true
     - kubectl get pods -n "${NAMESPACE}" -o wide || true
