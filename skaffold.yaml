@@ -23,4 +23,4 @@ profiles:
   patches:
   - op: replace
     path: /manifests/rawYaml/0  # JSON Pointer to ingress.yaml
-    value: k3s/ingress.production.yaml
+    value: infra/k3s/ingress.production.yaml
