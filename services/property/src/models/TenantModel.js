@@ -12,31 +12,19 @@ const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
+    trim: true
   },
-  contactInfo: {
+  email: {
     type: String,
     required: true,
     trim: true,
+    lowercase: true
   },
-  apartment: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Apartment",
-    required: true,
-  },
-  rent: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  startDate: {
-    type: Date,
-    required: true,
-  },
-  endDate: {
-    type: Date,
-    default: null,
-  },
+  phone: {
+    type: String,
+    trim: true,
+    default: null
+  }
 });
 
 schema.add(BASE_SCHEMA);

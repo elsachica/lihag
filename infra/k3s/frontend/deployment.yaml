@@ -1,23 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service.name: frontend
+  name: frontend
+spec:
+  type: NodePort
+  ports:
+    - name: "frontend-port"
+      port: 8888
+      targetPort: frontend-http
+      nodePort: 30080
+  selector:
+    deployment.name: frontend
+status:
+  loadBalancer: {}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: default
 spec:
-  replicas: 3
+  replicas: 3 # Update to 3 to get stateful proplems. Look at flash messages.
   selector:
     matchLabels:
-      app: frontend
+      deployment.name: frontend
   template:
     metadata:
       labels:
-        app: frontend
+        deployment.name: frontend
     spec:
       containers:
         - name: frontend
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:main
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:latest
           ports:
-            - name: http
-              containerPort: 8001
-          imagePullPolicy: Always
+          - containerPort: 3000
+            name: frontend-http
       imagePullSecrets:
-        - name: regcred
+      - name: regcred

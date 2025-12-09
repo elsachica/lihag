@@ -35,12 +35,12 @@ export class TenantController {
   }
 
   /**
-   * Lists all tenants with populated apartment details.
+   * Lists all tenants.
    */
   async index(req, res, next) {
     try {
       logger.silly("Loading all TenantModel documents");
-      const tenants = await TenantModel.find().populate("apartment");
+      const tenants = await TenantModel.find();
       logger.silly("Loaded all TenantModel documents");
       res.json(tenants);
     } catch (error) {
@@ -49,11 +49,10 @@ export class TenantController {
   }
 
   /**
-   * Shows a single tenant with populated apartment details.
+   * Shows a single tenant.
    */
   async show(req, res, next) {
     try {
-      await req.doc.populate("apartment");
       res.json(req.doc);
     } catch (error) {
       next(error);
@@ -66,12 +65,12 @@ export class TenantController {
    */
   async create(req, res, next) {
     try {
-      const { apartmentId, name, contactInfo, rent, startDate } = req.body;
+      const { name, email, phone, apartmentId } = req.body;
 
       // Validate required fields
-      if (!apartmentId || !name || !contactInfo || !rent || !startDate) {
+      if (!name || !email || !apartmentId) {
         const error = new Error(
-          "Missing required fields: apartmentId, name, contactInfo, rent, startDate"
+          "Missing required fields: name, email, apartmentId"
         );
         error.status = 400;
         throw error;
@@ -86,22 +85,33 @@ export class TenantController {
         throw error;
       }
 
-      logger.silly("Creating new tenant document with apartment binding", {
-        body: req.body,
-      });
+      // Check if apartment is already occupied
+      if (!apartment.isAvailable) {
+        const error = new Error("The apartment is already occupied.");
+        error.status = 400;
+        throw error;
+      }
+
+      logger.silly("Creating new tenant document", { body: req.body });
       const tenant = await TenantModel.create({
-        apartment: apartmentId,
         name,
-        contactInfo,
-        rent,
-        startDate,
+        email,
+        phone: phone || null,
       });
 
-      // Populate apartment details in response
-      await tenant.populate("apartment");
+      logger.silly("Binding tenant to apartment", {
+        tenantId: tenant.id,
+        apartmentId,
+      });
+      // Bind tenant to apartment
+      apartment.tenant = tenant.id;
+      apartment.isAvailable = false;
+      await apartment.save();
 
-      logger.silly("Created new tenant document");
+      logger.silly("Created new tenant and bound to apartment");
       await publishEvent("tenant.created", tenant.toObject());
+      await publishEvent("apartment.tenant-bound", apartment.toObject());
+
       res.status(201).json(tenant);
     } catch (error) {
       next(error);
@@ -109,7 +119,7 @@ export class TenantController {
   }
 
   /**
-   * Updates a tenant and populates apartment details in response.
+   * Updates a tenant.
    */
   async update(req, res, next) {
     try {
@@ -119,7 +129,6 @@ export class TenantController {
       });
       Object.assign(req.doc, req.body);
       await req.doc.save();
-      await req.doc.populate("apartment");
       logger.silly("Updated tenant document", { id: req.doc.id });
       await publishEvent("tenant.updated", req.doc.toObject());
       res.json(req.doc);
@@ -129,11 +138,24 @@ export class TenantController {
   }
 
   /**
-   * Deletes a tenant.
+   * Deletes a tenant and unbinds from apartment.
    */
   async delete(req, res, next) {
     try {
       logger.silly("Deleting tenant document", { id: req.doc.id });
+
+      // Find and unbind apartment
+      const apartment = await ApartmentModel.findOne({ tenant: req.doc.id });
+      if (apartment) {
+        logger.silly("Unbinding apartment from tenant", {
+          apartmentId: apartment.id,
+        });
+        apartment.tenant = null;
+        apartment.isAvailable = true;
+        await apartment.save();
+        await publishEvent("apartment.tenant-unbound", apartment.toObject());
+      }
+
       await req.doc.deleteOne();
       logger.silly("Deleted tenant document", { id: req.doc.id });
       await publishEvent("tenant.deleted", { id: req.doc.id });

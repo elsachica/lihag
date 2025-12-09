@@ -12,6 +12,7 @@ import './config/rabbitmq.js'
 import { router } from './routes/router.js'
 import { morganLogger } from './config/morgan.js'
 import { logger } from './config/winston.js'
+import { errorHandler } from './middleware/errorHandler.js'
 
 const app = express()
 app.use(express.json())
@@ -26,11 +27,8 @@ async function start() {
 
     app.use('/', router)
 
-    // Global error handler
-    app.use((err, req, res, next) => {
-      logger.error(err.message, { error: err })
-      res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' })
-    })
+    // Global error handler - MUST be last middleware
+    app.use(errorHandler)
 
     app.listen(port, () => {
       logger.info(`Property service running on port ${port}`)
