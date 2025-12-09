@@ -1,0 +1,26 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+metadata:
+  name: lihag-system
+build:
+  artifacts:
+    # - image: taskit
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend
+      docker:
+        dockerfile: frontend/Dockerfile
+manifests:
+  rawYaml:
+    - infra/k3s/ingress.yaml
+    - infra/k3s/mongodb/deployment.yaml
+    - infra/k3s/frontend/deployment.yaml
+deploy:
+  kubectl: {}
+
+# Production profile
+# A slightly modyfied ingress configuration needed in production.
+profiles:
+- name: production
+  patches:
+  - op: replace
+    path: /manifests/rawYaml/0  # JSON Pointer to ingress.yaml
+    value: infra/k3s/ingress.production.yaml

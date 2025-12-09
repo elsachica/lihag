@@ -14,10 +14,10 @@ spec:
     spec:
       containers:
         - name: frontend
-          # OBS! Byt ut nedan till er GitLab Container Registry-path, t.ex. registry.gitlab.com/<user>/<repo>/frontend:latest
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:main  # <-- GitLab Container Registry
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend:main
           ports:
-            - containerPort: 8001 # OBS! Uppdatera denna port då appen kommer att lyssna på en annan port. Glöm inte att även ändra i service.yaml.
+            - name: http
+              containerPort: 8001
           imagePullPolicy: Always
       imagePullSecrets:
-        - name: gitlab-registry-secret
+        - name: regcred
