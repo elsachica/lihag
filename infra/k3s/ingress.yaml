@@ -13,7 +13,7 @@ spec:
               service:
                 name: frontend
                 port:
-                  number: 8001
+                  number: 8888
           - path: /auth
             pathType: Prefix
             backend:
