@@ -97,6 +97,21 @@ export class MaintenanceController {
     }
   }
 
+  async deleteReport (req, res) {
+    try {
+      const existingReport = req.doc
+      await this.maintenanceService.deleteReport(existingReport)
+
+      return res.status(204).send()
+    } catch (error) {
+      console.error('Failed to delete maintenance report:', error)
+      return res.status(500).json({
+        message: 'Failed to delete maintenance report.',
+        details: error.message
+      })
+    }
+  }
+
   /**
    * Helpmethod to convert a report document to a Data Transfer Object (DTO).
    *

@@ -5,7 +5,7 @@
  */
 
 import express from 'express'
-import { MaintenanceController } from './controllers/MaintenanceController.js'
+import { MaintenanceController } from '../controllers/MaintenanceController.js'
 import { MaintenanceService } from '../services/MaintenanceService.js'
 import { MaintenanceRepository } from '../repositories/MaintenanceRepository.js'
 
@@ -41,10 +41,10 @@ router.patch('/:id', (req, res) =>
   maintenanceController.updateReport(req, res)
 )
 
-// // Admin only
-// router.delete('/:id', (req, res) =>
-//   maintenanceController.deleteReport(req, res)
-// )
+// Admin only
+router.delete('/:id', (req, res) =>
+  maintenanceController.deleteReport(req, res)
+)
 
 // Catch 404 (ALWAYS keep this as the last route).
 router.use('*', (req, res, next) => {

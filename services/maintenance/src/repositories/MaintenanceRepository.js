@@ -60,4 +60,8 @@ export class MaintenanceRepository {
     Object.assign(report, updates)
     return report.save()
   }
+
+  async deleteReport(report) {
+    return report.deleteOne()
+  }
 }

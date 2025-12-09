@@ -77,7 +77,11 @@ export class MaintenanceService {
       }
     }
 
-    const updatedReport = await existingReport.save()
+    const updatedReport = await this.maintenanceRepository.updateReport(existingReport, changes)
     return updatedReport
+  }
+
+  async deleteReport(report) {
+    await this.maintenanceRepository.deleteReport(report)
   }
 }
