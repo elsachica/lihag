@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - staging
   - deploy
 
 # Property Service (ACTIVE - ready for deployment)
@@ -82,6 +83,8 @@ build_frontend:
 
       /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
 
+  when: manual
+
 # test_frontend:
 #   stage: test
 #   image: node:20
@@ -92,8 +95,8 @@ build_frontend:
 #     - npm test || echo "No tests yet"
 
 # Kubernetes Deployment
-deploy_k8s:
-  stage: deploy
+deploy_staging:
+  stage: staging
   image:
     name: gcr.io/k8s-skaffold/skaffold:v2.8.0
     entrypoint: ['']
@@ -128,6 +131,42 @@ deploy_k8s:
 
 
     - echo "✓ Deployment complete!"
+
+  only:
+    - main
+    - master
+    - deploy
+  when: manual
+  environment:
+    name: staging
+
+deploy_production:
+  stage: deploy
+  image:
+    name: gcr.io/k8s-skaffold/skaffold:v2.8.0
+    entrypoint: ['']
+  variables:
+    KUBECONFIG_PATH: "/root/.kube/config"
+    NAMESPACE: "default"
+  before_script:
+    - mkdir -p "$(dirname "${KUBECONFIG_PATH}")"
+    - 'test -f "${KUBE_CONFIG_PRODUCTION}" && cp "${KUBE_CONFIG_PRODUCTION}" "${KUBECONFIG_PATH}" || (printf "%s" "${KUBE_CONFIG_PRODUCTION}" | base64 --decode > "${KUBECONFIG_PATH}" 2>/dev/null || printf "%s" "${KUBE_CONFIG_PRODUCTION}" | base64 -D > "${KUBECONFIG_PATH}" 2>/dev/null || (echo "KUBE_CONFIG_PRODUCTION is not a file path and not valid base64" >&2; exit 1))'
+    - chmod 600 "${KUBECONFIG_PATH}"
+    - kubectl version --client
+  script:
+    - |
+      echo "Creating ImagePullSecret for GitLab Container Registry..."
+      # ensure IMAGE is defined in this job
+      IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
+      IMAGE="${CI_REGISTRY_IMAGE}/frontend:${IMAGE_TAG}"
+      echo "IMAGE=${IMAGE}"
+      # recreate secret (use --dry-run to avoid accidental interactive errors)
+      kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
+      kubectl create secret docker-registry regcred \
+        --docker-server=gitlab.lnu.se:5050 \
+        --docker-username="${CI_REGISTRY_USER}" \
+        --docker-password="${CI_REGISTRY_PASSWORD}" \
+        --docker-email="${GITLAB_USER_EMAIL:-
 
   only:
     - main
