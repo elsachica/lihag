@@ -1,5 +1,5 @@
 import express from 'express'
-import { authenticateJWT } from '../middlewares/auth.js'
+import { authenticateJWT, authorizeRoles } from '../middlewares/auth.js'
 import { AuthController } from '../controllers/AuthController.js'
 
 export const router = express.Router()
