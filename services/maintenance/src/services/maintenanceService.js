@@ -68,4 +68,16 @@ export class MaintenanceService {
     const newReport = await this.maintenanceRepository.createReport(reportData)
     return newReport
   }
+
+  async updateReport(existingReport, changes) {
+    const allowedChanges = ['category', 'description', 'status', 'priority', 'assignedTo', 'images']
+    for (const key of allowedChanges) {
+      if (key in changes) {
+        existingReport[key] = changes[key]
+      }
+    }
+
+    const updatedReport = await existingReport.save()
+    return updatedReport
+  }
 }

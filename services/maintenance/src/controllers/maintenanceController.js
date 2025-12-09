@@ -25,34 +25,11 @@ export class MaintenanceController {
    * @param {object} res - Express response object.
    * @returns {Promise<void>} - A promise that resolves when the operation is complete.
    */
-  async getAllReports(req, res) {
+  async getAllReports (req, res) {
     try {
       const reports = await this.maintenanceService.getAllReports(req.query)
-
       const dto = reports.map(this._toDTO)
 
-      // const dto = reports.map((report) => ({
-      //   id: report._id,
-      //   apartmentId: report.apartmentId, // One main tenant per apartment
-      //   category: report.category, // e.g. kitchen, appliance, plumbing, heating, etc.
-      //   description: report.description,
-      //   status: report.status,
-      //   assignedTo: report.assignedTo || null,
-      //   priority: report.priority || null,
-      //   images: report.images || [],
-      //   createdAt: report.createdAt.toLocaleString('sv-SE', {
-      //     dateStyle: 'short',
-      //     timeStyle: 'short'
-      //   }),
-      //   ...(report.updatedAt.getTime() !== report.createdAt.getTime()
-      //     ? {
-      //         updatedAt: report.updatedAt.toLocaleString('sv-SE', {
-      //           dateStyle: 'short',
-      //           timeStyle: 'short'
-      //         })
-      //       }
-      //     : {})
-      // }))
       return res.status(200).json({ data: dto })
     } catch (error) {
       console.error('Failed to fetch maintenance reports:', error)
@@ -70,33 +47,9 @@ export class MaintenanceController {
    * @param {object} res - Express response object.
    * @returns {Promise<void>} - A promise that resolves when the operation is complete.
    */
-  async getReport(req, res) {
+  async getReport (req, res) {
     try {
       const dto = this._toDTO(req.doc)
-      // const report = req.doc
-
-      // const dto = {
-      //   id: report._id,
-      //   apartmentId: report.apartmentId, // One main tenant per apartment
-      //   category: report.category, // e.g. kitchen, appliance, plumbing, heating, etc.
-      //   description: report.description,
-      //   status: report.status,
-      //   assignedTo: report.assignedTo || null,
-      //   priority: report.priority || null,
-      //   images: report.images || [],
-      //   createdAt: report.createdAt.toLocaleString('sv-SE', {
-      //     dateStyle: 'short',
-      //     timeStyle: 'short'
-      //   }),
-      //   ...(report.updatedAt.getTime() !== report.createdAt.getTime()
-      //     ? {
-      //         updatedAt: report.updatedAt.toLocaleString('sv-SE', {
-      //           dateStyle: 'short',
-      //           timeStyle: 'short'
-      //         })
-      //       }
-      //     : {})
-      // }
       return res.status(200).json({ data: dto })
     } catch (error) {
       console.error('Failed to fetch maintenance reports:', error)
@@ -107,29 +60,13 @@ export class MaintenanceController {
     }
   }
 
-  async createReport(req, res) {
+  async createReport (req, res) {
     try {
       const reportData = req.body
 
       const newReport = await this.maintenanceService.createReport(reportData)
 
       const dto = this._toDTO(newReport)
-
-      // const dto = {
-      //   id: newReport._id,
-      //   apartmentId: newReport.apartmentId,
-      //   category: newReport.category,
-      //   description: newReport.description,
-      //   status: newReport.status,
-      //   assignedTo: newReport.assignedTo || null,
-      //   priority: newReport.priority || null,
-      //   images: newReport.images || [],
-      //   createdAt: newReport.createdAt.toLocaleString('sv-SE', {
-      //     dateStyle: 'short',
-      //     timeStyle: 'short'
-      //   })
-      // }
-
       return res.status(201).json({ data: dto })
     } catch (error) {
       console.error('Failed to create maintenance report:', error)
@@ -140,8 +77,33 @@ export class MaintenanceController {
     }
   }
 
-  // Hjälpfunktion för DTO
-  _toDTO(report) {
+  async updateReport (req, res) {
+    try {
+      const existingReport = req.doc
+      const changes = req.body
+      const updatedReport = await this.maintenanceService.updateReport(
+        existingReport,
+        changes
+      )
+
+      const dto = this._toDTO(updatedReport)
+      return res.status(200).json({ data: dto })
+    } catch (error) {
+      console.error('Failed to update maintenance report:', error)
+      return res.status(500).json({
+        message: 'Failed to update maintenance report.',
+        details: error.message
+      })
+    }
+  }
+
+  /**
+   * Helpmethod to convert a report document to a Data Transfer Object (DTO).
+   *
+   * @param {object} report - The maintenance report document.
+   * @returns {object} - The maintenance report DTO.
+   */
+  _toDTO (report) {
     return {
       id: report._id,
       apartmentId: report.apartmentId,

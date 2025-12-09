@@ -42,7 +42,7 @@ export class MaintenanceRepository {
    * @returns {Promise<object|null>} - A promise that resolves to the maintenance report document, or null if not found.
    */
   async getReportById(id) {
-    return ReportModel.findById(id)
+    return ReportModel.findById(id).exec()
   }
 
   /**
@@ -53,6 +53,11 @@ export class MaintenanceRepository {
    */
   async createReport(reportData) {
     const report = new ReportModel(reportData)
+    return report.save()
+  }
+
+  async updateReport(report, updates) {
+    Object.assign(report, updates)
     return report.save()
   }
 }
