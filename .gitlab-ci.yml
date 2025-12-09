@@ -166,7 +166,16 @@ deploy_production:
         --docker-server=gitlab.lnu.se:5050 \
         --docker-username="${CI_REGISTRY_USER}" \
         --docker-password="${CI_REGISTRY_PASSWORD}" \
-        --docker-email="${GITLAB_USER_EMAIL:-
+        --docker-email="${GITLAB_USER_EMAIL:-you@example.com}" \
+        -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+      # deploy with skaffold (pass image built in pipeline)
+      skaffold deploy --profile production --images "${IMAGE}"
+      echo "Waiting for deployments to rollout..."
+      kubectl get deployments -n "${NAMESPACE}" || true
+      kubectl get pods -n "${NAMESPACE}" -o wide || true
+
+
+    - echo "✓ Deployment complete!"
 
   only:
     - main
