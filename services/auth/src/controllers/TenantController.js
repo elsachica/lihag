@@ -1,5 +1,3 @@
-import fetch from 'node-fetch'
-
 export class TenantController {
   constructor() {
     this.backendUrl = 'http://tenant-backend-service/tenants'

@@ -1,5 +1,3 @@
-import fetch from 'node-fetch'
-
 export class ApartmentController {
   constructor() {
     this.backendUrl = 'http://apartment-backend-service/apartments'

@@ -16,14 +16,11 @@ export class AuthController {
    */
   async register(req, res) {
     try {
-      const { firstName, lastName, username, email, password, role } = req.body
+      const { username, password, role } = req.body
 
       // Skapa ny användare
       const user = new UserModel({
-        firstName,
-        lastName,
         username,
-        email,
         password,
         role: role || 'user'
       })
