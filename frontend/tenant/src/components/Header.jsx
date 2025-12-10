@@ -7,8 +7,24 @@ import { LogOut, User, AlertCircle } from 'lucide-react'
 export const TenantHeader = ({ onNavigate, onLogout }) => (
   <header className="bg-white shadow-sm border-b border-blue-100">
     <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div className="text-2xl font-bold text-blue-600">Lihag AB</div>
+      {/* Klickbar logo - tar dig till dashboard (Mina sidor) */}
+      <button
+        onClick={() => onNavigate('tenant-dashboard')}
+        className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition"
+        title="Gå till Mina sidor"
+      >
+        Lihag AB
+      </button>
       <div className="flex items-center gap-4">
+        {/* Mina sidor knapp */}
+        <button
+          onClick={() => onNavigate('tenant-dashboard')}
+          className="px-4 py-2 text-gray-700 hover:text-blue-600 transition font-medium"
+          title="Gå till Mina sidor"
+        >
+          Mina sidor
+        </button>
+        {/* Felanmälan knapp */}
         <button
           onClick={() => onNavigate('report-form')}
           className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 transition"
@@ -17,6 +33,7 @@ export const TenantHeader = ({ onNavigate, onLogout }) => (
           <AlertCircle size={20} />
           Felanmälan
         </button>
+        {/* Profil knapp */}
         <button
           onClick={() => onNavigate('profile')}
           className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 transition"
@@ -25,6 +42,7 @@ export const TenantHeader = ({ onNavigate, onLogout }) => (
           <User size={20} />
           Profil
         </button>
+        {/* Logga ut knapp */}
         <button
           onClick={onLogout}
           className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 transition"

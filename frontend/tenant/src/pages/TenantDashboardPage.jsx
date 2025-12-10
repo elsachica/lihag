@@ -86,14 +86,8 @@ export const TenantDashboardPage = ({ onNavigate }) => {
 
         {/* Maintenance Reports Section */}
         <section className="bg-white rounded-xl shadow-lg p-6 md:p-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+          <div className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900">Mina felanmälningar</h2>
-            <button
-              onClick={() => onNavigate('report-form')}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
-            >
-              Ny felanmälan
-            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -6,7 +6,8 @@ import { TenantHeader } from '../components/Header'
  */
 export const ProfilePage = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
-    name: 'Anna Andersson',
+    firstName: 'Anna',
+    lastName: 'Andersson',
     email: 'anna.andersson@example.com',
     phone: '070-123 45 67',
     password: ''
@@ -44,15 +45,28 @@ export const ProfilePage = ({ onNavigate }) => {
 
           {!submitted ? (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Namn</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Förnamn</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Efternamn</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+                  />
+                </div>
               </div>
 
               <div>
