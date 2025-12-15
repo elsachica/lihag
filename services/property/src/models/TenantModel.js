@@ -4,8 +4,8 @@
  * @version 1.0.0
  */
 
-import mongoose from "mongoose";
-import { BASE_SCHEMA } from "./baseSchema.js";
+import mongoose from 'mongoose'
+import { BASE_SCHEMA } from './baseSchema.js'
 
 // Create a schema.
 const schema = new mongoose.Schema({
@@ -25,11 +25,11 @@ const schema = new mongoose.Schema({
     trim: true,
     default: null
   }
-});
+})
 
-schema.add(BASE_SCHEMA);
+schema.add(BASE_SCHEMA)
 
 // Create a model using the schema.
-export const TenantModel = mongoose.model("Tenant", schema);
+export const TenantModel = mongoose.model('Tenant', schema)
 
 // Du kan lägga till fler fält om du behöver, t.ex. personnummer, adress, etc.

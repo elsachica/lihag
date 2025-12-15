@@ -5,16 +5,16 @@
  * @version 1.0.0
  */
 
-import express from "express";
-import { router as apartmentRouter } from "./apartmentRoutes.js";
-import { router as tenantRouter } from "./tenantRoutes.js";
+import express from 'express'
+import { router as apartmentRouter } from './apartmentRoutes.js'
+import { router as tenantRouter } from './tenantRoutes.js'
 
-export const router = express.Router();
+export const router = express.Router()
 
-router.use("/apartments", apartmentRouter);
-router.use("/tenants", tenantRouter);
+router.use('/apartments', apartmentRouter)
+router.use('/tenants', tenantRouter)
 
 // Catch 404 (ALWAYS keep this as the last route).
-router.use("*", (req, res, next) => {
-  res.status(404).json({ error: "Not Found" });
-});
+router.use('*', (req, res, next) => {
+  res.status(404).json({ error: 'Not Found' })
+})

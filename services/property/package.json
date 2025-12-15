@@ -28,6 +28,7 @@
     "winston": "^3.18.3"
   },
   "devDependencies": {
+    "@lnu/eslint-config": "^1.1.10",
     "eslint": "^8.56.0",
     "nodemon": "^3.1.7"
   }
