@@ -108,6 +108,25 @@ services:
       - lihag-network
     restart: unless-stopped
 
+  # Frontend - Tenant portal
+  frontend:
+    build:
+      context: ./frontend/tenant
+      dockerfile: Dockerfile.development
+    container_name: lihag-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:8003
+    volumes:
+      - ./frontend/tenant:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
   # # Maintenance Service - Handles maintenance requests
   # maintenance:
   #   build:
