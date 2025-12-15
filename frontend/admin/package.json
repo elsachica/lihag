@@ -1,0 +1,32 @@
+{
+  "name": "lihag-admin-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@tanstack/react-query-devtools": "^5.91.1",
+    "ra-data-simple-rest": "^5.13.3",
+    "react": "^18.3.1",
+    "react-admin": "^5.13.3",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.4"
+  }
+}
