@@ -4,7 +4,10 @@ import { ReportModel } from '../src/models/report.js'
 
 dotenv.config()
 
-async function seed() {
+/**
+ * Seed the database with initial test data for maintenance reports.
+ */
+async function seed () {
   try {
     await mongoose.connect(process.env.DB_CONNECTION_STRING)
     console.log('Connected to MongoDB Atlas!')
@@ -27,8 +30,8 @@ async function seed() {
         description: 'My apartment is too cold',
         category: 'Värme & ventilation',
         apartmentId: new mongoose.Types.ObjectId(),
-        status: 'Under behandling',
-        priority: 'Hög',
+        status: 'Behandlas',
+        priority: 'Låg',
         assignedTo: null,
         images: ['https://example.com/heater.jpg']
       },
@@ -37,7 +40,7 @@ async function seed() {
         category: 'Vitvaror',
         apartmentId: new mongoose.Types.ObjectId(),
         status: 'Stängd',
-        priority: 'Låg',
+        priority: 'Hög',
         assignedTo: null,
         images: ['https://example.com/fridge.jpg']
       }
