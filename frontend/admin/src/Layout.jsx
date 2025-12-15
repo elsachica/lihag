@@ -17,7 +17,7 @@ const MyAppBar = () => (
 
 const MyMenu = () => (
     <Menu>
-        <Menu.ResourceItem name="users" keyboardShortcut="g>u" />
+        <Menu.ResourceItem name="accounts" keyboardShortcut="g>u" />
         <Menu.ResourceItem name="properties" keyboardShortcut="g>p" />
         <Menu.ResourceItem name="maintenance" keyboardShortcut="g>m" />
     </Menu>
