@@ -1,5 +1,6 @@
 import React from 'react'
 import { CheckCircle } from 'lucide-react'
+import { PublicHeader, Navigation } from '../components/Header'
 
 /**
  * Apartment Detail Page - Full apartment information
@@ -14,16 +15,8 @@ export const ApartmentDetailPage = ({ apartment, onNavigate, onSelectApartment }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <header className="bg-white shadow-sm border-b border-blue-100">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <button
-            onClick={() => onNavigate('landing')}
-            className="text-blue-600 hover:text-blue-800 font-medium transition flex items-center gap-2"
-          >
-            ← Tillbaka till sök
-          </button>
-        </div>
-      </header>
+      <PublicHeader onNavigate={onNavigate} />
+      <Navigation currentPage="apartment" onNavigate={onNavigate} />
 
       <main className="max-w-5xl mx-auto px-6 py-12">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">

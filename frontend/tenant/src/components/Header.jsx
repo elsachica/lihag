@@ -7,11 +7,11 @@ import { LogOut, User, AlertCircle } from 'lucide-react'
 export const TenantHeader = ({ onNavigate, onLogout }) => (
   <header className="bg-white shadow-sm border-b border-blue-100">
     <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      {/* Klickbar logo - tar dig till dashboard (Mina sidor) */}
+      {/* Klickbar logo - tar dig till startsidan */}
       <button
-        onClick={() => onNavigate('tenant-dashboard')}
+        onClick={() => onNavigate('landing')}
         className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition"
-        title="Gå till Mina sidor"
+        title="Gå till startsidan"
       >
         Lihag AB
       </button>

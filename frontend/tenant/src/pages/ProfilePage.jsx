@@ -9,8 +9,7 @@ export const ProfilePage = ({ onNavigate }) => {
     firstName: 'Anna',
     lastName: 'Andersson',
     email: 'anna.andersson@example.com',
-    phone: '070-123 45 67',
-    password: ''
+    phone: '070-123 45 67'
   })
   const [submitted, setSubmitted] = useState(false)
 
@@ -89,19 +88,6 @@ export const ProfilePage = ({ onNavigate }) => {
                   onChange={handleInputChange}
                   className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                 />
-              </div>
-
-              <div className="border-t border-gray-200 pt-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Nytt lösenord</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Lämna tomt för att behålla nuvarande"
-                  className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                />
-                <p className="text-xs text-gray-500 mt-2">Du kan lämna detta fält tomt om du inte vill ändra lösenordet</p>
               </div>
 
               <button

@@ -4,6 +4,11 @@
 @tailwind utilities;
 /* stylelint-enable at-rule-no-unknown */
 
+/* Ensure scrollbar always visible to prevent layout shift */
+html {
+  overflow-y: scroll;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
