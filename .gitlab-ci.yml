@@ -15,6 +15,10 @@ stages:
 #     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/property" --dockerfile "${CI_PROJECT_DIR}/services/property/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}"
 #     - echo "✓ Successfully built and pushed property:${CI_COMMIT_REF_SLUG}"
 
+# only:
+#   changes:
+#     - services/property/**/*
+
 # test_property:
 #   stage: test
 #   image: node:20
@@ -35,6 +39,10 @@ stages:
 #     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/auth" --dockerfile "${CI_PROJECT_DIR}/services/auth/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}"
 #     - echo "✓ Successfully built and pushed auth:${CI_COMMIT_REF_SLUG}"
 
+# only:
+#   changes:
+#     - services/auth/**/*
+
 # test_auth:
 #   stage: test
 #   image: node:20
@@ -54,6 +62,10 @@ stages:
 #     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 #     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
 #     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
+
+# only:
+#   changes:
+#     - services/maintenance/**/*
 
 # test_maintenance:
 #   stage: test
@@ -83,6 +95,9 @@ build_frontend:
 
       /kaniko/executor --context "${CI_PROJECT_DIR}/frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
 
+  only:
+    changes:
+      - frontend/**/*
   when: manual
 
 # test_frontend:
