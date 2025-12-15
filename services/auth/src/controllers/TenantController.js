@@ -1,6 +1,6 @@
 export class TenantController {
   constructor() {
-    this.backendUrl = 'http://tenant-backend-service/tenants'
+    this.backendUrl = process.env.TENANT_SERVICE_URL
   }
 
   async index(req, res, next) {

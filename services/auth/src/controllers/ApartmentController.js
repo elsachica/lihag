@@ -1,6 +1,6 @@
 export class ApartmentController {
   constructor() {
-    this.backendUrl = 'http://apartment-backend-service/apartments'
+    this.backendUrl = process.env.APARTEMENT_SERVICE_URL
   }
 
   async index(req, res, next) {
