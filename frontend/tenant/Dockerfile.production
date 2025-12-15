@@ -1,0 +1,41 @@
+# Build stage
+FROM node:20.17.0-bookworm-slim AS builder
+
+WORKDIR /usr/src/app
+
+# Kopiera package-filer
+COPY package*.json ./
+
+# Installera dependencies för build
+RUN npm ci --ignore-scripts --no-bin-links
+
+# Kopiera hela projektet
+COPY . .
+
+# Bygg för production
+RUN npm run build
+
+# Production stage
+FROM node:20.17.0-bookworm-slim
+
+# Installera dumb-init för proper process management
+RUN true \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends dumb-init \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Skapa app directory
+WORKDIR /usr/src/app
+
+# Kopiera dist från builder stage
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Set user för security
+USER node
+
+# Exponera port
+EXPOSE 5173
+
+# Starta Vite preview server
+CMD ["dumb-init", "npm", "run", "preview"]
