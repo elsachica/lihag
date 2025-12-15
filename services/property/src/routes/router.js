@@ -7,12 +7,10 @@
 
 import express from 'express'
 import { router as apartmentRouter } from './apartmentRoutes.js'
-import { router as tenantRouter } from './tenantRoutes.js'
 
 export const router = express.Router()
 
 router.use('/apartments', apartmentRouter)
-router.use('/tenants', tenantRouter)
 
 // Catch 404 (ALWAYS keep this as the last route).
 router.use('*', (req, res, next) => {

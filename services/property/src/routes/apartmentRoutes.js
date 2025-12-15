@@ -28,11 +28,3 @@ router.get('/:id', (req, res, next) => controller.show(req, res, next))
 router.post('/', (req, res, next) => controller.create(req, res, next))
 router.put('/:id', (req, res, next) => controller.update(req, res, next))
 router.delete('/:id', (req, res, next) => controller.delete(req, res, next))
-
-// Tenant binding/unbinding
-router.post('/:id/bind-tenant', (req, res, next) =>
-  controller.bindTenant(req, res, next)
-)
-router.post('/:id/unbind-tenant', (req, res, next) =>
-  controller.unbindTenant(req, res, next)
-)

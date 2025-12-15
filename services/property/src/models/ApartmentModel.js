@@ -50,11 +50,6 @@ const schema = new mongoose.Schema({
   roomCount: {
     type: Number,
     default: null
-  },
-  tenant: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Tenant',
-    default: null // En lägenhet kan ha en tenant eller vara tom
   }
 })
 
