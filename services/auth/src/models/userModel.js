@@ -7,9 +7,6 @@
 
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs' // använder bcryptjs för enklare installation
-import validator, { trim } from 'validator'
-
-const { isEmail } = validator
 
 // Create a schema.
 const schema = new mongoose.Schema(

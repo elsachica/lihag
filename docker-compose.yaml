@@ -51,28 +51,39 @@ services:
       - lihag-network
     restart: unless-stopped
 
-  # # Auth Service - Handles authentication and sessions
-  # auth:
-  #   build:
-  #     context: ./services/auth
-  #     dockerfile: Dockerfile
-  #   container_name: lihag-auth
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     NODE_ENV: development
-  #     PORT: 8000
-  #     DB_CONNECTION_STRING: mongodb://mongodb:27017/authDB
-  #   volumes:
-  #     - ./services/auth:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   depends_on:
-  #     mongodb:
-  #       condition: service_healthy
-  #   command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/server.js
-  #   networks:
-  #     - lihag-network
-  #   restart: unless-stopped
+ # Mongo för auth-service
+  mongo-auth:
+    image: mongo:6
+    container_name: mongo-auth
+    ports:
+      - "27017:27017"   # OBS: välj unika portar om du kör lokalt
+    environment:
+      MONGO_INITDB_DATABASE: lihag_auth
+
+  # Auth Service - Handles authentication and sessions
+  auth:
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    container_name: lihag-auth
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: development
+      PORT: 8000
+      DB_CONNECTION_STRING: mongodb://mongodb:27017/authDB
+      APARTMENT_SERVICE_URL: http://property:8003
+    volumes:
+      - ./services/auth:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    command: ["node", "src/server.js"]
+
+    networks:
+      - lihag-network
+    restart: unless-stopped
 
   # Property Service - Handles property data
   property:
