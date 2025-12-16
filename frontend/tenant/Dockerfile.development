@@ -1,0 +1,51 @@
+# =============================================================================
+# Base stage - Install dependencies
+# =============================================================================
+FROM node:20.17.0-bookworm-slim AS base
+
+# Install curl for healthchecks (do this early to leverage cache)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies for development
+RUN npm install --ignore-scripts
+
+# =============================================================================
+# Final stage - Development image
+# =============================================================================
+FROM node:20.17.0-bookworm-slim
+
+# Install curl for healthchecks
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+# Copy node_modules from base stage
+COPY --from=base --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
+
+# Copy application code (will be overridden by volume mount in dev)
+COPY --chown=node:node . .
+
+# Run as non-root user for security
+USER node
+
+# Expose Vite dev server port
+ARG VITE_PORT=5173
+EXPOSE ${VITE_PORT}
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV PORT=${VITE_PORT}
+
+# Start Vite dev server with --host for Docker networking
+CMD ["npm", "run", "dev", "--", "--host"]

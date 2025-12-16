@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:8.0.0
@@ -82,6 +80,12 @@ services:
       context: ./services/property
       dockerfile: Dockerfile.development
     container_name: lihag-property
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/apartments"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
     ports:
       - "8003:8003"
     environment:
@@ -98,6 +102,31 @@ services:
       rabbitmq:
         condition: service_healthy
     command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
+  # Frontend - Tenant portal
+  frontend:
+    build:
+      context: ./frontend/tenant
+      dockerfile: Dockerfile.development
+    container_name: lihag-frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:8003
+    volumes:
+      - ./frontend/tenant:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev -- --host
     networks:
       - lihag-network
     restart: unless-stopped

@@ -1,0 +1,53 @@
+# =============================================================================
+# Base stage - Install dependencies
+# =============================================================================
+
+FROM node:20.17.0-bookworm-slim AS base
+
+# Install dumb-init (process supervisor for PID 1)
+RUN true \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends dumb-init \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json /usr/src/app/
+
+# Install production dependencies only
+RUN npm ci --ignore-scripts --no-bin-links --omit=dev
+
+# =============================================================================
+# Final stage - Production image
+# =============================================================================
+
+FROM node:20.17.0-bookworm-slim
+
+# Copy dumb-init from base
+COPY --from=base /usr/bin/dumb-init /usr/bin/dumb-init
+
+# Create log directory
+RUN true \
+    && mkdir -p /var/log/lihag-property \
+    && chown -R node:node /var/log/lihag-property
+
+WORKDIR /usr/src/app
+
+# Copy dependencies and application from base
+COPY --from=base --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
+COPY --chown=node:node . /usr/src/app/
+
+# Run as non-root user for security
+USER node
+
+# Expose port
+ARG EXPRESS_APP_PORT=8003
+EXPOSE $EXPRESS_APP_PORT
+
+# Set environment
+ENV NODE_ENV=production PORT=$EXPRESS_APP_PORT
+
+# Run application with dumb-init
+CMD ["dumb-init", "node", "src/index.js"]
