@@ -1,32 +1,39 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: lihag-ingress
+  name: ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
     - http:
         paths:
-          - path: /auth(/|$)(.*)
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 8888
+          - path: /auth
             pathType: Prefix
             backend:
               service:
                 name: auth
                 port:
                   number: 8000
-          - path: /property(/|$)(.*)
+          - path: /property
             pathType: Prefix
             backend:
               service:
                 name: property
                 port:
                   number: 8003
-          - path: /maintenance(/|$)(.*)
+          - path: /maintenance
             pathType: Prefix
             backend:
               service:
                 name: maintenance
                 port:
                   number: 8002
+          
 # lägg till frontend i ingressen?

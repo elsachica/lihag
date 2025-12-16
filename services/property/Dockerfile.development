@@ -1,0 +1,53 @@
+# =============================================================================
+# Base stage - Install dependencies
+# =============================================================================
+FROM node:20.17.0-bookworm-slim AS base
+
+# Install curl for healthchecks
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies for nodemon)
+RUN npm install --ignore-scripts
+
+# =============================================================================
+# Final stage - Development image
+# =============================================================================
+FROM node:20.17.0-bookworm-slim
+
+# Install curl for healthchecks
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create log directory
+RUN mkdir -p /var/log/lihag-property \
+    && chown -R node:node /var/log/lihag-property
+
+WORKDIR /usr/src/app
+
+# Copy node_modules from base stage (application code mounted as volume in dev)
+COPY --from=base --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
+
+# Run as non-root user for security
+USER node
+
+# Expose port for Property Service and debug port
+ARG EXPRESS_APP_PORT=8003
+ARG DEBUG_PORT=9229
+EXPOSE ${EXPRESS_APP_PORT} ${DEBUG_PORT}
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV PORT=${EXPRESS_APP_PORT}
+
+# Start with nodemon for auto-reload on file changes
+CMD ["npx", "nodemon", "-e", "js,json", "--inspect=0.0.0.0:${DEBUG_PORT}", "src/index.js"]

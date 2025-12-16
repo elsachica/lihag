@@ -1,0 +1,202 @@
+services:
+  mongodb:
+    image: mongo:8.0.0
+    container_name: lihag-mongodb
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping')"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27020:27017"
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: lihag-redis
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: lihag-rabbitmq
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
+  # # Auth Service - Handles authentication and sessions
+  # auth:
+  #   build:
+  #     context: ./services/auth
+  #     dockerfile: Dockerfile.development
+  #   container_name: lihag-auth
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 8000
+  #     DB_CONNECTION_STRING: mongodb://mongodb:27017/authDB
+  #     RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
+  #     REDIS_URL: redis://redis:6379
+  #   volumes:
+  #     - ./services/auth:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #   command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+  #   networks:
+  #     - lihag-network
+  #   restart: unless-stopped
+
+  # Property Service - Handles property data
+  property:
+    build:
+      context: ./services/property
+      dockerfile: Dockerfile.development
+    container_name: lihag-property
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/apartments"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "8003:8003"
+    environment:
+      NODE_ENV: development
+      PORT: 8003
+      DB_CONNECTION_STRING: mongodb://mongodb:27017/propertyDB
+      RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
+    volumes:
+      - ./services/property:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
+  # Frontend - Tenant portal
+  frontend:
+    build:
+      context: ./frontend/tenant
+      dockerfile: Dockerfile.development
+    container_name: lihag-frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "5173:5173"
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:8003
+    volumes:
+      - ./frontend/tenant:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run dev -- --host
+    networks:
+      - lihag-network
+    restart: unless-stopped
+
+  # # Maintenance Service - Handles maintenance requests
+  # maintenance:
+  #   build:
+  #     context: ./services/maintenance
+  #     dockerfile: Dockerfile.development
+  #   container_name: lihag-maintenance
+  #   ports:
+  #     - "8002:8002"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 8002
+  #     DB_CONNECTION_STRING: mongodb://mongodb:27017/maintenanceDB
+  #     RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
+  #   volumes:
+  #     - ./services/maintenance:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy
+  #   command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+  #   networks:
+  #     - lihag-network
+  #   restart: unless-stopped
+
+  # # Frontend
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.development
+  #   container_name: lihag-frontend
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     NODE_ENV: development
+  #     PORT: 8001
+  #     AUTH_SERVICE_URL: http://auth:8000
+  #     PROPERTY_SERVICE_URL: http://property:8003
+  #     MAINTENANCE_SERVICE_URL: http://maintenance:8002
+  #   volumes:
+  #     - ./frontend:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   depends_on:
+  #     auth:
+  #       condition: service_started
+  #     property:
+  #       condition: service_started
+  #     maintenance:
+  #       condition: service_started
+  #   command: npx nodemon -e js,json src/index.js
+  #   networks:
+  #     - lihag-network
+  #   restart: unless-stopped
+
+volumes:
+  mongodb-data:
+  redis-data:
+  rabbitmq-data:
+
+networks:
+  lihag-network:
+    driver: bridge
