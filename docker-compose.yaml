@@ -55,7 +55,7 @@ services:
   # auth:
   #   build:
   #     context: ./services/auth
-  #     dockerfile: Dockerfile.development
+  #     dockerfile: Dockerfile
   #   container_name: lihag-auth
   #   ports:
   #     - "8000:8000"
@@ -63,19 +63,13 @@ services:
   #     NODE_ENV: development
   #     PORT: 8000
   #     DB_CONNECTION_STRING: mongodb://mongodb:27017/authDB
-  #     RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
-  #     REDIS_URL: redis://redis:6379
   #   volumes:
   #     - ./services/auth:/usr/src/app
   #     - /usr/src/app/node_modules
   #   depends_on:
   #     mongodb:
   #       condition: service_healthy
-  #     rabbitmq:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #   command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+  #   command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/server.js
   #   networks:
   #     - lihag-network
   #   restart: unless-stopped

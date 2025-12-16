@@ -13,10 +13,11 @@ import { randomUUID } from 'node:crypto'
 import http from 'node:http'
 import { connectToDatabase } from './config/mongoose.js'
 import { router } from './routes/router.js'
+import dotenv from 'dotenv'
+dotenv.config()
 
 try {
   // Connect to MongoDB.
-
   await connectToDatabase(process.env.DB_CONNECTION_STRING)
 
   // Create an Express application.

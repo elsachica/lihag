@@ -13,11 +13,12 @@ spec:
         app: auth
     spec:
       containers:
-        - name: auth
-          # OBS! Byt ut nedan till er GitLab Container Registry-path, t.ex. registry.gitlab.com/<user>/<repo>/auth:latest
-          image: registry.gitlab.com/<user>/<repo>/auth:latest  # <-- GitLab Container Registry
-          ports:
-            - containerPort: 8000 # OBS! Uppdatera denna port då appen kommer att lyssna på en annan port. Glöm inte att även ändra i service.yaml.
-          envFrom:
-            - configMapRef:
-                name: auth-config
+      - name: auth
+        image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/services/auth
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_CONNECTION_STRING
+          value: mongodb://mongo:27017/lihag
+        - name: PORT
+          value: "3000"
