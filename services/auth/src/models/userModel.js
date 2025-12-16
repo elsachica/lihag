@@ -7,7 +7,7 @@
 
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs' // använder bcryptjs för enklare installation
-import validator from 'validator'
+import validator, { trim } from 'validator'
 
 const { isEmail } = validator
 
@@ -18,19 +18,30 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, 'Username is required.'],
       unique: true,
-      match: [/^[A-Za-z][A-Za-z0-9_-]{2,255}$/, 'Please provide a valid username.']
+      trim: true,
+      lowercase: true
     },
     password: {
       type: String,
-      required: [true, 'Password is required.'],
-      minLength: [10, 'The password must be of minimum length 10 characters.'],
-      maxLength: [256, 'The password must be of maximum length 256 characters.']
+      required: [true, 'Password is required.']
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required.'],
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
     role: {
       type: String,
-      enum: ['user', 'admin'], // tillåt endast user eller admin
-      default: 'user',         // standard är 'user'
+      enum: ['admin', 'tenant', 'maintenance'], // tillåt endast tenant, maintenance eller admin
+      default: 'tenant',         // standard är 'tenant'
       required: true
+    },
+    propertyId: {
+      type: String,
+      required: false,
+      default: null
     }
 
   },

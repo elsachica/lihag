@@ -8,12 +8,19 @@ build:
     - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend
       docker:
         dockerfile: frontend/Dockerfile
+    #- image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
+      #docker:
+        #dockerfile: services/auth/Dockerfile
 manifests:
   rawYaml:
     - infra/k3s/ingress.yaml
     - infra/k3s/mongodb/pvc.yaml
     - infra/k3s/mongodb/deployment.yaml
     - infra/k3s/frontend/deployment.yaml
+    #- infra/k3s/auth/deployment.yaml
+    #- infra/k3s/auth/mongo-pvc.yaml
+    #- infra/k3s/auth/mongo-deployment.yaml
+    
 deploy:
   kubectl: {}
 
