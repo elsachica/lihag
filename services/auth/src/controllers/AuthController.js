@@ -59,10 +59,6 @@ export class AuthController {
   }
 
  async test(req, res) {
-    // req.user är satt av authenticateJWT
-    res.status(200).json({
-      message: `Hej ${req.user.username}, du har access till den här route!`,
-      user: req.user
-    })
+    res.status(200).json({ status: 'ok' })
   }
 }

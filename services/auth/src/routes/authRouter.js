@@ -13,4 +13,4 @@ router.post('/register', (req, res, next) => controller.register(req, res, next)
 // Logga in existerande användare
 router.post('/login', (req, res, next) => controller.login(req, res, next))
 
-router.get('/test', authenticateJWT, (req, res, next) => controller.test(req, res, next))
+router.get('/health', (req, res, next) => controller.test(req, res, next))
