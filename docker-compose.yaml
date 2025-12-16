@@ -72,7 +72,7 @@ services:
       NODE_ENV: development
       PORT: 8000
       DB_CONNECTION_STRING: mongodb://mongodb:27017/authDB
-      APARTMENT_SERVICE_URL: http://property:8003
+      APARTMENT_SERVICE_URL: http://property:8003/apartments
     volumes:
       - ./services/auth:/usr/src/app
       - /usr/src/app/node_modules
