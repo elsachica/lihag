@@ -9,14 +9,6 @@ spec:
   selector:
     app: auth
   ports:
-<<<<<<< HEAD
     - port: 8000         # Porten som exponeras i klustret
       targetPort: 8000   # Porten som containern lyssnar på
   type: ClusterIP
-=======
-    - name: http
-      protocol: TCP
-      port: 3000
-      targetPort: 3000
-      nodePort: 31000
->>>>>>> 7443a0bbb0d5b06b1d2b4789c5bb87d4a5d92ab1
