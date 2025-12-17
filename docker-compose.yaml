@@ -112,7 +112,7 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-    command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+    command: sh -c "node /usr/src/app/seed/seedApartments.js && npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js"
     networks:
       - lihag-network
     restart: unless-stopped
