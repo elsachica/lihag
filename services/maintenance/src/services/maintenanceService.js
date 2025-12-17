@@ -1,3 +1,5 @@
+import { publishEvent } from '../messaging/rabbitmq.js'
+
 /**
  * @file Defines the maintenance service for fetching maintenance data.
  * @module services/MaintenanceService
@@ -66,6 +68,14 @@ export class MaintenanceService {
     }
 
     const newReport = await this.maintenanceRepository.createReport(reportData)
+
+    await publishEvent('maintenance.created', {
+      reportId: newReport._id,
+      apartmentId: newReport.apartmentId,
+      category: newReport.category,
+      status: newReport.status || 'new'
+    })
+
     return newReport
   }
 
@@ -77,11 +87,25 @@ export class MaintenanceService {
       }
     }
 
-    const updatedReport = await this.maintenanceRepository.updateReport(existingReport, changes)
+    const updatedReport = await this.maintenanceRepository.updateReport(
+      existingReport,
+      changes
+    )
+
+    await publishEvent('maintenance.updated', {
+      reportId: updatedReport._id,
+      ...changes
+    })
+
     return updatedReport
   }
 
   async deleteReport(report) {
     await this.maintenanceRepository.deleteReport(report)
+
+    await publishEvent('maintenance.deleted', {
+      reportId: report._id,
+      apartmentId: report.apartmentId
+    })
   }
 }
