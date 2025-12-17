@@ -11,13 +11,6 @@ import bcrypt from 'bcryptjs' // använder bcryptjs för enklare installation
 // Create a schema.
 const schema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: [true, 'Username is required.'],
-      unique: true,
-      trim: true,
-      lowercase: true
-    },
     password: {
       type: String,
       required: [true, 'Password is required.']
@@ -57,12 +50,12 @@ schema.pre('save', async function () {
 /**
  * Authenticates a user.
  *
- * @param {string} username - The username.
+ * @param {string} email - The email.
  * @param {string} password - The password.
  * @returns {Promise<UserModel>} A promise that resolves with the user if authentication was successful.
  */
-schema.statics.authenticate = async function (username, password) {
-  const userDocument = await this.findOne({ username })
+schema.statics.authenticate = async function (email, password) {
+  const userDocument = await this.findOne({ email })
 
   if (!userDocument || !(await bcrypt.compare(password, userDocument.password))) {
     throw new Error('Invalid credentials.')

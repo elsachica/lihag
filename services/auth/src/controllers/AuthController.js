@@ -16,11 +16,10 @@ export class AuthController {
    */
   async register(req, res) {
     try {
-      const { username, password, email, role, propertyId } = req.body
+      const { password, email, role, propertyId } = req.body
 
       // Skapa ny användare
       const user = new UserModel({
-        username,
         password,
         email,
         role: role || 'tenant',
@@ -43,10 +42,10 @@ export class AuthController {
    */
   async login(req, res) {
     try {
-      const { username, password } = req.body
+      const { email, password } = req.body
 
       // Autentisera användare
-      const user = await UserModel.authenticate(username, password)
+      const user = await UserModel.authenticate(email, password)
 
       // Skapa JWT med RS256
       const token = await JsonWebToken.encodeUser(user, JWT_PRIVATE_KEY, JWT_EXPIRES_IN)
