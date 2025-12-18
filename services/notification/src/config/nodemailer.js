@@ -4,9 +4,8 @@ import { logger } from './winston.js'
 let transporter = null
 
 /**
- * Initializes the email transporter.
- * Supports both Gmail (production) and Mailhog (development)
- * 
+ * Initializes the email transporter. Supports both Gmail (production) and Mailhog (development).
+ *
  * @returns {Promise<void>}
  */
 export async function initializeEmailService () {
@@ -15,7 +14,7 @@ export async function initializeEmailService () {
     if (process.env.NODE_ENV === 'development' && !process.env.SMTP_USER) {
       logger.warn('⚠️ Email service not configured - using Mailhog for testing')
       transporter = nodemailer.createTransport({
-        host: 'mailhog',      // Docker service name
+        host: 'mailhog', // Docker service name
         port: 1025,
         auth: false
       })
@@ -40,12 +39,12 @@ export async function initializeEmailService () {
     logger.info('✅ Email service initialized successfully with Gmail')
   } catch (error) {
     logger.error('❌ Failed to initialize email service:', error)
-    
+
     if (process.env.NODE_ENV === 'production') {
       logger.error('⚠️ Production mode requires valid SMTP configuration!')
       throw error
     }
-    
+
     logger.warn('⚠️ Falling back to Mailhog for testing')
   }
 }
@@ -56,7 +55,7 @@ export async function initializeEmailService () {
  * @param {string} to - Recipient email address
  * @param {string} subject - Email subject
  * @param {string} html - Email body (HTML format)
- * @returns {Promise<Object>} - Email send result with messageId
+ * @returns {Promise<object>} - Email send result with messageId
  * @throws {Error} If email service is not initialized or sending fails
  */
 export async function sendEmail (to, subject, html) {
@@ -66,21 +65,21 @@ export async function sendEmail (to, subject, html) {
     }
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@lihag.se',
+      from: process.env.SMTP_FROM,
       to,
       subject,
       html
     }
 
     const info = await transporter.sendMail(mailOptions)
-    
-    logger.info(`📧 Email sent successfully`, { 
+
+    logger.info('📧 Email sent successfully', {
       messageId: info.messageId,
       to,
       subject,
       provider: process.env.SMTP_USER ? 'Gmail' : 'Mailhog'
     })
-    
+
     return info
   } catch (error) {
     logger.error('❌ Failed to send email:', error)

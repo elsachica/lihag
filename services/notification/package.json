@@ -1,7 +1,7 @@
 {
-  "name": "property-service",
+  "name": "notification-service",
   "version": "1.0.0",
-  "description": "Microservice for managing properties, apartments, tenants, contracts, and rents.",
+  "description": "Microservice for managing notifications.",
   "type": "module",
   "main": "src/index.js",
   "engines": {
@@ -11,19 +11,20 @@
     "start": "node src/index.js",
     "dev": "nodemon --inspect src/index.js",
     "lint": "npx eslint ./src || exit 0",
-    "lint:fix": "npx eslint ./src --fix || exit 0",
-    "seed:apartments": "node seed/seedApartments.js"
+    "lint:fix": "npx eslint ./src --fix || exit 0"
   },
   "license": "MIT",
   "private": true,
   "dependencies": {
     "@lnu/json-js-cycle": "^2.0.5",
     "amqplib": "^0.10.3",
+    "axios": "^1.13.2",
     "dotenv": "^17.2.3",
     "express": "^4.21.0",
     "express-http-context": "^2.0.1",
     "mongoose": "^8.6.3",
     "morgan": "^1.10.1",
+    "nodemailer": "^7.0.11",
     "winston": "^3.18.3"
   },
   "devDependencies": {

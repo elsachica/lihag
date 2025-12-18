@@ -31,7 +31,9 @@ const port = process.env.PORT || 8888
 async function start () {
   try {
     if (!process.env.DB_CONNECTION_STRING) {
-      throw new Error('DB_CONNECTION_STRING environment variable is not defined')
+      throw new Error(
+        'DB_CONNECTION_STRING environment variable is not defined'
+      )
     }
     await connectToDatabase(process.env.DB_CONNECTION_STRING)
     logger.info('MongoDB connected')

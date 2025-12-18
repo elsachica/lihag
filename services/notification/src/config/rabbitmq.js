@@ -1,6 +1,11 @@
+/**
+ * @file Configures RabbitMQ connection and message consumption.
+ * @module config/rabbitmq
+ */
+
 import amqp from 'amqplib'
 import { logger } from './winston.js'
-import { handleMaintenanceCreatedEvent } from '../services/EventHandler.js'
+import { routeEvent } from '../handlers/EventHandler.js'
 
 let connection = null
 let channel = null
@@ -19,8 +24,8 @@ export async function connect () {
     // Assert exchange
     await channel.assertExchange('tasks', 'topic', { durable: true })
 
-    // Assert queue - ÄNDRAT: notification-specifik queue
-    const queue = await channel.assertQueue('notification.events', { 
+    // Assert queue
+    const queue = await channel.assertQueue('notification.events', {
       durable: true,
       arguments: {
         'x-message-ttl': 3600000 // 1 hour message TTL
@@ -30,7 +35,9 @@ export async function connect () {
     // Bind queue to exchange (listen for maintenance.* events)
     await channel.bindQueue(queue.queue, 'tasks', 'maintenance.*')
 
-    logger.info('RabbitMQ consumer connected and listening on notification.events')
+    logger.info(
+      '✅ RabbitMQ consumer connected and listening on notification.events'
+    )
 
     // Start consuming messages
     channel.consume(queue.queue, async (msg) => {
@@ -39,18 +46,12 @@ export async function connect () {
           const content = JSON.parse(msg.content.toString())
           const routingKey = msg.fields.routingKey
 
-          logger.info(`📨 Event received: ${routingKey}`, { 
-            maintenanceId: content.maintenanceId 
+          logger.info(`📨 Event received: ${routingKey}`, {
+            reportId: content.reportId
           })
 
-          // Route to appropriate handler
-          if (routingKey === 'maintenance.created') {
-            await handleMaintenanceCreatedEvent(content)
-          } else if (routingKey === 'maintenance.updated') {
-            await handleMaintenanceUpdatedEvent(content)
-          } else if (routingKey === 'maintenance.resolved') {
-            await handleMaintenanceResolvedEvent(content)
-          }
+          // ✅ ANVÄND routeEvent ISTÄLLET FÖR DIREKTA ANROP
+          await routeEvent(routingKey, content)
 
           // Acknowledge message
           channel.ack(msg)
