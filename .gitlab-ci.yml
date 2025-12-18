@@ -148,11 +148,13 @@ deploy_staging:
         --docker-password="${CI_REGISTRY_PASSWORD}" \
         --docker-email="${GITLAB_USER_EMAIL:-you@example.com}" \
         -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+        
       # deploy with skaffold (pass image built in pipeline)
       skaffold deploy --profile production \
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:${CI_COMMIT_REF_SLUG}" \
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}" \
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}" \
+
       echo "Waiting for deployments to rollout..."
       kubectl get deployments -n "${NAMESPACE}" || true
       kubectl get pods -n "${NAMESPACE}" -o wide || true

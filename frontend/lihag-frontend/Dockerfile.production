@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Installera dependencies för build
-RUN npm ci --ignore-scripts --no-bin-links
+RUN npm ci
 
 # Kopiera hela projektet
 COPY . .
