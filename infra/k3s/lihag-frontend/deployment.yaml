@@ -34,3 +34,4 @@ spec:
       port: 80
       targetPort: 5173
   type: ClusterIP
+  imagePullPolicy: Always
