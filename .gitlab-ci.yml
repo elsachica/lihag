@@ -161,11 +161,6 @@ deploy_staging:
 
     - echo "✓ Deployment complete!"
 
-  only:
-    - main
-    - master
-    - deploy
-  when: manual
   environment:
     name: staging
 
@@ -210,10 +205,6 @@ deploy_production:
 
     - echo "✓ Deployment complete!"
 
-  only:
-    - main
-    - master
-    - deploy
-  when: manual
+
   environment:
     name: production
