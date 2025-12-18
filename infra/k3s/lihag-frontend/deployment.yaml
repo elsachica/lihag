@@ -19,6 +19,7 @@ spec:
       containers:
         - name: lihag-frontend
           image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend
+          imagePullPolicy: Always
           ports:
             - containerPort: 5173
 ---
@@ -34,4 +35,3 @@ spec:
       port: 80
       targetPort: 5173
   type: ClusterIP
-  imagePullPolicy: Always
