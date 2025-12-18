@@ -18,7 +18,7 @@ spec:
         - name: regcred
       containers:
         - name: lihag-frontend
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:latest
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:staging
           ports:
             - containerPort: 80
 ---

@@ -10,6 +10,9 @@ build:
     - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
       docker:
         dockerfile: services/auth/Dockerfile
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
+      docker:
+        dockerfile: services/property/Dockerfile.production
 manifests:
   rawYaml:
     - infra/k3s/ingress.yaml
