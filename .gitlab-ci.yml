@@ -134,24 +134,42 @@ deploy_staging:
     - chmod 600 "${KUBECONFIG_PATH}"
     - kubectl version --client
   script:
+    # - |
+    #   echo "Creating ImagePullSecret for GitLab Container Registry..."
+    #   # ensure IMAGE is defined in this job
+    #   IMAGE_TAG="${CI_COMMIT_REF_NAME}"
+    #   IMAGE="${CI_REGISTRY_IMAGE}/lihag-frontend:${IMAGE_TAG}"
+    #   echo "IMAGE=${IMAGE}"
+    #   # recreate secret (use --dry-run to avoid accidental interactive errors)
+    #   kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
+    #   kubectl create secret docker-registry regcred \
+    #     --docker-server=gitlab.lnu.se:5050 \
+    #     --docker-username="${CI_REGISTRY_USER}" \
+    #     --docker-password="${CI_REGISTRY_PASSWORD}" \
+    #     -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+    #   # deploy with skaffold (pass image built in pipeline)
+    #   skaffold deploy --profile production --images "${IMAGE}"
+    #   echo "Waiting for deployments to rollout..."
+    #   kubectl get deployments -n "${NAMESPACE}" || true
+    #   kubectl get pods -n "${NAMESPACE}" -o wide || true
+
+
     - |
-      echo "Creating ImagePullSecret for GitLab Container Registry..."
-      # ensure IMAGE is defined in this job
-      IMAGE_TAG="${CI_COMMIT_REF_NAME}"
-      IMAGE="${CI_REGISTRY_IMAGE}/lihag-frontend:${IMAGE_TAG}"
-      echo "IMAGE=${IMAGE}"
-      # recreate secret (use --dry-run to avoid accidental interactive errors)
+      echo "Testing registry access..."
+      echo "Username: ${CI_REGISTRY_USER}"
+      echo "Server: gitlab.lnu.se:5050"
       kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
       kubectl create secret docker-registry regcred \
         --docker-server=gitlab.lnu.se:5050 \
         --docker-username="${CI_REGISTRY_USER}" \
         --docker-password="${CI_REGISTRY_PASSWORD}" \
-        -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
-      # deploy with skaffold (pass image built in pipeline)
-      skaffold deploy --profile production --images "${IMAGE}"
-      echo "Waiting for deployments to rollout..."
-      kubectl get deployments -n "${NAMESPACE}" || true
-      kubectl get pods -n "${NAMESPACE}" -o wide || true
+        -n "${NAMESPACE}"
+      kubectl get secret regcred -n "${NAMESPACE}" -o yaml
+
+    - skaffold deploy --profile production
+    - kubectl get deployments -n "${NAMESPACE}" || true
+    - kubectl get pods -n "${NAMESPACE}" -o wide || true
+    - kubectl rollout status deployment/taskit -n "${NAMESPACE}" --timeout=120s || (kubectl get pods -n "${NAMESPACE}" -o wide; exit 1)
 
 
     - echo "✓ Deployment complete!"
