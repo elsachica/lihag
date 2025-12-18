@@ -22,3 +22,5 @@ spec:
           value: mongodb://mongo:27017/lihag
         - name: PORT
           value: "3000"
+          imagePullSecrets:
+                - name: regcred
