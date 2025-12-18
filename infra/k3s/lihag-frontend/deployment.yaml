@@ -28,8 +28,7 @@ kind: Service
 metadata:
   name: lihag-frontend
 spec:
-  selector:
-    app: lihag-frontend
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
