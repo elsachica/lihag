@@ -1,0 +1,51 @@
+# =============================================================================
+# Base stage - Install dependencies
+# =============================================================================
+# Specifies a base image, a specific version of the Node.js image.
+FROM node:20-alpine AS base
+
+# Creates a working directory in the Docker image. The application will be placed here.
+WORKDIR /usr/src/app
+
+# Copies the package.json and package-lock.json to the app directory.
+# This is done separately from copying the rest of the app's code to leverage Docker's cache.
+# As a result, the Docker image layer with installed dependencies is only rebuilt when these files change.
+COPY package*.json ./
+
+# Installs the dependencies in a way that's optimized for production.
+# The --omit=dev flag ensures that devDependencies are not installed.
+RUN npm ci --omit=dev
+
+# Copies the rest of the application code to the app directory.
+COPY . .
+
+# =============================================================================
+# Final stage - Production image
+# =============================================================================
+FROM node:20-alpine
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Copy app and node_modules from base stage
+COPY --from=base /usr/src/app /usr/src/app
+
+# Create log directory if needed
+RUN mkdir -p /var/log/lihag-maintenance \
+    && chown -R node:node /var/log/lihag-maintenance
+
+# Run as non-root user for security
+USER node
+
+# Exposes a port that the application listens on and sets environment variables to indicate that the application is running in production mode.
+ARG APP_PORT=8002
+ENV NODE_ENV=production
+ENV PORT=$APP_PORT
+EXPOSE $APP_PORT
+
+# Defines the command to run the application. In this case, the Node.js server is started.
+CMD [ "dumb-init", "node", "src/server.js" ]
+
