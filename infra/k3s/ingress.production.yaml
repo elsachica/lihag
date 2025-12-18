@@ -7,34 +7,20 @@ spec:
   ingressClassName: traefik
   rules:
     - http:
-        paths:         
+        paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: lihag-frontend
                 port:
                   number: 8888
-          - path: /auth
+          - path: /admin
             pathType: Prefix
             backend:
               service:
-                name: auth
+                name: admin-frontend
                 port:
-                  number: 8000
-          - path: /property
-            pathType: Prefix
-            backend:
-              service:
-                name: property
-                port:
-                  number: 8003
-          - path: /maintenance
-            pathType: Prefix
-            backend:
-              service:
-                name: maintenance
-                port:
-                  number: 8002
+                  number: 8004
 
 # lägg till frontend i ingressen?

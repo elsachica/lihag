@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lihag-frontend
+  labels:
+    app: lihag-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lihag-frontend
+  template:
+    metadata:
+      labels:
+        app: lihag-frontend
+    spec:
+      containers:
+        - name: lihag-frontend
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lihag-frontend
+spec:
+  selector:
+    app: lihag-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: auth
-        image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/services/auth
+        image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:latest
         ports:
         - containerPort: 3000
         env:
