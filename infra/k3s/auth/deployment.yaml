@@ -16,11 +16,13 @@ spec:
         - name: regcred
       containers:
       - name: auth
-        image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:staging
+        image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
         ports:
         - containerPort: 3000
         env:
-        - name: DB_CONNECTION_STRING
-          value: mongodb://mongo:27017/lihag
+        - name: DB_CONNECTION_STRING_AUTH
+          value: "$DB_CONNECTION_STRING_AUTH"
         - name: PORT
           value: "3000"
+        - name: PROPERTY_URL
+          value: "$PROPERTY_URL"

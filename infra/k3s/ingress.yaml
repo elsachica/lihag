@@ -14,12 +14,12 @@ spec:
                 name: lihag-frontend
                 port:
                   number: 8888
-          - path: /admin
-            pathType: Prefix
-            backend:
-              service:
-                name: admin-frontend
-                port:
-                  number: 8004
+          # - path: /admin
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: admin-frontend
+          #       port:
+          #         number: 8004
           
 # lägg till frontend i ingressen?

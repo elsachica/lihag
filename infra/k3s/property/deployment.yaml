@@ -16,13 +16,17 @@ spec:
         - name: regcred
       containers:
         - name: property
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:staging
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
           imagePullPolicy: Always
           ports:
             - containerPort: 8003
-          envFrom:
-            - configMapRef:
-                name: property-config
+          env:
+            - name: DB_CONNECTION_STRING_PROPERTY
+              value: "$DB_CONNECTION_STRING_PROPERTY"
+            - name: PORT
+              value: "8006"
+            - name: PROPERTY_URL
+              value: "$PROPERTY_URL"
           resources:
             limits:
               memory: "256Mi"

@@ -18,7 +18,7 @@ const app = express()
 app.use(express.json())
 app.use(morganLogger)
 
-const port = process.env.PORT || 8888
+const port = process.env.PORT || 8006
 
 /**
  * Starts the Property service by connecting to the MongoDB database,
@@ -31,9 +31,9 @@ const port = process.env.PORT || 8888
 async function start () {
   try {
     if (!process.env.DB_CONNECTION_STRING) {
-      throw new Error('DB_CONNECTION_STRING environment variable is not defined')
+      throw new Error('DB_CONNECTION_STRING_PROPERTY environment variable is not defined')
     }
-    await connectToDatabase(process.env.DB_CONNECTION_STRING)
+    await connectToDatabase(process.env.DB_CONNECTION_STRING_PROPERTY)
     logger.info('MongoDB connected')
 
     app.use('/', router)

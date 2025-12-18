@@ -12,7 +12,7 @@ import { connectToDatabase } from './config/mongoose.js'
 import { createApp } from './app.js'
 
 try {
-  await connectToDatabase(process.env.DB_CONNECTION_STRING)
+  await connectToDatabase(process.env.DB_CONNECTION_STRING_AUTH || 'mongodb://localhost:27017/lihag-auth')
 
   const app = createApp()
   const port = process.env.PORT || 3000
