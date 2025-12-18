@@ -86,7 +86,7 @@ build_frontend:
     - |
       echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 
-      IMAGE_TAG="${CI_COMMIT_REF_NAME}"
+      IMAGE_TAG="${CI_COMMIT_REF_SLUG}"
       IMAGE="${CI_REGISTRY_IMAGE}/lihag-frontend:${IMAGE_TAG}"
 
       echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
