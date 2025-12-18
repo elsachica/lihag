@@ -86,7 +86,7 @@ build_frontend:
     - |
       echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 
-      IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
+      IMAGE_TAG="${CI_COMMIT_TAG}"
       IMAGE="${CI_REGISTRY_IMAGE}/lihag-frontend:${IMAGE_TAG}"
 
       echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
@@ -136,10 +136,6 @@ deploy_staging:
   script:
     - |
       echo "Creating ImagePullSecret for GitLab Container Registry..."
-      # ensure IMAGE is defined in this job
-      IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
-      IMAGE="${CI_REGISTRY_IMAGE}/frontend:${IMAGE_TAG}"
-      echo "IMAGE=${IMAGE}"
       # recreate secret (use --dry-run to avoid accidental interactive errors)
       kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
       kubectl create secret docker-registry regcred \
@@ -148,7 +144,7 @@ deploy_staging:
         --docker-password="${CI_REGISTRY_PASSWORD}" \
         --docker-email="${GITLAB_USER_EMAIL:-you@example.com}" \
         -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
-        
+
       # deploy with skaffold (pass image built in pipeline)
       skaffold deploy --profile production \
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:${CI_COMMIT_REF_SLUG}" \
