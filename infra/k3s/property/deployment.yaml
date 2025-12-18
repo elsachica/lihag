@@ -16,7 +16,7 @@ spec:
         - name: gitlab-registry-secret
       containers:
         - name: property
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:main
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:staging
           imagePullPolicy: Always
           ports:
             - containerPort: 8003
