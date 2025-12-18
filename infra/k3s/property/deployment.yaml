@@ -13,7 +13,7 @@ spec:
         app: property
     spec:
       imagePullSecrets:
-        - name: gitlab-registry-secret
+        - name: regcred
       containers:
         - name: property
           image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:staging
@@ -30,5 +30,3 @@ spec:
             requests:
               memory: "128Mi"
               cpu: "125m"
-              imagePullSecrets:
-                - name: regcred
