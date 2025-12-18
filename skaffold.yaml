@@ -7,21 +7,21 @@ build:
     - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend
       docker:
         dockerfile: frontend/lihag-frontend/Dockerfile.production
-    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
-      docker:
-        dockerfile: services/auth/Dockerfile
-    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
-      docker:
-        dockerfile: services/property/Dockerfile.production
+    # - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
+    #   docker:
+    #     dockerfile: services/auth/Dockerfile
+    # - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
+    #   docker:
+    #     dockerfile: services/property/Dockerfile.production
 manifests:
   rawYaml:
     - infra/k3s/ingress.yaml
-    - infra/k3s/mongodb/pvc.yaml
-    - infra/k3s/mongodb/deployment.yaml
-    - infra/k3s/frontend/deployment.yaml
-    - infra/k3s/auth/deployment.yaml
-    - infra/k3s/auth/mongo-pvc.yaml
-    - infra/k3s/auth/mongo-deployment.yaml
+    # - infra/k3s/mongodb/pvc.yaml
+    # - infra/k3s/mongodb/deployment.yaml
+    # - infra/k3s/frontend/deployment.yaml
+    # - infra/k3s/auth/deployment.yaml
+    # - infra/k3s/auth/mongo-pvc.yaml
+    # - infra/k3s/auth/mongo-deployment.yaml
     - infra/k3s/lihag-frontend/deployment.yaml
     
 deploy:
