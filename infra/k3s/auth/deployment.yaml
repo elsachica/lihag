@@ -26,3 +26,7 @@ spec:
           value: "3000"
         - name: PROPERTY_URL
           value: "$PROPERTY_URL"
+        - name: JWT_PRIVATE_PEM
+          value: "$JWT_PRIVATE_PEM"
+        - name: JWT_PUBLIC_PEM
+          value: "$JWT_PUBLIC_PEM"

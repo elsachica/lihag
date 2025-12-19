@@ -166,7 +166,25 @@ deploy_staging:
         -n "${NAMESPACE}"
       kubectl get secret regcred -n "${NAMESPACE}" -o yaml
 
-    - skaffold deploy --profile production
+      for file in k3s/*.yaml k3s/ingress*.yaml; do
+        sed -i "s|\$PROPERTY_URL|${PROPERTY_URL}|g; \
+                s|\$AUTH_URL|${AUTH_URL}|g; \
+                s|\$MAINTENANCE_URL|${MAINTENANCE_URL}|g; \
+                s|\$DB_CONNECTION_STRING_PROPERTY|${DB_CONNECTION_STRING_PROPERTY}|g; \
+                s|\$DB_CONNECTION_STRING_AUTH|${DB_CONNECTION_STRING_AUTH}|g; \
+                s|\$DB_CONNECTION_STRING_MAINTENANCE|${DB_CONNECTION_STRING_MAINTENANCE}|g; \
+                s|\$JWT_PRIVATE_PEM|${JWT_PRIVATE_PEM}|g; \
+                s|\$JWT_PUBLIC_PEM|${JWT_PUBLIC_PEM}|g; \
+                s|\$NODE_ENV|${NODE_ENV}|g; \
+                s|\$REDIS_URL|${REDIS_URL}|g; \
+                s|\$RABBITMQ_URL|${RABBITMQ_URL}|g; \
+                s|\$TOKEN|${TOKEN}|g" "$file"
+      done
+
+    - skaffold deploy --profile production \
+      --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:$CI_COMMIT_REF_SLUG \
+      --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:$CI_COMMIT_REF_SLUG \
+      --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:$CI_COMMIT_REF_SLUG
     - kubectl get deployments -n "${NAMESPACE}" || true
     - kubectl get pods -n "${NAMESPACE}" -o wide || true
     - kubectl rollout status deployment/taskit -n "${NAMESPACE}" --timeout=120s || (kubectl get pods -n "${NAMESPACE}" -o wide; exit 1)
