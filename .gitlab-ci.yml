@@ -166,7 +166,8 @@ deploy_staging:
         -n "${NAMESPACE}"
       kubectl get secret regcred -n "${NAMESPACE}" -o yaml
 
-      for file in k3s/*.yaml k3s/ingress*.yaml; do
+    - |
+      for file in infra/k3s/*.yaml infra/k3s/ingress*.yaml; do
         sed -i "s|\$PROPERTY_URL|${PROPERTY_URL}|g; \
                 s|\$AUTH_URL|${AUTH_URL}|g; \
                 s|\$MAINTENANCE_URL|${MAINTENANCE_URL}|g; \
