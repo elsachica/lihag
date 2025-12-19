@@ -20,13 +20,23 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: DB_CONNECTION_STRING_AUTH
-          value: "$DB_CONNECTION_STRING_AUTH"
-        - name: PORT
-          value: "3000"
-        - name: PROPERTY_URL
-          value: "$PROPERTY_URL"
         - name: JWT_PRIVATE_PEM
-          value: "$JWT_PRIVATE_PEM"
+          valueFrom:
+            secretKeyRef:
+              name: lihag-env-vars
+              key: JWT_PRIVATE_PEM
         - name: JWT_PUBLIC_PEM
-          value: "$JWT_PUBLIC_PEM"
+          valueFrom:
+            secretKeyRef:
+              name: lihag-env-vars
+              key: JWT_PUBLIC_PEM
+        - name: DB_CONNECTION_STRING_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: lihag-env-vars
+              key: DB_CONNECTION_STRING_AUTH
+        - name: PROPERTY_URL
+          valueFrom:
+            secretKeyRef:
+              name: lihag-env-vars
+              key: PROPERTY_URL

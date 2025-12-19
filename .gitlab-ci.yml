@@ -166,21 +166,16 @@ deploy_staging:
         -n "${NAMESPACE}"
       kubectl get secret regcred -n "${NAMESPACE}" -o yaml
 
-    - |
-      for file in infra/k3s/*.yaml infra/k3s/ingress*.yaml; do
-        sed -i "s|\$PROPERTY_URL|${PROPERTY_URL}|g; \
-                s|\$AUTH_URL|${AUTH_URL}|g; \
-                s|\$MAINTENANCE_URL|${MAINTENANCE_URL}|g; \
-                s|\$DB_CONNECTION_STRING_PROPERTY|${DB_CONNECTION_STRING_PROPERTY}|g; \
-                s|\$DB_CONNECTION_STRING_AUTH|${DB_CONNECTION_STRING_AUTH}|g; \
-                s|\$DB_CONNECTION_STRING_MAINTENANCE|${DB_CONNECTION_STRING_MAINTENANCE}|g; \
-                s|\$JWT_PRIVATE_PEM|${JWT_PRIVATE_PEM}|g; \
-                s|\$JWT_PUBLIC_PEM|${JWT_PUBLIC_PEM}|g; \
-                s|\$NODE_ENV|${NODE_ENV}|g; \
-                s|\$REDIS_URL|${REDIS_URL}|g; \
-                s|\$RABBITMQ_URL|${RABBITMQ_URL}|g; \
-                s|\$TOKEN|${TOKEN}|g" "$file"
-      done
+    - kubectl create secret generic lihag-env-vars \
+        --from-literal=PROPERTY_URL="${PROPERTY_URL}" \
+        --from-literal=AUTH_URL="${AUTH_URL}" \
+        --from-literal=MAINTENANCE_URL="${MAINTENANCE_URL}" \
+        --from-literal=DB_CONNECTION_STRING_AUTH="${DB_CONNECTION_STRING_AUTH}" \
+        --from-literal=DB_CONNECTION_STRING_MAINTENANCE="${DB_CONNECTION_STRING_MAINTENANCE}" \
+        --from-literal=DB_CONNECTION_STRING_PROPERTY="${DB_CONNECTION_STRING_PROPERTY}" \
+        --from-literal=JWT_PRIVATE_PEM="${JWT_PRIVATE_PEM}" \
+        --from-literal=JWT_PUBLIC_PEM="${JWT_PUBLIC_PEM}" \
+        -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
 
     - skaffold deploy --profile production \
       --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:$CI_COMMIT_REF_SLUG \
