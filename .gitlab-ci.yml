@@ -166,7 +166,8 @@ deploy_staging:
         -n "${NAMESPACE}"
       kubectl get secret regcred -n "${NAMESPACE}" -o yaml
 
-    - kubectl create secret generic lihag-env-vars \
+    - |
+      kubectl create secret generic lihag-env-vars \
         --from-literal=PROPERTY_URL="${PROPERTY_URL}" \
         --from-literal=AUTH_URL="${AUTH_URL}" \
         --from-literal=MAINTENANCE_URL="${MAINTENANCE_URL}" \
@@ -175,7 +176,8 @@ deploy_staging:
         --from-literal=DB_CONNECTION_STRING_PROPERTY="${DB_CONNECTION_STRING_PROPERTY}" \
         --from-literal=JWT_PRIVATE_PEM="${JWT_PRIVATE_PEM}" \
         --from-literal=JWT_PUBLIC_PEM="${JWT_PUBLIC_PEM}" \
-        -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+        -n "${NAMESPACE}" \
+        --dry-run=client -o yaml | kubectl apply -f -
 
     - skaffold deploy --profile production \
       --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:$CI_COMMIT_REF_SLUG \
