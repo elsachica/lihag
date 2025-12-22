@@ -22,6 +22,19 @@ Email Service (Gmail eller MailHog)
 Admin/Tenants mottar e-post
 ```
 
+rätt?
+1. Maintenance Service crear report
+   ↓ 
+2. Publish event to RabbitMQ (maintenance-exchange)
+   ↓
+3. Notification Service receives event
+   ↓
+4. Fetch apartment details from Property Service
+   ↓
+5. Send email via Mailhog/Gmail
+   ↓
+6. Save notification to MongoDB
+
 ---
 
 ## 📋 Komponenter

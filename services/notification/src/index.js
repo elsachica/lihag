@@ -8,7 +8,8 @@
 import 'dotenv/config'
 import express from 'express'
 import { connectToDatabase } from './config/mongoose.js'
-import './config/rabbitmq.js'
+import { connect as connectRabbitMQ } from './config/rabbitmq.js'
+import { initializeEmailService } from './config/nodemailer.js'
 import { router } from './routes/router.js'
 import { morganLogger } from './config/morgan.js'
 import { logger } from './config/winston.js'
@@ -37,6 +38,12 @@ async function start () {
     }
     await connectToDatabase(process.env.DB_CONNECTION_STRING)
     logger.info('MongoDB connected')
+
+    await initializeEmailService()
+    logger.info('Email service initialized')
+
+    await connectRabbitMQ()
+    logger.info('RabbitMQ connected')
 
     app.use('/', router)
 

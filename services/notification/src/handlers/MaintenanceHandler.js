@@ -1,5 +1,26 @@
 /**
- * @file Handles maintenance-related events from Maintenance Service.
+ * @file Handlasync function getApartmentDetails (apartmentId) {
+  try {
+    const response = await axios.get(
+      `http://property:8003/apartments/${apartmentId}`,
+      { timeout: 5000 }
+    )
+    return {
+      number: response.data.number || 'Unknown',
+      tenantId: response.data.tenantId || 'N/A',
+      tenantName: response.data.tenantName || 'Boende',
+      area: response.data.area || 'Unknown'
+    }
+  } catch (error) {
+    logger.warn(`Failed to fetch apartment ${apartmentId}:`, error.message)
+    return {
+      number: 'Unknown',
+      tenantId: 'N/A',
+      tenantName: 'Boende',
+      area: 'Unknown'
+    }
+  }
+}elated events from Maintenance Service.
  * @module handlers/MaintenanceHandler
  * @version 1.0.0
  */
@@ -11,7 +32,7 @@ import { NotificationModel } from '../models/NotificationModel.js'
 import { getMaintenanceCreatedTemplate } from '../templates/EmailTemplates.js'
 
 /**
- * Helper: Hämta lägenhet-detaljer från Property Service
+ * Helper: Hämta lägenhet-detaljer från Property Service.
  *
  * @param {string} apartmentId - Apartment ID from Property Service
  * @returns {Promise<object>} Apartment details or default values
@@ -19,37 +40,70 @@ import { getMaintenanceCreatedTemplate } from '../templates/EmailTemplates.js'
 async function getApartmentDetails (apartmentId) {
   try {
     const response = await axios.get(
-      `http://property-service:8001/apartments/${apartmentId}`,
+      `http://property:8003/apartments/${apartmentId}`,
       { timeout: 5000 }
     )
-    return response.data.data
+    return {
+      number: response.data.number || 'Unknown',
+      tenantId: response.data.tenantId || 'N/A',
+      tenantName: response.data.tenantName || 'Boende',
+      area: response.data.area || 'Unknown'
+    }
   } catch (error) {
     logger.warn(`Failed to fetch apartment ${apartmentId}:`, error.message)
     return {
       number: 'Unknown',
-      tenantId: 'Unknown',
-      tenantName: 'Unknown'
+      tenantId: 'N/A',
+      tenantName: 'Boende',
+      area: 'Unknown'
     }
   }
 }
 
 /**
- * Handles maintenance.created event
- * Sends email to admin about new maintenance request
+ * Helper: Hämta felanmälan-detaljer från Maintenance Service.
+ *
+ * @param {string} reportId - Report ID from Maintenance Service
+ * @returns {Promise<object>} Report details or empty object
+ */
+async function getMaintenanceDetails (reportId) {
+  try {
+    const response = await axios.get(
+      `http://maintenance:8002/maintenance/${reportId}`,
+      { timeout: 5000 }
+    )
+    return response.data.data || {}
+  } catch (error) {
+    logger.warn(
+      `Failed to fetch maintenance report ${reportId}:`,
+      error.message
+    )
+    return {}
+  }
+}
+
+/**
+ * Handles maintenance.created event.
+ * Sends email to admin about new maintenance request.
  *
  * @param {object} event - Event from RabbitMQ
  * @returns {Promise<void>}
  */
 export async function handleMaintenanceCreatedEvent (event) {
   try {
-    const { reportId, apartmentId, category, description, status } = event
+    const { reportId, apartmentId, category, status } = event
 
     // 1. Hämta lägenhet-detaljer från Property Service
     const apartmentDetails = await getApartmentDetails(apartmentId)
 
+    // 2. Hämta felanmälan-detaljer från Maintenance Service (för att få description)
+    const maintenanceDetails = await getMaintenanceDetails(reportId)
+    const description =
+      maintenanceDetails.description || 'Ingen beskrivning tillgänglig'
+
     const adminEmail = process.env.ADMIN_EMAIL
 
-    // 2. Skapa email med all data
+    // 3. Skapa email med all data
     const { subject, html } = getMaintenanceCreatedTemplate({
       reportId,
       apartmentAddress: apartmentDetails.number,
@@ -60,7 +114,7 @@ export async function handleMaintenanceCreatedEvent (event) {
       status
     })
 
-    // 3. Spara notification
+    // 4. Spara notification
     const notification = await NotificationModel.create({
       eventType: 'maintenance.created',
       recipient: adminEmail,
@@ -80,7 +134,7 @@ export async function handleMaintenanceCreatedEvent (event) {
       notificationId: notification._id
     })
 
-    // 4. Skicka email
+    // 5. Skicka email
     try {
       await sendEmail(adminEmail, subject, html)
 
@@ -103,8 +157,8 @@ export async function handleMaintenanceCreatedEvent (event) {
 }
 
 /**
- * Handles maintenance.updated event
- * TODO: Implement when ready
+ * Handles maintenance.updated event.
+ * TODO: Implement when ready.
  *
  * @param {object} event - Event from RabbitMQ
  * @returns {Promise<void>}
@@ -122,8 +176,8 @@ export async function handleMaintenanceUpdatedEvent (event) {
 }
 
 /**
- * Handles maintenance.deleted event
- * TODO: Implement when ready
+ * Handles maintenance.deleted event.
+ * TODO: Implement when ready.
  *
  * @param {object} event - Event from RabbitMQ
  * @returns {Promise<void>}

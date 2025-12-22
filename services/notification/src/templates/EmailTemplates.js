@@ -5,8 +5,8 @@
  */
 
 /**
- * Template for maintenance.created event (admin notification)
- * Skickas till admin när en ny felanmälan skapas
+ * Template for maintenance.created event (admin notification).
+ * Skickas till admin när en ny felanmälan skapas.
  *
  * @param {object} data - Email data
  * @returns {object} - { subject, html }
@@ -151,8 +151,7 @@ export function getMaintenanceUpdatedTemplate (data) {
 }
 
 /**
- * Template for tenant notification when maintenance is resolved
- * TODO: Implementera senare - skicka till tenant, inte admin
+ * Template for tenant notification when maintenance is resolved.
  *
  * @param {object} data - Email data
  * @returns {object} - { subject, html }
@@ -182,8 +181,8 @@ export function getMaintenanceResolvedTemplate (data) {
 }
 
 /**
- * Template for tenant notification when maintenance is created
- * TODO: Implementera senare - skicka till tenant om felanmälan är registrerad
+ * Template for tenant notification when maintenance is created.
+ * TODO: Implementera senare - skicka till tenant om felanmälan är registrerad.
  *
  * @param {object} data - Email data
  * @returns {object} - { subject, html }

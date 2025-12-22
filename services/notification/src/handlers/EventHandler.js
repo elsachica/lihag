@@ -11,7 +11,7 @@ import {
 } from './MaintenanceHandler.js'
 
 /**
- * Routes incoming RabbitMQ event to correct handler
+ * Routes incoming RabbitMQ event to correct handler.
  *
  * @param {string} routingKey - RabbitMQ routing key
  * @param {object} event - Event data
