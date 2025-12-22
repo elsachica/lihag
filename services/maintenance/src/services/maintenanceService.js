@@ -73,6 +73,7 @@ export class MaintenanceService {
       reportId: newReport._id,
       apartmentId: newReport.apartmentId,
       category: newReport.category,
+      description: newReport.description,
       status: newReport.status || 'new'
     })
 
@@ -80,7 +81,14 @@ export class MaintenanceService {
   }
 
   async updateReport(existingReport, changes) {
-    const allowedChanges = ['category', 'description', 'status', 'priority', 'assignedTo', 'images']
+    const allowedChanges = [
+      'category',
+      'description',
+      'status',
+      'priority',
+      'assignedTo',
+      'images'
+    ]
     for (const key of allowedChanges) {
       if (key in changes) {
         existingReport[key] = changes[key]
