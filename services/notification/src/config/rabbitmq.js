@@ -21,8 +21,9 @@ export async function connect () {
 
     channel = await connection.createChannel()
 
-    // Assert exchange
-    await channel.assertExchange('tasks', 'topic', { durable: true })
+    // ✅ SAMMA exchange-namn som Maintenance Service!
+    const exchangeName = process.env.RABBITMQ_EXCHANGE || 'maintenance-exchange'
+    await channel.assertExchange(exchangeName, 'topic', { durable: true })
 
     // Assert queue
     const queue = await channel.assertQueue('notification.events', {
@@ -32,8 +33,8 @@ export async function connect () {
       }
     })
 
-    // Bind queue to exchange (listen for maintenance.* events)
-    await channel.bindQueue(queue.queue, 'tasks', 'maintenance.*')
+    // ✅ Bind queue till SAMMA exchange!
+    await channel.bindQueue(queue.queue, exchangeName, 'maintenance.*')
 
     logger.info(
       '✅ RabbitMQ consumer connected and listening on notification.events'
@@ -50,7 +51,6 @@ export async function connect () {
             reportId: content.reportId
           })
 
-          // ✅ ANVÄND routeEvent ISTÄLLET FÖR DIREKTA ANROP
           await routeEvent(routingKey, content)
 
           // Acknowledge message
