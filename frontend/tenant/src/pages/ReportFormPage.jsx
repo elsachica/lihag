@@ -52,7 +52,7 @@ export const ReportFormPage = ({ onNavigate }) => {
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Skapa felanmälan</h1>
-          <p className="text-gray-600 mb-8">Beskrivhär vilket fel eller problem som behöver åtgärdas</p>
+          <p className="text-gray-600 mb-8">Beskriv här vilket fel eller problem som behöver åtgärdas</p>
 
           {!submitted ? (
             <form onSubmit={handleSubmit} className="space-y-6">
