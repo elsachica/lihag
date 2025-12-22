@@ -4,8 +4,7 @@ import fs from 'fs'
 import path from 'path'
 
 // Läs private key från fil (lokalt under utveckling)
-const privateKeyPath = path.resolve('./private.pem')
-const JWT_PRIVATE_KEY = fs.readFileSync(privateKeyPath, 'utf8')
+const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_PEM
 
 // Expiration time från .env
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h'
