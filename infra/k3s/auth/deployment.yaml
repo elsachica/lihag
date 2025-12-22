@@ -40,3 +40,11 @@ spec:
             secretKeyRef:
               name: lihag-env-vars
               key: PROPERTY_URL
+        volumeMounts:
+          - name: jwt-public-key
+            mountPath: /app/keys
+            readOnly: true
+      volumes:
+        - name: jwt-public-key
+          secret:
+            secretName: jwt-public-key
