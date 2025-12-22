@@ -72,3 +72,7 @@ tfplan
 terraform.tfstate
 terraform.tfstate.backup
 .terraform.lock.hcl
+
+# Production and development environment files
+.env.production
+.env.development
