@@ -14,7 +14,7 @@
 export function getMaintenanceCreatedTemplate (data) {
   const { reportId, apartmentAddress, tenantName, category, description, status } = data
 
-  const subject = `🔧 Ny felanmälan: ${apartmentAddress}`
+  const subject = `Ny felanmälan: ${apartmentAddress}`
 
   const html = `
     <!DOCTYPE html>
@@ -81,7 +81,7 @@ export function getMaintenanceCreatedTemplate (data) {
     <body>
       <div class="container">
         <div class="header">
-          <h1>🔧 Ny felanmälan inlämnad</h1>
+          <h1>Ny felanmälan inlämnad</h1>
         </div>
         
         <div class="content">
@@ -130,7 +130,7 @@ export function getMaintenanceCreatedTemplate (data) {
 export function getMaintenanceUpdatedTemplate (data) {
   const { reportId, apartmentAddress, status } = data
 
-  const subject = `📝 Uppdatering: Felanmälan ${apartmentAddress}`
+  const subject = `Uppdatering: Felanmälan ${apartmentAddress}`
 
   const html = `
     <!DOCTYPE html>
@@ -139,7 +139,7 @@ export function getMaintenanceUpdatedTemplate (data) {
       <meta charset="UTF-8">
     </head>
     <body>
-      <h1>📝 Felanmälan uppdaterad</h1>
+      <h1>Felanmälan uppdaterad</h1>
       <p>Felanmälan <strong>${reportId}</strong> har uppdaterats.</p>
       <p><strong>Ny status:</strong> ${status}</p>
       <p>Logga in på admin-portalen för mer information.</p>
@@ -159,7 +159,7 @@ export function getMaintenanceUpdatedTemplate (data) {
 export function getMaintenanceResolvedTemplate (data) {
   const { reportId, tenantName, resolutionDescription } = data
 
-  const subject = '✅ Din felanmälan är löst'
+  const subject = 'Din felanmälan är löst'
 
   const html = `
     <!DOCTYPE html>
@@ -168,7 +168,7 @@ export function getMaintenanceResolvedTemplate (data) {
       <meta charset="UTF-8">
     </head>
     <body>
-      <h1>✅ Din felanmälan är löst</h1>
+      <h1>Din felanmälan är löst</h1>
       <p>Hej ${tenantName},</p>
       <p>Din felanmälan <strong>${reportId}</strong> har lösts.</p>
       <h3>Åtgärd som genomfördes:</h3>
@@ -199,7 +199,7 @@ export function getTenantMaintenanceCreatedTemplate (data) {
       <meta charset="UTF-8">
     </head>
     <body>
-      <h1>✅ Din felanmälan är registrerad</h1>
+      <h1>Din felanmälan är registrerad</h1>
       <p>Din felanmälan för ${apartmentAddress} har registrerats.</p>
       <p><strong>Felanmälan ID:</strong> ${reportId}</p>
       <p><strong>Problem:</strong> ${description}</p>
