@@ -10,7 +10,7 @@ import http from 'node:http'
 import { JsonWebToken } from '../lib/JsonWebToken.js'
 
 // Läs public key från fil
-const jwtPublicKey = fs.readFileSync('./public.pem', 'utf8')
+const jwtPublicKey = process.env.JWT_PUBLIC_PEM
 
 export const authenticateJWT = async (req, res, next) => {
   try {
