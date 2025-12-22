@@ -21,11 +21,11 @@ spec:
           ports:
             - containerPort: 8003
           env:
-          - name: DB_CONNECTION_STRING_AUTH
+          - name: DB_CONNECTION_STRING_PROPERTY
             valueFrom:
               secretKeyRef:
                 name: lihag-env-vars
-                key: DB_CONNECTION_STRING_AUTH
+                key: DB_CONNECTION_STRING_PROPERTY
           - name: PORT
             value: "8006"
           - name: PROPERTY_URL
