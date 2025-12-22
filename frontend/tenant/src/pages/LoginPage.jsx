@@ -9,7 +9,7 @@ export const LoginPage = ({ onNavigate }) => {
   const [password, setPassword] = useState('')
 
   const handleSubmit = async (e) => {
-    const url = import.meta.env.VITE_AUTH_SERVICE_URL
+    const url = import.meta.env.AUTH_URL
     e.preventDefault()
     if (email && password) {
       try {

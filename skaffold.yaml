@@ -25,6 +25,7 @@ manifests:
     - infra/k3s/lihag-frontend/deployment.yaml
     - infra/k3s/property/deployment.yaml
     - infra/k3s/property/service.yaml
+    - infra/k3s/rabbitmq/deployment.yaml
     
 deploy:
   kubectl: {}

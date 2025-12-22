@@ -176,6 +176,10 @@ deploy_staging:
         --from-literal=DB_CONNECTION_STRING_PROPERTY="${DB_CONNECTION_STRING_PROPERTY}" \
         --from-literal=JWT_PRIVATE_PEM="${JWT_PRIVATE_PEM}" \
         --from-literal=JWT_PUBLIC_PEM="${JWT_PUBLIC_PEM}" \
+        --from-literal=NODE_ENV="${NODE_ENV}" \
+        --from-literal=RABBITMQ_URL="${RABBITMQ_URL}" \
+        --from-literal=RABBITMQ_DEFAULT_USER="${RABBITMQ_DEFAULT_USER}" \
+        --from-literal=RABBITMQ_DEFAULT_PASS="${RABBITMQ_DEFAULT_PASS}" \
         -n "${NAMESPACE}" \
         --dry-run=client -o yaml | kubectl apply -f -
 
