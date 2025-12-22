@@ -30,9 +30,9 @@ spec:
                 key: NODE_ENV
           - name: PROPERTY_URL
             valueFrom:
-            secretKeyRef:
-              name: lihag-env-vars
-              key: PROPERTY_URL
+              secretKeyRef:
+                name: lihag-env-vars
+                key: PROPERTY_URL
           - name: AUTH_URL
             valueFrom:
               secretKeyRef:
