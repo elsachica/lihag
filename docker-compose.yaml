@@ -139,25 +139,18 @@ services:
       context: ./services/notification
       dockerfile: Dockerfile.development
     container_name: lihag-notification
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8005/notifications"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
     ports:
       - "8005:8005"
     environment:
-      NODE_ENV: development
       PORT: 8005
       DB_CONNECTION_STRING: mongodb://mongodb:27017/notificationDB
       RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
-      SMTP_HOST: mailhog
-      SMTP_PORT: 1025
-      SMTP_USER: test
-      SMTP_PASS: test
-      SMTP_FROM: noreply@lihag.se
-      ADMIN_EMAIL: elsagaswikstrom@gmail.com
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_FROM}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
       LOG_LEVEL: info
     volumes:
       - ./services/notification:/usr/src/app
