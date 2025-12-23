@@ -38,59 +38,6 @@ Admin mottar e-post
 
 ---
 
-## 📋 Komponenter
-
-### 1. **EventHandler** (`src/handlers/EventHandler.js`)
-
-- Lyssnar på RabbitMQ-events från Maintenance Service
-- Tar emot messages från `notification.events` queue
-- Routar till lämplig handler baserat på event-typ (`maintenance.created`)
-- Logar all aktivitet
-
-### 2. **MaintenanceHandler** (`src/handlers/MaintenanceHandler.js`)
-
-- Hanterar `maintenance.created`-events
-- `getApartmentDetails()` - Fetchar lägenhet-nummer från Property Service API
-
-  ```javascript
-  http://property:8003/apartments/{apartmentId}
-  ```
-
-  Returnerar: `{ number, tenantId, tenantName, area }`
-
-- `getMaintenanceDetails()` - Fetchar rapport-detaljer från Maintenance Service API
-
-  ```javascript
-  http://maintenance:8002/maintenance/{reportId}
-  ```
-
-  Returnerar: `{ description, category, ...andra fält }`
-
-- Genererar HTML-mail med templatefunktionen
-- Skickar mail via Nodemailer (MailHog eller Gmail)
-- Sparar notification i MongoDB med status `sent`/`failed`
-
-### 3. **Email Templates** (`src/templates/EmailTemplates.js`)
-
-- `getMaintenanceCreatedTemplate()` - HTML template för admin-notifiering
-- Visar: Lägenhet, Hyresgäst, Felanmälan ID, Kategori, Status, Problem-beskrivning
-- Returnerar: `{ subject, html }`
-
-### 4. **Email Service** (`src/config/nodemailer.js`)
-
-- Initialiserar Nodemailer med SMTP-konfiguration
-- **Development**: Skickar till MailHog på `mailhog:1025`
-- **Production**: Skickar till Gmail SMTP `smtp.gmail.com:587`
-- Konfigureras via miljövariabler
-
-### 5. **NotificationController** (`src/controllers/NotificationController.js`)
-
-- GET `/notifications` - Hämta alla notifications
-- GET `/notifications/:id` - Hämta specifik notification
-- GET `/notifications/tenant/:tenantId` - Hämta tenant-notifications
-
----
-
 ## 🚀 Komma igång
 
 ### 1. Development (med MailHog)
@@ -173,6 +120,7 @@ Du bör se en e-post med:
 - **Content**: Lägenhet, Hyresgäst, Kategori, Beskrivning, Status
 
 ---
+
 ## 🔐 Gmail Setup (Production)
 
 ### ⚠️ VIKTIGT - Läs detta först!
@@ -228,42 +176,41 @@ ADMIN_EMAIL=admin@lihag.se
 Din `docker-compose.yaml` notification-sektion bör se ut såhär:
 
 ```yaml
-  notification:
-    build:
-      context: ./services/notification
-      dockerfile: Dockerfile.development
-    container_name: lihag-notification
-    ports:
-      - "8005:8005"
-    environment:
-      PORT: 8005
-      DB_CONNECTION_STRING: mongodb://mongodb:27017/notificationDB
-      RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASS: ${SMTP_PASS}
-      SMTP_FROM: ${SMTP_FROM}
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      LOG_LEVEL: info
-    volumes:
-      - ./services/notification:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      mailhog:
-        condition: service_started
-    command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
-    networks:
-      - lihag-network
-    restart: unless-stopped
+notification:
+  build:
+    context: ./services/notification
+    dockerfile: Dockerfile.development
+  container_name: lihag-notification
+  ports:
+    - "8005:8005"
+  environment:
+    PORT: 8005
+    DB_CONNECTION_STRING: mongodb://mongodb:27017/notificationDB
+    RABBITMQ_URL: amqp://admin:password@rabbitmq:5672
+    SMTP_HOST: ${SMTP_HOST}
+    SMTP_PORT: ${SMTP_PORT}
+    SMTP_USER: ${SMTP_USER}
+    SMTP_PASS: ${SMTP_PASS}
+    SMTP_FROM: ${SMTP_FROM}
+    ADMIN_EMAIL: ${ADMIN_EMAIL}
+    LOG_LEVEL: info
+  volumes:
+    - ./services/notification:/usr/src/app
+    - /usr/src/app/node_modules
+  depends_on:
+    mongodb:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+    mailhog:
+      condition: service_started
+  command: npx nodemon -e js,json --inspect=0.0.0.0:9229 src/index.js
+  networks:
+    - lihag-network
+  restart: unless-stopped
 ```
 
 **Viktigt:** `${SMTP_HOST}`, `${SMTP_USER}` osv. läses från `.env`-filen!
-
 
 #### 6️⃣ Starta servicen
 
@@ -308,6 +255,26 @@ Gå till din Gmail inbox - e-posten bör komma inom 2-3 sekunder! ✅
 
 ## 🧪 Test & Debugging
 
+### Setup Tips
+
+**⚠️ Always use the `.env` file:**
+
+```bash
+# Create symlink (do this once)
+ln -s .env.production .env
+
+# Now docker-compose automatically loads environment variables
+docker-compose up
+docker-compose logs notification
+```
+
+**Without the symlink**, you must use the flag every time:
+
+```bash
+docker-compose --env-file .env.production up
+docker-compose --env-file .env.production logs notification
+```
+
 ### Hämta apartment IDs
 
 ```bash
@@ -320,23 +287,89 @@ curl -s http://localhost:8003/apartments | jq '.[] | {number, id}' | head -20
 curl -X POST http://localhost:8002/maintenance \
   -H "Content-Type: application/json" \
   -d '{
-    "apartmentId": "694924f0246791b5ab90d723",
+    "apartmentId": "694ab6731000744bbbed3d11",
     "category": "Badrum",
-    "description": "TEST - Kran läcker",
+    "description": "TEST",
     "priority": "Hög"
   }'
 ```
 
+**Valid `category` values:**
+
+- Kök
+- Badrum
+- Sovrum
+- Vardagsrum
+- Entré
+- Övrig
+
 ### Se Notification Service logs
 
 ```bash
+# Real-time logs
+docker-compose logs -f notification
+
+# Filter for email-related logs
+docker-compose logs notification | grep -i "email\|sent\|gmail"
+
+# Full diagnostic output
 docker-compose logs -f notification | grep -E "Email|RabbitMQ|MongoDB"
 ```
 
 ### Se alle notifications i MongoDB
 
 ```bash
-docker exec lihag-mongodb mongosh notificationDB --eval "db.notifications.find().limit(5).pretty()"
+# View last 5 notifications
+docker-compose exec lihag-mongodb mongosh notificationDB --eval "db.notifications.find().sort({createdAt: -1}).limit(5).pretty()"
+
+# View notifications by status
+docker-compose exec lihag-mongodb mongosh notificationDB --eval "db.notifications.find({status: 'sent'}).pretty()"
+
+# Count all notifications
+docker-compose exec lihag-mongodb mongosh notificationDB --eval "db.notifications.countDocuments()"
+```
+
+### Troubleshooting Checklist
+
+**E-post skickades men du får den inte:**
+
+1. ✅ Check Gmail spam/trash folder
+2. ✅ Verify `.env.production` has correct Gmail credentials
+3. ✅ Check that SMTP_FROM matches SMTP_USER (Gmail requirement)
+4. ✅ View logs: `docker-compose logs notification | grep -i "email"`
+
+**RabbitMQ events inte mottagna:**
+
+```bash
+# Check RabbitMQ health
+docker-compose exec rabbitmq rabbitmq-diagnostics -q ping
+
+# View RabbitMQ admin UI
+# Open: http://localhost:15672
+# Login: admin / password
+```
+
+**MongoDB connection issues:**
+
+```bash
+# Check MongoDB health
+docker-compose exec mongodb mongosh --eval "db.adminCommand('ping')"
+
+# View all notifications
+docker-compose exec lihag-mongodb mongosh notificationDB --eval "db.notifications.find().pretty()"
+```
+
+**Services not starting:**
+
+```bash
+# Check port conflicts
+lsof -i :8005  # Notification Service port
+
+# View full service logs
+docker-compose logs notification
+
+# Restart services
+docker-compose restart notification
 ```
 
 ---
