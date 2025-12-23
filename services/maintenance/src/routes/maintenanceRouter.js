@@ -5,7 +5,7 @@
  */
 
 import express from 'express'
-import { MaintenanceController } from '../controllers/MaintenanceController.js'
+import { MaintenanceController } from '../controllers/maintenanceController.js'
 import { MaintenanceService } from '../services/MaintenanceService.js'
 import { MaintenanceRepository } from '../repositories/MaintenanceRepository.js'
 
