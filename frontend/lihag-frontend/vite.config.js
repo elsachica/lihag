@@ -7,7 +7,8 @@ export default defineConfig({
     port: 5173,
     host: '0.0.0.0',
     open: false,
-    middlewareMode: false
+    middlewareMode: false,
+    allowedHosts: 'all',
   },
   build: {
     outDir: "dist",
