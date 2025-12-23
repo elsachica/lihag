@@ -60,7 +60,7 @@ build_maintenance:
     entrypoint: [""]
   script:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
+    - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile.production" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
 
 
