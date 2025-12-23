@@ -26,6 +26,8 @@ manifests:
     - infra/k3s/property/deployment.yaml
     - infra/k3s/property/service.yaml
     - infra/k3s/rabbitmq/deployment.yaml
+    - infra/k3s/maintenance/deployment.yaml
+    - infra/k3s/maintenance/service.yaml
     
 deploy:
   kubectl: {}

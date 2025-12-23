@@ -53,19 +53,16 @@ build_auth:
 #     - npm test || echo "No tests yet"
 
 # Maintenance Service (commented out - not ready yet)
-# build_maintenance:
-#   stage: build
-#   image:
-#     name: gcr.io/kaniko-project/executor:v1.9.0-debug
-#     entrypoint: [""]
-#   script:
-#     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
-#     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
-#     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
+build_maintenance:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
+    - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
 
-# only:
-#   changes:
-#     - services/maintenance/**/*
 
 # test_maintenance:
 #   stage: test
@@ -134,26 +131,6 @@ deploy_staging:
     - chmod 600 "${KUBECONFIG_PATH}"
     - kubectl version --client
   script:
-    # - |
-    #   echo "Creating ImagePullSecret for GitLab Container Registry..."
-    #   # ensure IMAGE is defined in this job
-    #   IMAGE_TAG="${CI_COMMIT_REF_NAME}"
-    #   IMAGE="${CI_REGISTRY_IMAGE}/lihag-frontend:${IMAGE_TAG}"
-    #   echo "IMAGE=${IMAGE}"
-    #   # recreate secret (use --dry-run to avoid accidental interactive errors)
-    #   kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
-    #   kubectl create secret docker-registry regcred \
-    #     --docker-server=gitlab.lnu.se:5050 \
-    #     --docker-username="${CI_REGISTRY_USER}" \
-    #     --docker-password="${CI_REGISTRY_PASSWORD}" \
-    #     -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
-    #   # deploy with skaffold (pass image built in pipeline)
-    #   skaffold deploy --profile production --images "${IMAGE}"
-    #   echo "Waiting for deployments to rollout..."
-    #   kubectl get deployments -n "${NAMESPACE}" || true
-    #   kubectl get pods -n "${NAMESPACE}" -o wide || true
-
-
     - |
       echo "Testing registry access..."
       echo "Username: ${CI_REGISTRY_USER}"
