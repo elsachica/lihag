@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-config
+data:
+  PORT: "8005"
+  NODE_ENV: "production"
+  DB_CONNECTION_STRING: "mongodb://mongodb:27017/notificationDB"
+  RABBITMQ_URL: "amqp://admin:password@rabbitmq:5672"
+  LOG_LEVEL: "info"
+  SMTP_HOST: "smtp.gmail.com"
+  SMTP_PORT: "587"
+  # NOTE: SMTP_USER, SMTP_PASS, SMTP_FROM, ADMIN_EMAIL should be set via Secret
+  # See: kubectl create secret generic notification-secrets --from-literal=SMTP_USER=... --from-literal=SMTP_PASS=...
