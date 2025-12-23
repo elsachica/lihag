@@ -7,7 +7,7 @@ export default defineConfig({
     port: 5173,
     open: false,
     middlewareMode: false,
-    allowedHosts: 'all',
+    allowedHosts: ['all', 'lihag.194.47.171.149.nip.io'],
   },
   build: {
     outDir: "dist",
