@@ -9,7 +9,7 @@ import {
   getMaintenanceUpdatedTemplate,
   getMaintenanceResolvedTemplate,
   getTenantMaintenanceCreatedTemplate
-} from './EmailTemplates.js'
+} from '../src/templates/EmailTemplates.js'
 
 describe('EmailTemplates', () => {
   describe('getMaintenanceCreatedTemplate', () => {
@@ -40,7 +40,9 @@ describe('EmailTemplates', () => {
       expect(result.html).toContain('Boende') // tenantName
       expect(result.html).toContain('694936db88259f7797c48d95') // reportId
       expect(result.html).toContain('Badrum') // category
-      expect(result.html).toContain('Kranar på handfatet är rostiga och läcker') // description
+      expect(result.html).toContain(
+        'Kranar på handfatet är rostiga och läcker'
+      ) // description
       expect(result.html).toContain('Ny') // status
 
       // Kontrollera HTML-struktur
@@ -159,7 +161,7 @@ describe('EmailTemplates', () => {
         getTenantMaintenanceCreatedTemplate(sampleData)
       ]
 
-      templates.forEach(template => {
+      templates.forEach((template) => {
         expect(template).toHaveProperty('subject')
         expect(template).toHaveProperty('html')
         expect(typeof template.subject).toBe('string')

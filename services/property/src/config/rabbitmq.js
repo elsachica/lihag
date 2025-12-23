@@ -18,7 +18,9 @@ let channel = null
  */
 async function connect () {
   try {
-    connection = await amqp.connect(process.env.RABBITMQ_URL || 'amqp://admin:password@rabbitmq:5672')
+    connection = await amqp.connect(
+      process.env.RABBITMQ_URL || 'amqp://admin:password@rabbitmq:5672'
+    )
 
     channel = await connection.createChannel()
 
@@ -41,6 +43,7 @@ async function connect () {
 
 /**
  * Publishes an event message to the 'tasks' exchange using the provided routing key.
+ * If RabbitMQ is not connected, logs a warning and returns gracefully.
  *
  * @param {string} routingKey - The routing key (topic) to publish the message to.
  * @param {any} message - The message payload to be sent; it will be JSON-stringified.
@@ -49,7 +52,9 @@ async function connect () {
 export async function publishEvent (routingKey, message) {
   try {
     if (!channel) {
-      logger.error('Rabbit channel not available')
+      logger.warn('RabbitMQ not connected - event not published', {
+        routingKey
+      })
       return
     }
 
@@ -85,7 +90,11 @@ export async function close () {
   }
 }
 
-await connect()
+// Start RabbitMQ connection in background (non-blocking)
+// If it fails, the service will still run without event publishing
+connect().catch((error) => {
+  logger.warn('Failed to initialize RabbitMQ connection on startup', error)
+})
 
 export default {
   publishEvent,
