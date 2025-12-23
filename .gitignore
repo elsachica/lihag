@@ -22,6 +22,7 @@ infra/ansible/inventory-generated
 # Kubernetes
 kubeconfig.yaml
 kubeconfig-external.yaml
+infra/k3s/**/secret.yaml
 
 # Python
 __pycache__/

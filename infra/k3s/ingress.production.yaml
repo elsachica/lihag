@@ -36,5 +36,10 @@ spec:
                 name: maintenance
                 port:
                   number: 8002
-
-# lägg till frontend i ingressen?
+          - path: /notification
+            pathType: Prefix
+            backend:
+              service:
+                name: notification
+                port:
+                  number: 8005
