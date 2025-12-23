@@ -14,7 +14,7 @@ import { router } from './routes/maintenanceRouter.js'
 dotenv.config()
 
 // Connect to MongoDB.
-await connectToDatabase(process.env.DB_CONNECTION_STRING)
+await connectToDatabase(process.env.DB_CONNECTION_STRING_MAINTENANCE || 'mongodb://localhost:27017/lihag-maintenance')
 
 // Create an Express application.
 const app = express()

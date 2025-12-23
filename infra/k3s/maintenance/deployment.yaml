@@ -17,7 +17,25 @@ spec:
           image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance
           imagePullPolicy: Always
           ports:
-            - containerPort: 8002 # OBS! Uppdatera denna port då appen kommer att lyssna på en annan port. Glöm inte att även ändra i service.yaml.
-          envFrom:
-            - configMapRef:
-                name: maintenance-config
+            - containerPort: 8002
+          env:
+          - name: DB_CONNECTION_STRING_MAINTENANCE
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: DB_CONNECTION_STRING_MAINTENANCE
+          - name: PROPERTY_URL
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: PROPERTY_URL
+          - name: RABBITMQ_URL
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: RABBITMQ_URL
+          - name: NODE_ENV
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: NODE_ENV
