@@ -4,11 +4,11 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { ApartmentController } from './ApartmentController.js'
-import * as rabbitmq from '../config/rabbitmq.js'
+import { ApartmentController } from '../src/controllers/ApartmentController.js'
+import * as rabbitmq from '../src/config/rabbitmq.js'
 
 // Mock ApartmentModel
-vi.mock('../models/ApartmentModel.js', () => ({
+vi.mock('../src/models/ApartmentModel.js', () => ({
   ApartmentModel: {
     findById: vi.fn(),
     find: vi.fn(),
@@ -18,12 +18,12 @@ vi.mock('../models/ApartmentModel.js', () => ({
 }))
 
 // Mock publishEvent
-vi.mock('../config/rabbitmq.js', () => ({
+vi.mock('../src/config/rabbitmq.js', () => ({
   publishEvent: vi.fn()
 }))
 
 // Mock logger
-vi.mock('../config/winston.js', () => ({
+vi.mock('../src/config/winston.js', () => ({
   logger: {
     silly: vi.fn(),
     info: vi.fn(),
@@ -33,7 +33,7 @@ vi.mock('../config/winston.js', () => ({
 }))
 
 // eslint-disable-next-line import/first
-import { ApartmentModel } from '../models/ApartmentModel.js'
+import { ApartmentModel } from '../src/models/ApartmentModel.js'
 
 describe('ApartmentController', () => {
   let controller
@@ -100,15 +100,15 @@ describe('ApartmentController', () => {
 
       await controller.index(req, res, next)
 
-      expect(ApartmentModel.find).toHaveBeenCalledWith({ area: 'Söder om järnvägen' })
+      expect(ApartmentModel.find).toHaveBeenCalledWith({
+        area: 'Söder om järnvägen'
+      })
       expect(res.json).toHaveBeenCalledWith(mockApartments)
     })
 
     it('should filter apartments by type', async () => {
       req.query = { type: 'locale' }
-      const mockApartments = [
-        { number: 'Local-1', type: 'locale' }
-      ]
+      const mockApartments = [{ number: 'Local-1', type: 'locale' }]
 
       ApartmentModel.find.mockResolvedValue(mockApartments)
 
@@ -183,7 +183,10 @@ describe('ApartmentController', () => {
       await controller.create(req, res, next)
 
       expect(ApartmentModel.create).toHaveBeenCalledWith(newApartmentData)
-      expect(rabbitmq.publishEvent).toHaveBeenCalledWith('apartment.created', newApartmentData)
+      expect(rabbitmq.publishEvent).toHaveBeenCalledWith(
+        'apartment.created',
+        newApartmentData
+      )
       expect(res.status).toHaveBeenCalledWith(201)
       expect(res.json).toHaveBeenCalledWith(mockCreatedApartment)
     })
@@ -253,7 +256,9 @@ describe('ApartmentController', () => {
       await controller.delete(req, res, next)
 
       expect(req.doc.deleteOne).toHaveBeenCalled()
-      expect(rabbitmq.publishEvent).toHaveBeenCalledWith('apartment.deleted', { id: '123' })
+      expect(rabbitmq.publishEvent).toHaveBeenCalledWith('apartment.deleted', {
+        id: '123'
+      })
       expect(res.status).toHaveBeenCalledWith(204)
       expect(res.end).toHaveBeenCalled()
     })
