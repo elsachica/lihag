@@ -12,6 +12,8 @@ spec:
       labels:
         app: maintenance
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: maintenance
           image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance
