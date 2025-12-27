@@ -73,7 +73,7 @@ build_maintenance:
 #     - npm run lint || echo "No linter configured"
 #     - npm test || echo "No tests yet"
 
-# Frontend (commented out - not ready yet)
+# Lihag-frontend (commented out - not ready yet)
 build_frontend:
   stage: build
   image:
@@ -94,6 +94,35 @@ build_frontend:
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
 # test_frontend:
+#   stage: test
+#   image: node:20
+#   script:
+#     - cd frontend
+#     - npm ci
+#     - npm run lint || echo "No linter configured"
+#     - npm test || echo "No tests yet"
+
+
+build_admin-frontend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
+    - |
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
+
+      IMAGE_TAG="${CI_COMMIT_REF_SLUG}"
+      IMAGE="${CI_REGISTRY_IMAGE}/admin-frontend:${IMAGE_TAG}"
+
+      echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
+      echo "IMAGE=${IMAGE}" >> build.env
+
+
+      /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/admin-frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/admin-frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
+    - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
+
+# test_admin-frontend:
 #   stage: test
 #   image: node:20
 #   script:
@@ -169,11 +198,9 @@ deploy_staging:
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:$CI_COMMIT_REF_SLUG
-        
+
     - kubectl get deployments -n "${NAMESPACE}" || true
     - kubectl get pods -n "${NAMESPACE}" -o wide || true
-    - kubectl rollout status deployment/taskit -n "${NAMESPACE}" --timeout=120s || (kubectl get pods -n "${NAMESPACE}" -o wide; exit 1)
-
 
     - echo "✓ Deployment complete!"
 

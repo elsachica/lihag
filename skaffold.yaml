@@ -16,6 +16,9 @@ build:
     - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance
       docker:
         dockerfile: services/maintenance/Dockerfile.production
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend
+      docker:
+        dockerfile: frontend/admin-frontend/Dockerfile
 manifests:
   rawYaml:
     - infra/k3s/ingress.yaml
@@ -30,6 +33,7 @@ manifests:
     - infra/k3s/rabbitmq/deployment.yaml
     - infra/k3s/maintenance/deployment.yaml
     - infra/k3s/maintenance/service.yaml
+    - infra/k3s/admin-frontend/deployment.yaml
     
 deploy:
   kubectl: {}
