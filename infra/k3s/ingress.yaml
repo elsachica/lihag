@@ -5,15 +5,19 @@ metadata:
   annotations:
 spec:
   rules:
-    - http:
+    - host: lihag.admin.194.47.171.149.nip.io
+      http:
         paths:
-          - path: /admin
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: admin-frontend
                 port:
                   number: 8004
+    - host: lihag.194.47.171.149.nip.io
+      http:
+        paths:
           - path: /
             pathType: Prefix
             backend:
