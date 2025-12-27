@@ -8,13 +8,6 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: lihag-frontend
-                port:
-                  number: 8888
           - path: /admin
             pathType: Prefix
             backend:
@@ -22,5 +15,12 @@ spec:
                 name: admin-frontend
                 port:
                   number: 8004
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lihag-frontend
+                port:
+                  number: 8888
 
 # lägg till frontend i ingressen?
