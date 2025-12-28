@@ -40,8 +40,8 @@ spec:
                 key: RABBITMQ_URL
           resources:
             limits:
-              memory: "256Mi"
+              memory: "1Gi"
               cpu: "250m"
             requests:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "125m"
