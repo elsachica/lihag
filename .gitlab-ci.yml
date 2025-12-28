@@ -91,6 +91,7 @@ build_frontend:
 
 
       /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/lihag-frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/lihag-frontend/Dockerfile.production" --destination "${IMAGE}" --snapshotMode=redo --reproducible
+      --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
 # test_frontend:

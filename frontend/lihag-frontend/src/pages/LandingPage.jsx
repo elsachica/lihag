@@ -23,7 +23,7 @@ export const LandingPage = ({ onNavigate, onSelectApartment }) => {
   useEffect(() => {
     const fetchApartments = async () => {
       try {
-        const baseUrl = 'http://localhost:8000'
+        const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
 
         const response = await fetch(`${baseUrl}/property/apartments`)
         if (!response.ok) {

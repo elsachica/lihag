@@ -1,14 +1,23 @@
-# 1. Basimage
-FROM node:20-alpine
-# 2. Sätt arbetskatalog
+# Stage 1: Build
+ARG VITE_AUTH_SERVICE_URL
+FROM node:20-alpine AS build
+
+ARG VITE_AUTH_SERVICE_URL
+ENV VITE_AUTH_SERVICE_URL=${VITE_AUTH_SERVICE_URL}
+
 WORKDIR /usr/src/app
-# 3. Kopiera package.json och package-lock.json först (för caching)
 COPY package*.json ./
-# 4. Installera beroenden
 RUN npm install
-# 5. Kopiera all frontend-kod
 COPY . .
-# 6. Exponera port 5173
+RUN npm run build
+
+# Stage 2: Serve (production)
+FROM node:20-alpine
+
+WORKDIR /usr/src/app
+RUN npm install -g serve
+
+COPY --from=build /usr/src/app/dist ./dist
+
 EXPOSE 5173
-# 7. Startkommando
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["serve", "-s", "dist", "-l", "5173"]
