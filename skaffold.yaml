@@ -24,6 +24,7 @@ manifests:
     - infra/k3s/ingress.yaml
     - infra/k3s/mongodb/pvc.yaml
     - infra/k3s/mongodb/deployment.yaml
+    - infra/k3s/mongodb/service.yaml
     - infra/k3s/auth/deployment.yaml
     - infra/k3s/auth/mongo-pvc.yaml
     - infra/k3s/auth/mongo-deployment.yaml
