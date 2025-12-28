@@ -1,12 +1,12 @@
 // seedApartments.js
 import mongoose from 'mongoose'
 import { ApartmentModel } from '../src/models/ApartmentModel.js'
-import { apartments } from './apartment.js' // ändra till rätt filväg
+import { apartments } from './apartments.js' // ändra till rätt filväg
 
 async function seed() {
   try {
     await mongoose.connect(
-      process.env.DB_CONNECTION_STRING || 'mongodb://localhost:27017/propertyDB'
+      process.env.DB_CONNECTION_STRING_PROPERTY || 'mongodb://localhost:27017/propertyDB'
     )
     console.log('Connected to DB!')
 
