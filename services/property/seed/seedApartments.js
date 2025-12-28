@@ -1,7 +1,7 @@
 // seedApartments.js
 import mongoose from 'mongoose'
 import { ApartmentModel } from '../src/models/ApartmentModel.js'
-import { apartments } from './apartment.js' // ändra till rätt filväg
+import { apartments } from './apartments.js' // ändra till rätt filväg
 
 async function seed() {
   try {
