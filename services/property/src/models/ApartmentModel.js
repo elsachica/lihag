@@ -50,6 +50,10 @@ const schema = new mongoose.Schema({
   roomCount: {
     type: Number,
     default: null
+  },
+  image: {
+    type: String,
+    default: null
   }
 })
 

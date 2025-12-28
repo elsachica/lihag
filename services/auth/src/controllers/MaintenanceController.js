@@ -1,6 +1,6 @@
 export class MaintenanceController {
   constructor() {
-    this.backendUrl = process.env.MAINTENANCE_SERVICE_URL
+    this.backendUrl = process.env.MAINTENANCE_URL
   }
 
   // Hämta alla rapporter

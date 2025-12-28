@@ -8,13 +8,33 @@ export const LoginPage = ({ onNavigate }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const url = import.meta.env.VITE_AUTH_SERVICE_URL
     e.preventDefault()
     if (email && password) {
-      // In a real app, this would authenticate with the backend
-      onNavigate('tenant-dashboard')
-      setEmail('')
-      setPassword('')
+      try {
+        const response = await fetch(url + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        })
+
+        const data = await response.json()
+        if (!response.ok) {
+          alert(data.message || 'Login failed')
+          return
+        }
+
+        // Spara token (eller session-id) lokalt
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('apartmentId', data.apartmentId)
+
+        // Navigera vidare
+        onNavigate('tenant-dashboard')
+      } catch (err) {
+        console.error(err)
+        alert('Something went wrong')
+      }
     }
   }
 

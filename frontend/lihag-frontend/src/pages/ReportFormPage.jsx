@@ -7,9 +7,9 @@ import { Upload } from 'lucide-react'
  */
 export const ReportFormPage = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
-    title: '',
+    category: '',
     description: '',
-    image: null
+    images: [] // array för bilder
   })
   const [submitted, setSubmitted] = useState(false)
 
@@ -24,24 +24,65 @@ export const ReportFormPage = ({ onNavigate }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0]
     if (file) {
+      // lägg till filen i arrayen
       setFormData((prev) => ({
         ...prev,
-        image: file.name
+        images: [...prev.images, file]
       }))
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (formData.title && formData.description) {
+
+    if (!formData.category || !formData.description) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      const apartmentId = localStorage.getItem('apartmentId')
+
+      if (!token) {
+        throw new Error('Ingen token hittades – användaren är inte inloggad')
+      }
+
+      const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
+
+      const response = await fetch(`${baseUrl}/maintenance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          category: formData.category,
+          description: formData.description,
+          apartmentId
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.error('Backend svarade med fel:', data)
+        throw new Error(data.message || 'Fel vid skickande av felanmälan')
+      }
+
       setSubmitted(true)
+
       setTimeout(() => {
         onNavigate('tenant-dashboard')
       }, 2000)
+    } catch (error) {
+      console.error('Fel vid skickande av felanmälan:', error)
     }
   }
 
+
+
   const handleLogout = () => {
+    localStorage.clear()
     onNavigate('landing')
   }
 
@@ -52,21 +93,42 @@ export const ReportFormPage = ({ onNavigate }) => {
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Skapa felanmälan</h1>
-          <p className="text-gray-600 mb-8">Beskrivhär vilket fel eller problem som behöver åtgärdas</p>
+          <p className="text-gray-600 mb-8">Beskriv vilket fel eller problem som behöver åtgärdas</p>
 
           {!submitted ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Titel *</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Kategori *</label>
+                <select
+                  name="category"
+                  value={formData.category}
                   onChange={handleInputChange}
-                  placeholder="T.ex. Läckande kran i köket"
                   className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                   required
-                />
+                >
+                  <option value="">Välj kategori</option>
+                  <option value="Sovrum">Sovrum</option>
+                  <option value="Kök">Kök</option>
+                  <option value="Vardagsrum">Vardagsrum</option>
+                  <option value="Badrum">Badrum</option>
+                  <option value="Klädkammare">Klädkammare</option>
+                  <option value="Balkong">Balkong</option>
+                  <option value="Hall">Hall</option>
+                  <option value="Vitvaror">Vitvaror</option>
+                  <option value="Värme & ventilation">Värme & ventilation</option>
+                  <option value="El">El</option>
+                  <option value="Vatten & avlopp">Vatten & avlopp</option>
+                  <option value="Hiss">Hiss</option>
+                  <option value="Trapphus">Trapphus</option>
+                  <option value="Entré">Entré</option>
+                  <option value="Utegård">Utegård</option>
+                  <option value="Tvättstuga">Tvättstuga</option>
+                  <option value="Miljörum">Miljörum</option>
+                  <option value="Fastighet">Fastighet</option>
+                  <option value="Parkering & garage">Parkering & garage</option>
+                  <option value="Cykelrum">Cykelrum</option>
+                  <option value="Övrigt">Övrigt</option>
+                </select>
               </div>
 
               <div>
@@ -96,7 +158,13 @@ export const ReportFormPage = ({ onNavigate }) => {
                     <Upload className="mx-auto text-blue-600 mb-2" size={40} />
                     <p className="text-gray-600 font-medium">Klicka för att välja bild</p>
                     <p className="text-sm text-gray-500 mt-1">Max 5MB, JPG eller PNG</p>
-                    {formData.image && <p className="text-sm text-green-600 mt-3 font-medium">✓ {formData.image}</p>}
+                    {formData.images.length > 0 && (
+                      <ul className="text-sm text-green-600 mt-3 font-medium">
+                        {formData.images.map((img, idx) => (
+                          <li key={idx}>✓ {img.name}</li>
+                        ))}
+                      </ul>
+                    )}
                   </label>
                 </div>
               </div>
