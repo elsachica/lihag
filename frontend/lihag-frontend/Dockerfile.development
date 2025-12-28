@@ -41,13 +41,11 @@ USER node
 
 # Expose Vite dev server port
 ARG VITE_PORT=5173
-ARG VITE_AUTH_SERVICE_URL
 EXPOSE ${VITE_PORT}
 
 # Set environment variables
 ENV NODE_ENV=development
 ENV PORT=${VITE_PORT}
-ENV VITE_AUTH_SERVICE_URL=${VITE_AUTH_SERVICE_URL}
 
 # Start Vite dev server with --host for Docker networking
 CMD ["npm", "run", "dev", "--", "--host"]
