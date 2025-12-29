@@ -13,6 +13,7 @@ import { router } from './routes/router.js'
 import { morganLogger } from './config/morgan.js'
 import { logger } from './config/winston.js'
 import { errorHandler } from './middleware/errorHandler.js'
+import cors from 'cors'
 
 const app = express()
 app.use(express.json())
@@ -35,6 +36,10 @@ async function start () {
     }
     await connectToDatabase(process.env.DB_CONNECTION_STRING_PROPERTY)
     logger.info('MongoDB connected')
+
+    app.use(cors({
+      origin: 'http://lihag.admin.194.47.171.149.nip.io'
+    }))
 
     app.use('/', router)
 
