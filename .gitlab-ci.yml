@@ -80,6 +80,13 @@ build_frontend:
     name: gcr.io/kaniko-project/executor:v1.9.0-debug
     entrypoint: [""]
   script:
+    // ...existing code...
+build_frontend:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
     - |
       echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 
@@ -89,11 +96,13 @@ build_frontend:
       echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
       echo "IMAGE=${IMAGE}" >> build.env
 
-
-      /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/lihag-frontend"\ --dockerfile "${CI_PROJECT_DIR}/frontend/lihag-frontend/Dockerfile.production" --destination "${IMAGE}" --snapshotMode=redo --reproducible
-      --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
+      /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/lihag-frontend" \
+        --dockerfile "${CI_PROJECT_DIR}/frontend/lihag-frontend/Dockerfile.production" \
+        --destination "${IMAGE}" \
+        --snapshotMode=redo \
+        --reproducible \
+        --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
-
 # test_frontend:
 #   stage: test
 #   image: node:20
