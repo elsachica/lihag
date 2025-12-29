@@ -11,7 +11,7 @@ import './App.css'
 
 import simpleRestProvider from 'ra-data-simple-rest'
 
-const propertyDataProvider = simpleRestProvider(import.meta.env.PROPERTY_URL || 'http://localhost:8888')
+const propertyDataProvider = simpleRestProvider(import.meta.env.PROPERTY_URL || 'http://property:8003')
 const userDataProvider = simpleRestProvider(import.meta.env.AUTH_URL || 'http://localhost:8889')
 const maintenanceDataProvider = simpleRestProvider(import.meta.env.MAINTENANCE_URL || 'http://localhost:8890')
 
