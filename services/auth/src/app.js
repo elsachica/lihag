@@ -13,7 +13,7 @@ export const createApp = () => {
   const app = express()
 
   app.use(cors({
-  origin: 'https://lihag.194.47.171.149.nip.io', // frontend URL
+  origin: ['http://lihag.194.47.171.149.nip.io', 'http://lihag.admin.194.47.171.149.nip.io'], // frontend URL
   credentials: true, // om du skickar cookies eller auth headers
 }))
   app.use(express.json())
