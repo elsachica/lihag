@@ -4,6 +4,7 @@ metadata:
   name: ingress
   annotations:
 spec:
+  ingressClassName: traefik
   rules:
     - host: lihag.admin.194.47.171.149.nip.io
       http:
