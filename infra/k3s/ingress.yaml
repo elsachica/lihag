@@ -17,7 +17,21 @@ spec:
                   number: 8004
     - host: lihag.194.47.171.149.nip.io
       http:
-        paths:
+         paths:
+          - path: /property
+            pathType: Prefix
+            backend:
+              service:
+                name: auth
+                port:
+                  number: 3000
+          - path: /maintenance
+            pathType: Prefix
+            backend:
+              service:
+                name: auth
+                port:
+                  number: 3000
           - path: /
             pathType: Prefix
             backend:
@@ -25,5 +39,4 @@ spec:
                 name: lihag-frontend
                 port:
                   number: 8888
-          
 # lägg till frontend i ingressen?
