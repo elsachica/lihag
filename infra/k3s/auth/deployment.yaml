@@ -41,6 +41,11 @@ spec:
             secretKeyRef:
               name: lihag-env-vars
               key: PROPERTY_URL
+        - name: MAINTENANCE_URL
+          valueFrom:
+            secretKeyRef:
+              name: lihag-env-vars
+              key: MAINTENANCE_URL
         volumeMounts:
           - name: jwt-public-key
             mountPath: /app/keys

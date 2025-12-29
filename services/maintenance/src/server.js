@@ -71,7 +71,7 @@ app.use((err, req, res, next) => {
 })
 
 // Starts the HTTP server listening for connections.
-const server = app.listen(process.env.PORT || 3000, () => {
+const server = app.listen(process.env.PORT || 8002, () => {
   console.log(
     `Server running at http://localhost:${server.address().port}/maintenance`
   )

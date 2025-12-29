@@ -26,6 +26,8 @@ spec:
               secretKeyRef:
                 name: lihag-env-vars
                 key: DB_CONNECTION_STRING_MAINTENANCE
+          - name: PORT
+            value: "8002"
           - name: PROPERTY_URL
             valueFrom:
               secretKeyRef:
