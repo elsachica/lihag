@@ -23,9 +23,10 @@ export const LandingPage = ({ onNavigate, onSelectApartment }) => {
   useEffect(() => {
     const fetchApartments = async () => {
       try {
-        const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
+        // const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
 
-        const response = await fetch(`${baseUrl}/property/apartments`)
+        // const response = await fetch(`${baseUrl}/property/apartments`)
+        const response = await fetch('http://auth.lihag.194.47.171.149.nip.io/property/apartments')
         if (!response.ok) {
           throw new Error('Failed to fetch apartments')
         }
