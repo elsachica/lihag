@@ -27,7 +27,7 @@ spec:
                 name: lihag-env-vars
                 key: DB_CONNECTION_STRING_PROPERTY
           - name: PORT
-            value: "8006"
+            value: "8003"
           - name: PROPERTY_URL
             valueFrom:
               secretKeyRef:

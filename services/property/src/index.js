@@ -19,7 +19,7 @@ const app = express()
 app.use(express.json())
 app.use(morganLogger)
 
-const port = process.env.PORT || 8006
+const port = process.env.PORT || 8003
 
 /**
  * Starts the Property service by connecting to the MongoDB database,
