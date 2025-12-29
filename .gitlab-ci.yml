@@ -15,6 +15,10 @@ build_property:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/property" --dockerfile "${CI_PROJECT_DIR}/services/property/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed property:${CI_COMMIT_REF_SLUG}"
 
+  rules:
+    - changes:
+        - services/property/**
+
 # only:
 #   changes:
 #     - services/property/**/*
@@ -39,6 +43,10 @@ build_auth:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/auth" --dockerfile "${CI_PROJECT_DIR}/services/auth/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed auth:${CI_COMMIT_REF_SLUG}"
 
+  rules:
+    - changes:
+        - services/auth/**
+
 # only:
 #   changes:
 #     - services/auth/**/*
@@ -62,6 +70,10 @@ build_maintenance:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile.production" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
+
+  rules:
+    - changes:
+        - services/maintenance/**
 
 
 # test_maintenance:
@@ -103,6 +115,11 @@ build_frontend:
         --reproducible \
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
+
+  rules:
+    - changes:
+        - frontend/lihag-frontend/**
+
 # test_frontend:
 #   stage: test
 #   image: node:20
@@ -131,6 +148,10 @@ build_admin-frontend:
 
       /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/admin-frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/admin-frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
     - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
+
+  # rules:
+  #   - changes:
+  #       - frontend/admin-frontend/**
 
 # test_admin-frontend:
 #   stage: test
