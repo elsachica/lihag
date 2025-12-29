@@ -26,8 +26,7 @@ manifests:
     - infra/k3s/mongodb/deployment.yaml
     - infra/k3s/mongodb/service.yaml
     - infra/k3s/auth/deployment.yaml
-    - infra/k3s/auth/mongo-pvc.yaml
-    - infra/k3s/auth/mongo-deployment.yaml
+    - infra/k3s/auth/service.yaml
     - infra/k3s/lihag-frontend/deployment.yaml
     - infra/k3s/property/deployment.yaml
     - infra/k3s/property/service.yaml
