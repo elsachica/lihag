@@ -49,3 +49,19 @@ spec:
         - name: jwt-public-key
           secret:
             secretName: jwt-public-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth
+  labels:
+    app: auth
+spec:
+  type: ClusterIP
+  selector:
+    app: auth
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
