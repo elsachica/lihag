@@ -26,5 +26,19 @@ spec:
                 name: lihag-frontend
                 port:
                   number: 8888
+          - path: /property
+            pathType: Prefix
+            backend:
+              service:
+                name: auth
+                port:
+                  number: 3000
+          - path: /maintenance
+            pathType: Prefix
+            backend:
+              service:
+                name: auth
+                port:
+                  number: 3000
 
 # lägg till frontend i ingressen?
