@@ -38,7 +38,7 @@ async function start () {
     logger.info('MongoDB connected')
 
     app.use(cors({
-      origin: 'http://lihag.admin.194.47.171.149.nip.io'
+      origin: ['http://lihag.admin.194.47.171.149.nip.io', 'http://lihag.admin.194.47.171.149.nip.io']
     }))
 
     app.use('/', router)
