@@ -4,6 +4,7 @@ export class ApartmentController {
   }
 
   async index(req, res, next) {
+    console.log('in index in ApartmentController')
     try {
       const queryString = new URLSearchParams(req.query).toString()
       const response = await fetch(`${this.backendUrl}?${queryString}`)
