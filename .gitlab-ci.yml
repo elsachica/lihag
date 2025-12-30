@@ -251,7 +251,7 @@ seed_property:
       when: always
     - when: never
   script:
-    - kubectl apply -f k3s/seed-property.yaml
+    - kubectl apply -f k3s/property/seed-property.yaml
     - kubectl wait --for=condition=complete job/seed-property-db --timeout=120s
     - kubectl logs job/seed-property-db
 
