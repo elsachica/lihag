@@ -241,18 +241,16 @@ deploy_staging:
 
 seed_property:
   stage: deploy
-  image: lachlanevenson/k8s-kubectl:latest
+  image: bitnami/kubectl:latest
   variables:
     KUBECONFIG_PATH: "/root/.kube/config"
     NAMESPACE: "default"
   before_script:
-    # Skapa kubeconfig-fil från base64-variabel
     - mkdir -p "$(dirname "$KUBECONFIG_PATH")"
     - echo "$KUBE_CONFIG_STAGING" | base64 -d > "$KUBECONFIG_PATH"
     - chmod 600 "$KUBECONFIG_PATH"
     - kubectl version --client
   script:
-    # Applicera seed YAML
     - kubectl --kubeconfig="$KUBECONFIG_PATH" apply -f infra/k3s/property/seed-property.yaml -n "$NAMESPACE"
     - echo "✓ Seed applied successfully!"
 
