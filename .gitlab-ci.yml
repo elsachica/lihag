@@ -15,9 +15,9 @@ build_property:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/property" --dockerfile "${CI_PROJECT_DIR}/services/property/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed property:${CI_COMMIT_REF_SLUG}"
 
-  # rules:
-  #   - changes:
-  #       - services/property/**
+  rules:
+    - changes:
+        - services/property/**
 
 # only:
 #   changes:
@@ -43,9 +43,9 @@ build_auth:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/auth" --dockerfile "${CI_PROJECT_DIR}/services/auth/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed auth:${CI_COMMIT_REF_SLUG}"
 
-  # rules:
-  #   - changes:
-  #       - services/auth/**
+  rules:
+    - changes:
+        - services/auth/**
 
 # only:
 #   changes:
@@ -71,9 +71,9 @@ build_maintenance:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile.production" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
 
-  # rules:
-  #   - changes:
-  #       - services/maintenance/**
+  rules:
+    - changes:
+        - services/maintenance/**
 
 
 # test_maintenance:
@@ -116,9 +116,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  # rules:
-  #   - changes:
-  #       - frontend/lihag-frontend/**
+  rules:
+    - changes:
+        - frontend/lihag-frontend/**
 
 # test_frontend:
 #   stage: test
@@ -149,9 +149,9 @@ build_admin-frontend:
       /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/admin-frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/admin-frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
     - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
 
-  # rules:
-  #   - changes:
-  #       - frontend/admin-frontend/**
+  rules:
+    - changes:
+        - frontend/admin-frontend/**
 
 # test_admin-frontend:
 #   stage: test
@@ -251,7 +251,7 @@ seed_property:
       when: always
     - when: never
   script:
-    - kubectl apply -f k3s/property/seed-property.yaml
+    - kubectl apply -f infra/k3s/property/seed-property.yaml
     - kubectl wait --for=condition=complete job/seed-property-db --timeout=120s
     - kubectl logs job/seed-property-db
 
