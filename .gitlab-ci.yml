@@ -116,9 +116,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  rules:
-    - changes:
-        - frontend/lihag-frontend/**
+  # rules:
+  #   - changes:
+  #       - frontend/lihag-frontend/**
 
 # test_frontend:
 #   stage: test
