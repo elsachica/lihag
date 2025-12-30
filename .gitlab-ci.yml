@@ -240,22 +240,21 @@ deploy_staging:
     name: staging
 
 seed_property:
-  stage: staging
-  image: bitnami/kubectl:latest
+  stage: deploy
+  image: lachlanevenson/k8s-kubectl:latest
   variables:
-    KUBECONFIG: "/root/.kube/config"
+    KUBECONFIG_PATH: "/root/.kube/config"
+    NAMESPACE: "default"
   before_script:
-    - mkdir -p "$(dirname "$KUBECONFIG")"
-    - echo "$KUBE_CONFIG_STAGING" | base64 -d > "$KUBECONFIG"
-    - chmod 600 "$KUBECONFIG"
+    # Skapa kubeconfig-fil från base64-variabel
+    - mkdir -p "$(dirname "$KUBECONFIG_PATH")"
+    - echo "$KUBE_CONFIG_STAGING" | base64 -d > "$KUBECONFIG_PATH"
+    - chmod 600 "$KUBECONFIG_PATH"
+    - kubectl version --client
   script:
-    - kubectl get nodes   # testar anslutning
-    - kubectl apply -f infra/k3s/property/seed-property.yaml
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "staging"'
-      when: always
-
-
+    # Applicera seed YAML
+    - kubectl --kubeconfig="$KUBECONFIG_PATH" apply -f infra/k3s/property/seed-property.yaml -n "$NAMESPACE"
+    - echo "✓ Seed applied successfully!"
 
 deploy_production:
   stage: deploy
