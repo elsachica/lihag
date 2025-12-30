@@ -2,8 +2,10 @@
 import mongoose from 'mongoose'
 import { ApartmentModel } from '../src/models/ApartmentModel.js'
 import { apartments } from './apartments.js' // ändra till rätt filväg
-
-async function seed() {
+/**
+ * Seeds the MongoDB database with apartment and locale data, including images.
+ */
+async function seed () {
   try {
     await mongoose.connect(
       process.env.DB_CONNECTION_STRING_PROPERTY || 'mongodb://localhost:27017/propertyDB'
@@ -29,7 +31,7 @@ async function seed() {
       built: a.built,
       objnr: a.objnr,
       features: a.features,
-      image: a.image,             // <-- Nu används image
+      image: a.image, // <-- Nu används image
       available: new Date(a.available),
       deadline: new Date(a.deadline),
       propertyId: `P${a.id}`,
