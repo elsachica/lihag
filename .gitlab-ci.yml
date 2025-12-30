@@ -241,19 +241,20 @@ deploy_staging:
 
 seed_property:
   stage: staging
-  image:
-    name: bitnami/kubectl:latest
-    entrypoint: [""]
-  needs:
-    - deploy_staging
+  image: bitnami/kubectl:latest
+  variables:
+    KUBECONFIG: "/root/.kube/config"
+  before_script:
+    - mkdir -p "$(dirname "$KUBECONFIG")"
+    - echo "$KUBE_CONFIG_STAGING" | base64 -d > "$KUBECONFIG"
+    - chmod 600 "$KUBECONFIG"
+  script:
+    - kubectl get nodes   # testar anslutning
+    - kubectl apply -f infra/k3s/property/seed-property.yaml
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "staging"'
       when: always
-    - when: never
-  script:
-    - kubectl apply -f infra/k3s/property/seed-property.yaml
-    - kubectl wait --for=condition=complete job/seed-property-db --timeout=120s
-    - kubectl logs job/seed-property-db
+
 
 
 deploy_production:
