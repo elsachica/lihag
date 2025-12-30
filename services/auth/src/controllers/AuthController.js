@@ -49,7 +49,10 @@ export class AuthController {
       // Skapa JWT med RS256
       const token = await JsonWebToken.encodeUser(user, JWT_PRIVATE_KEY, JWT_EXPIRES_IN)
 
-      res.status(200).json({ token })
+      res.status(200).json({ 
+        token,
+        apartmentId: user.propertyId
+       })
     } catch (err) {
       console.error(err)
       res.status(401).json({ message: err.message })

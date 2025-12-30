@@ -43,9 +43,9 @@ build_auth:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/auth" --dockerfile "${CI_PROJECT_DIR}/services/auth/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed auth:${CI_COMMIT_REF_SLUG}"
 
-  rules:
-    - changes:
-        - services/auth/**
+  # rules:
+  #   - changes:
+  #       - services/auth/**
 
 # only:
 #   changes:
@@ -71,9 +71,9 @@ build_maintenance:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile.production" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
 
-  rules:
-    - changes:
-        - services/maintenance/**
+  # rules:
+  #   - changes:
+  #       - services/maintenance/**
 
 
 # test_maintenance:
@@ -102,7 +102,7 @@ build_frontend:
     - |
       echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 
-      IMAGE_TAG="${CI_COMMIT_SHA}"
+      IMAGE_TAG="${CI_COMMIT_REF_SLUG}"
       IMAGE="${CI_REGISTRY_IMAGE}/lihag-frontend:${IMAGE_TAG}"
 
       echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
@@ -139,7 +139,7 @@ build_admin-frontend:
     - |
       echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
 
-      IMAGE_TAG="${CI_COMMIT_SHA}"
+      IMAGE_TAG="${CI_COMMIT_REF_SLUG}"
       IMAGE="${CI_REGISTRY_IMAGE}/admin-frontend:${IMAGE_TAG}"
 
       echo "IMAGE_TAG=${IMAGE_TAG}" > build.env
@@ -225,11 +225,11 @@ deploy_staging:
 
     - |
       skaffold deploy --profile production \
-        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:$CI_COMMIT_SHA \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:$CI_COMMIT_REF_SLUG \
-        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend:$CI_COMMIT_SHA
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend:$CI_COMMIT_REF_SLUG
 
     - kubectl get deployments -n "${NAMESPACE}" || true
     - kubectl get pods -n "${NAMESPACE}" -o wide || true
@@ -238,6 +238,23 @@ deploy_staging:
 
   environment:
     name: staging
+
+seed_property:
+  stage: staging
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  needs:
+    - deploy_staging
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "staging"'
+      when: always
+    - when: never
+  script:
+    - kubectl apply -f k3s/seed-property.yaml
+    - kubectl wait --for=condition=complete job/seed-property-db --timeout=120s
+    - kubectl logs job/seed-property-db
+
 
 deploy_production:
   stage: deploy
