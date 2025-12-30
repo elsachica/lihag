@@ -24,7 +24,6 @@ export const LandingPage = ({ onNavigate, onSelectApartment }) => {
     const fetchApartments = async () => {
       try {
         const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
-        console.log(baseUrl)
 
         const response = await fetch(`${baseUrl}/property/apartments`)
         if (!response.ok) {
