@@ -1,21 +1,20 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: seed-property-db
+  name: seed-property
 spec:
-  backoffLimit: 1
   template:
     spec:
-      restartPolicy: Never
-      imagePullSecrets:
-        - name: regcred
       containers:
-        - name: seed
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
-          command: ["node", "seed/seedApartments.js"]
+        - name: seed-property
+          image: node:20
+          command: ["node", "/app/infra/k3s/property/seedApartments.js"]
           env:
             - name: DB_CONNECTION_STRING_PROPERTY
               valueFrom:
                 secretKeyRef:
                   name: lihag-env-vars
                   key: DB_CONNECTION_STRING_PROPERTY
+      restartPolicy: Never
+  backoffLimit: 1
+

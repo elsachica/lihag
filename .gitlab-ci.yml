@@ -240,28 +240,16 @@ deploy_staging:
     name: staging
 
 seed_property:
-  stage: staging
+  stage: deploy
   image:
     name: bitnami/kubectl:latest
-    entrypoint: ['']   # Viktigt för att kunna köra shell-kommandon
-  variables:
-    NAMESPACE: "default"
-    DB_CONNECTION_STRING_PROPERTY: "$DB_CONNECTION_STRING_PROPERTY"
+    entrypoint: ['']
   script:
     - echo "💡 Running property seed script..."
-    # Skapa en enkel kubernetes job som kör seed script
-    - |
-      kubectl run seed-property-job \
-        --rm \
-        --namespace "$NAMESPACE" \
-        --restart=Never \
-        --image=gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG} \
-        --env="DB_CONNECTION_STRING_PROPERTY=${DB_CONNECTION_STRING_PROPERTY}" \
-        --command -- node services/property/seed/seedApartments.js
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "staging"'
-      when: always
-
+    - kubectl apply -f infra/k3s/property/seed-property.yaml
+    - kubectl wait --for=condition=complete job/seed-property --timeout=60s
+    - kubectl delete job seed-property
+    - echo "✓ Property seeding complete!"
 
 deploy_production:
   stage: deploy
