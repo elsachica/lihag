@@ -11,8 +11,8 @@ import './App.css'
 
 import simpleRestProvider from 'ra-data-simple-rest'
 
-const propertyDataProvider = simpleRestProvider(import.meta.env.VITE_PROPERTY_URL || 'http://lihag.194.47.171.149.nip.io')
-const userDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL || 'http://localhost:8889')
+const propertyDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/property/apartments' || 'http://lihag.194.47.171.149.nip.io')
+const userDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/maintenance' || 'http://localhost:8889')
 const maintenanceDataProvider = simpleRestProvider(import.meta.env.VITE_MAINTENANCE_URL || 'http://localhost:8890')
 
 // Map resource names to API endpoints

@@ -112,7 +112,7 @@ export const ApartmentDetailPage = ({ apartment, onNavigate, onSelectApartment }
             <section className="mb-10">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Mer information</h2>
               <ul className="space-y-3">
-                {apartment.features.map((feature, index) => (
+                {Array.isArray(apartment.features) && apartment.features.map((feature, index) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle size={20} className="text-blue-600 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{feature}</span>
