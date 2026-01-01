@@ -36,7 +36,7 @@ async function start () {
         'DB_CONNECTION_STRING environment variable is not defined'
       )
     }
-    await connectToDatabase(process.env.DB_CONNECTION_STRING)
+    await connectToDatabase(process.env.DB_CONNECTION_STRING_NOTIFICATION)
     logger.info('MongoDB connected')
 
     await initializeEmailService()
