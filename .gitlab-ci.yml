@@ -246,7 +246,7 @@ deploy_staging:
         --from-literal=SMTP_PASS="${SMTP_PASS}" \
         --from-literal=SMTP_FROM="${SMTP_FROM}" \
         --from-literal=ADMIN_EMAIL="${ADMIN_EMAIL}" \
-        -n "default" \
+        -n "${NAMESPACE}" \
         --dry-run=client -o yaml | kubectl apply -f -
 
     - |
