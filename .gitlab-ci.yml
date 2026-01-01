@@ -85,6 +85,38 @@ build_maintenance:
 #     - npm run lint || echo "No linter configured"
 #     - npm test || echo "No tests yet"
 
+# Notification Service
+build_notification:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]   # Viktigt för Kaniko
+  script:
+    # Konfigurera Docker auth för GitLab Registry
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
+    
+    # Bygg och pusha notification image med Kaniko
+    - /kaniko/executor \
+      --context "${CI_PROJECT_DIR}/services/notification" \
+      --dockerfile "${CI_PROJECT_DIR}/services/notification/Dockerfile.production" \
+      --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:${CI_COMMIT_REF_SLUG}"
+    
+    - echo "✓ Successfully built and pushed notification:${CI_COMMIT_REF_SLUG}"
+
+  rules:
+    - changes:
+        - services/notification/**
+
+  # test_notification:
+  #   stage: test
+  #   image: node:20
+  #   script:
+  #     - cd services/maintenance
+  #     - npm ci
+  #     - npm run lint || echo "No linter configured"
+  #     - npm test || echo "No tests yet"
+
+
 # Lihag-frontend (commented out - not ready yet)
 build_frontend:
   stage: build
