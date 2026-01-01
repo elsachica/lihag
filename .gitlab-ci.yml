@@ -234,6 +234,7 @@ deploy_staging:
         --from-literal=DB_CONNECTION_STRING_AUTH="${DB_CONNECTION_STRING_AUTH}" \
         --from-literal=DB_CONNECTION_STRING_MAINTENANCE="${DB_CONNECTION_STRING_MAINTENANCE}" \
         --from-literal=DB_CONNECTION_STRING_PROPERTY="${DB_CONNECTION_STRING_PROPERTY}" \
+        --from-literal=DB_CONNECTION_STRING_NOTIFICATION="${DB_CONNECTION_STRING_NOTIFICATION}" \
         --from-literal=JWT_PRIVATE_PEM="${JWT_PRIVATE_PEM}" \
         --from-literal=JWT_PUBLIC_PEM="${JWT_PUBLIC_PEM}" \
         --from-literal=NODE_ENV="${NODE_ENV}" \
