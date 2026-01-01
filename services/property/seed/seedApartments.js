@@ -31,7 +31,7 @@ async function seed () {
       built: a.built,
       objnr: a.objnr,
       features: a.features,
-      image: a.image, // <-- Nu används image
+      image: a.image,
       available: new Date(a.available),
       deadline: new Date(a.deadline),
       propertyId: `P${a.id}`,
