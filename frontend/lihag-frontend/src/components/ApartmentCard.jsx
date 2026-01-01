@@ -1,13 +1,15 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MapPin } from 'lucide-react'
 
 /**
  * Apartment Card Component - displayed in search grid
  */
-export const ApartmentCard = ({ apartment, onSelectApartment }) => {
+export const ApartmentCard = ({ apartment }) => {
+  const navigate = useNavigate()
   return (
     <div
-      onClick={onSelectApartment}
+      onClick={() => navigate(`/${apartment._id || apartment.id}`)}
       className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition cursor-pointer group"
     >
       <div className="overflow-hidden h-48">

@@ -32,8 +32,8 @@ async function seed () {
       objnr: a.objnr,
       features: a.features,
       image: a.image,
-      available: new Date(a.available),
-      deadline: new Date(a.deadline),
+      available: a.available,
+      deadline: a.deadline,
       propertyId: `P${a.id}`,
       isAvailable: true
     }))

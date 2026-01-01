@@ -78,6 +78,11 @@ const schema = new mongoose.Schema({
   deadline: {
     type: Date,
     default: null
+  },
+  objnr: {
+    type: String,
+    required: true,
+    trim: true
   }
 })
 

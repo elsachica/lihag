@@ -1,30 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { CheckCircle } from 'lucide-react'
 import { PublicHeader, Navigation } from '../components/Header'
 
 /**
  * Apartment Detail Page - Full apartment information
  */
-export const ApartmentDetailPage = ({ apartment, onNavigate, onSelectApartment }) => {
+export const ApartmentDetailPage = () => {
+  const { apartmentId } = useParams()
+  const [apartment, setApartment] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchApartment = async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
+        const response = await fetch(`${baseUrl}/property/apartments/${apartmentId}`)
+        if (!response.ok) throw new Error('Kunde inte hämta lägenhet')
+        const data = await response.json()
+        setApartment(data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchApartment()
+  }, [apartmentId])
+
+  if (loading) return <p className="text-center mt-20">Laddar lägenhet...</p>
+  if (error) return <p className="text-center mt-20 text-red-600">{error}</p>
   if (!apartment) return null
 
   const handleInterestClick = () => {
-    onSelectApartment(apartment)
-    onNavigate('interest-form')
+    // Hantera intresseanmälan här om du vill
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <PublicHeader onNavigate={onNavigate} />
-      <Navigation currentPage="apartment" onNavigate={onNavigate} />
-
+      <PublicHeader />
+      <Navigation currentPage="apartment" />
       <main className="max-w-5xl mx-auto px-6 py-12">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Hero Image */}
           <div className="h-96 overflow-hidden">
             <img src={apartment.image} alt={apartment.address} className="h-full w-full object-cover" />
           </div>
-
           <div className="p-8 md:p-12">
             {/* Title Section */}
             <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-8 pb-8 border-b border-gray-200">
