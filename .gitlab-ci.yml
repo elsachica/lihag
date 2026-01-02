@@ -277,6 +277,15 @@ deploy_production:
   variables:
     KUBECONFIG_PATH: "/root/.kube/config"
     NAMESPACE: "default"
+    PROPERTY_URL: "$PROPERTY_URL"
+    AUTH_URL: "$AUTH_URL"
+    MAINTENANCE_URL: "$MAINTENANCE_URL"
+    DB_CONNECTION_STRING_AUTH: "$DB_CONNECTION_STRING_AUTH"
+    DB_CONNECTION_STRING_MAINTENANCE: "$DB_CONNECTION_STRING_MAINTENANCE"
+    DB_CONNECTION_STRING_PROPERTY: "$DB_CONNECTION_STRING_PROPERTY"
+    DB_CONNECTION_STRING_NOTIFICATION: "$DB_CONNECTION_STRING_NOTIFICATION"
+    JWT_PRIVATE_PEM: "$JWT_PRIVATE_PEM"
+    JWT_PUBLIC_PEM: "$JWT_PUBLIC_PEM"
   before_script:
     - mkdir -p "$(dirname "${KUBECONFIG_PATH}")"
     - 'test -f "${KUBE_CONFIG_PRODUCTION}" && cp "${KUBE_CONFIG_PRODUCTION}" "${KUBECONFIG_PATH}" || (printf "%s" "${KUBE_CONFIG_PRODUCTION}" | base64 --decode > "${KUBECONFIG_PATH}" 2>/dev/null || printf "%s" "${KUBE_CONFIG_PRODUCTION}" | base64 -D > "${KUBECONFIG_PATH}" 2>/dev/null || (echo "KUBE_CONFIG_PRODUCTION is not a file path and not valid base64" >&2; exit 1))'
@@ -284,32 +293,57 @@ deploy_production:
     - kubectl version --client
   script:
     - |
-      echo "Creating ImagePullSecret for GitLab Container Registry..."
-      # ensure IMAGE is defined in this job
-      IMAGE_TAG="${CI_COMMIT_TAG:-latest}"
-      IMAGE="${CI_REGISTRY_IMAGE}/frontend:${IMAGE_TAG}"
-      echo "IMAGE=${IMAGE}"
-      # recreate secret (use --dry-run to avoid accidental interactive errors)
+      echo "Testing registry access..."
+      echo "Username: ${CI_REGISTRY_USER}"
+      echo "Server: gitlab.lnu.se:5050"
       kubectl delete secret regcred -n "${NAMESPACE}" --ignore-not-found || true
       kubectl create secret docker-registry regcred \
         --docker-server=gitlab.lnu.se:5050 \
         --docker-username="${CI_REGISTRY_USER}" \
         --docker-password="${CI_REGISTRY_PASSWORD}" \
-        --docker-email="${GITLAB_USER_EMAIL:-you@example.com}" \
-        -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
-      # deploy with skaffold (pass image built in pipeline)
-      skaffold deploy --profile production \
-        --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:${CI_COMMIT_REF_SLUG}" \
-        --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}" \
-        --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}" \
-        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:$CI_COMMIT_REF_SLUG \
-      echo "Waiting for deployments to rollout..."
-      kubectl get deployments -n "${NAMESPACE}" || true
-      kubectl get pods -n "${NAMESPACE}" -o wide || true
+        -n "${NAMESPACE}"
+      kubectl get secret regcred -n "${NAMESPACE}" -o yaml
 
+    - echo "$JWT_PUBLIC_PEM" > public.pem
+    - kubectl create secret generic jwt-public-key --from-file=public.pem=public.pem -n "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+
+    - |
+      kubectl create secret generic lihag-env-vars \
+        --from-literal=PROPERTY_URL="${PROPERTY_URL}" \
+        --from-literal=AUTH_URL="${AUTH_URL}" \
+        --from-literal=MAINTENANCE_URL="${MAINTENANCE_URL}" \
+        --from-literal=DB_CONNECTION_STRING_AUTH="${DB_CONNECTION_STRING_AUTH}" \
+        --from-literal=DB_CONNECTION_STRING_MAINTENANCE="${DB_CONNECTION_STRING_MAINTENANCE}" \
+        --from-literal=DB_CONNECTION_STRING_PROPERTY="${DB_CONNECTION_STRING_PROPERTY}" \
+        --from-literal=DB_CONNECTION_STRING_NOTIFICATION="${DB_CONNECTION_STRING_NOTIFICATION}" \
+        --from-literal=JWT_PRIVATE_PEM="${JWT_PRIVATE_PEM}" \
+        --from-literal=JWT_PUBLIC_PEM="${JWT_PUBLIC_PEM}" \
+        --from-literal=NODE_ENV="${NODE_ENV}" \
+        --from-literal=RABBITMQ_URL="${RABBITMQ_URL}" \
+        --from-literal=RABBITMQ_DEFAULT_USER="${RABBITMQ_DEFAULT_USER}" \
+        --from-literal=RABBITMQ_DEFAULT_PASS="${RABBITMQ_DEFAULT_PASS}" \
+        --from-literal=SMTP_HOST="${SMTP_HOST}" \
+        --from-literal=SMTP_PORT="${SMTP_PORT}" \
+        --from-literal=SMTP_USER="${SMTP_USER}" \
+        --from-literal=SMTP_PASS="${SMTP_PASS}" \
+        --from-literal=SMTP_FROM="${SMTP_FROM}" \
+        --from-literal=ADMIN_EMAIL="${ADMIN_EMAIL}" \
+        -n "${NAMESPACE}" \
+        --dry-run=client -o yaml | kubectl apply -f -
+
+    - |
+      skaffold deploy --profile production \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:$CI_COMMIT_REF_SLUG \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:$CI_COMMIT_REF_SLUG \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:$CI_COMMIT_REF_SLUG \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:$CI_COMMIT_REF_SLUG \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend:$CI_COMMIT_REF_SLUG \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:$CI_COMMIT_REF_SLUG
+
+    - kubectl get deployments -n "${NAMESPACE}" || true
+    - kubectl get pods -n "${NAMESPACE}" -o wide || true
 
     - echo "✓ Deployment complete!"
-
 
   environment:
     name: production
