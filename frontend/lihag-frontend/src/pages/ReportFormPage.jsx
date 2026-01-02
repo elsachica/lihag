@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { TenantHeader } from '../components/Header'
 import { Upload } from 'lucide-react'
 
 /**
  * Report Form Page - Create new maintenance report
  */
-export const ReportFormPage = ({ onNavigate }) => {
+export const ReportFormPage = () => {
   const [formData, setFormData] = useState({
     category: '',
     description: '',
     images: [] // array för bilder
   })
   const [submitted, setSubmitted] = useState(false)
+  const navigate = useNavigate() // React Router navigation
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -24,7 +26,6 @@ export const ReportFormPage = ({ onNavigate }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0]
     if (file) {
-      // lägg till filen i arrayen
       setFormData((prev) => ({
         ...prev,
         images: [...prev.images, file]
@@ -36,6 +37,7 @@ export const ReportFormPage = ({ onNavigate }) => {
     e.preventDefault()
 
     if (!formData.category || !formData.description) {
+      alert('Fyll i kategori och beskrivning')
       return
     }
 
@@ -44,7 +46,9 @@ export const ReportFormPage = ({ onNavigate }) => {
       const apartmentId = localStorage.getItem('apartmentId')
 
       if (!token) {
-        throw new Error('Ingen token hittades – användaren är inte inloggad')
+        alert('Du måste logga in först')
+        navigate('/login')
+        return
       }
 
       const baseUrl = import.meta.env.VITE_AUTH_SERVICE_URL
@@ -66,29 +70,30 @@ export const ReportFormPage = ({ onNavigate }) => {
 
       if (!response.ok) {
         console.error('Backend svarade med fel:', data)
-        throw new Error(data.message || 'Fel vid skickande av felanmälan')
+        alert(data.message || 'Fel vid skickande av felanmälan')
+        return
       }
 
       setSubmitted(true)
 
+      // Omdirigera till dashboard efter 2 sekunder
       setTimeout(() => {
-        onNavigate('tenant-dashboard')
+        navigate('/tenant-dashboard')
       }, 2000)
     } catch (error) {
       console.error('Fel vid skickande av felanmälan:', error)
+      alert('Ett fel uppstod, försök igen senare')
     }
   }
 
-
-
   const handleLogout = () => {
     localStorage.clear()
-    onNavigate('landing')
+    navigate('/') // gå till landing page
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <TenantHeader onNavigate={onNavigate} onLogout={handleLogout} />
+      <TenantHeader onLogout={handleLogout} />
 
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
@@ -111,7 +116,6 @@ export const ReportFormPage = ({ onNavigate }) => {
                   <option value="Kök">Kök</option>
                   <option value="Vardagsrum">Vardagsrum</option>
                   <option value="Badrum">Badrum</option>
-                  <option value="Klädkammare">Klädkammare</option>
                   <option value="Balkong">Balkong</option>
                   <option value="Hall">Hall</option>
                   <option value="Vitvaror">Vitvaror</option>
