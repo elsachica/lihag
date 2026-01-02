@@ -63,7 +63,7 @@ export class ApartmentController {
       const total = await ApartmentModel.countDocuments(filter)
       const apartments = await ApartmentModel.find(filter).skip(rangeStart).limit(limit)
 
-      res.set('Content-Range', `apartments ${rangeStart}-${rangeStart + apartments.length - 1}/${total}`)
+      res.set('Content-Range', `items ${rangeStart}-${rangeStart + apartments.length - 1}/${total}`)
       res.set('Access-Control-Expose-Headers', 'Content-Range')
       logger.silly('Loaded ApartmentModel documents')
       res.json(apartments)
