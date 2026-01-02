@@ -40,22 +40,22 @@ build_auth:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/auth" --dockerfile "${CI_PROJECT_DIR}/services/auth/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed auth:${CI_COMMIT_REF_SLUG}"
 
-  rules:
-    - changes:
-        - services/auth/**
+  # rules:
+  #   - changes:
+  #       - services/auth/**
 
 # only:
 #   changes:
 #     - services/auth/**/*
 
-# test_auth:
-#   stage: test
-#   image: node:20
-#   script:
-#     - cd services/auth
-#     - npm ci
-#     - npm run lint || echo "No linter configured"
-#     - npm test || echo "No tests yet"
+test_auth:
+  stage: test
+  image: node:20
+  script:
+    - cd services/auth
+    - npm ci
+    - npm run lint || echo "No linter configured"
+    - npm test || echo "No tests yet"
 
 # Maintenance Service (commented out - not ready yet)
 build_maintenance:
@@ -132,9 +132,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  # rules:
-  #   - changes:
-  #       - frontend/lihag-frontend/**
+  rules:
+    - changes:
+        - frontend/lihag-frontend/**
 
 # test_frontend:
 #   stage: test
