@@ -10,7 +10,6 @@ import { MaintenanceList, MaintenanceCreate, MaintenanceEdit } from './component
 import './App.css'
 
 import simpleRestProvider from 'ra-data-simple-rest'
-import { maintenanceReports } from '../../lihag-frontend/src/data/reports'
 
 const adminDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/property/apartments' || 'http://localhost:8891')
 
