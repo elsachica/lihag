@@ -139,7 +139,8 @@ build_admin-frontend:
       echo "IMAGE=${IMAGE}" >> build.env
 
 
-      /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/admin-frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/admin-frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible
+      /kaniko/executor --context "${CI_PROJECT_DIR}/frontend/admin-frontend" --dockerfile "${CI_PROJECT_DIR}/frontend/admin-frontend/Dockerfile" --destination "${IMAGE}" --snapshotMode=redo --reproducible \
+      --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
 
   rules:

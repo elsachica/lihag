@@ -10,70 +10,53 @@ import { MaintenanceList, MaintenanceCreate, MaintenanceEdit } from './component
 import './App.css'
 
 import simpleRestProvider from 'ra-data-simple-rest'
+import { maintenanceReports } from '../../lihag-frontend/src/data/reports'
 
-const propertyDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/property/apartments' || 'http://lihag.194.47.171.149.nip.io')
-const userDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/maintenance' || 'http://localhost:8889')
-const maintenanceDataProvider = simpleRestProvider(import.meta.env.VITE_MAINTENANCE_URL || 'http://localhost:8890')
+const adminDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/property/apartments' || 'http://localhost:8891')
 
 // Map resource names to API endpoints
 const resourceMap = {
-    properties: 'apartments'
+    properties: 'property/apartments',
+    maintenanceReports: 'maintenance',
+    accounts: '/'
 }
 
 const dataProvider = {
     getList: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.getList('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.getList('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.getList('apartments', params)
-        return propertyDataProvider.getList(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.getList(mapped, params)
     },
     getOne: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.getOne('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.getOne('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.getOne('apartments', params)
-        return propertyDataProvider.getOne(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.getOne(mapped, params)
     },
     getMany: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.getMany('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.getMany('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.getMany('apartments', params)
-        return propertyDataProvider.getMany(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.getMany(mapped, params)
     },
     getManyReference: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.getManyReference('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.getManyReference('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.getManyReference('apartments', params)
-        return propertyDataProvider.getManyReference(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.getManyReference(mapped, params)
     },
     create: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.create('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.create('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.create('apartments', params)
-        return propertyDataProvider.create(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.create(mapped, params)
     },
     update: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.update('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.update('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.update('apartments', params)
-        return propertyDataProvider.update(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.update(mapped, params)
     },
     updateMany: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.updateMany('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.updateMany('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.updateMany('apartments', params)
-        return propertyDataProvider.updateMany(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.updateMany(mapped, params)
     },
     delete: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.delete('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.delete('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.delete('apartments', params)
-        return propertyDataProvider.delete(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.delete(mapped, params)
     },
     deleteMany: (resource, params) => {
-        if (resource === 'accounts') return userDataProvider.deleteMany('accounts', params)
-        if (resource === 'maintenance') return maintenanceDataProvider.deleteMany('maintenance', params)
-        if (resource === 'properties') return propertyDataProvider.deleteMany('apartments', params)
-        return propertyDataProvider.deleteMany(resource, params)
+        const mapped = resourceMap[resource] || resource
+        return adminDataProvider.deleteMany(mapped, params)
     }
 }
 
