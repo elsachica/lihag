@@ -85,6 +85,32 @@ build_maintenance:
 #     - npm run lint || echo "No linter configured"
 #     - npm test || echo "No tests yet"
 
+# Notification Service
+build_notification:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]   # Viktigt för Kaniko
+  script:
+    # Konfigurera Docker auth för GitLab Registry
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(printf '%s' "gitlab-ci-token:${CI_JOB_TOKEN}" | base64)\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context "${CI_PROJECT_DIR}/services/notification" --dockerfile "${CI_PROJECT_DIR}/services/notification/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:${CI_COMMIT_REF_SLUG}"
+    - echo "✓ Successfully built and pushed notification:${CI_COMMIT_REF_SLUG}"
+
+  # rules:
+  #   - changes:
+  #       - services/notification/**
+
+  # test_notification:
+  #   stage: test
+  #   image: node:20
+  #   script:
+  #     - cd services/maintenance
+  #     - npm ci
+  #     - npm run lint || echo "No linter configured"
+  #     - npm test || echo "No tests yet"
+
+
 # Lihag-frontend (commented out - not ready yet)
 build_frontend:
   stage: build
@@ -176,6 +202,7 @@ deploy_staging:
     DB_CONNECTION_STRING_AUTH: "$DB_CONNECTION_STRING_AUTH"
     DB_CONNECTION_STRING_MAINTENANCE: "$DB_CONNECTION_STRING_MAINTENANCE"
     DB_CONNECTION_STRING_PROPERTY: "$DB_CONNECTION_STRING_PROPERTY"
+    DB_CONNECTION_STRING_NOTIFICATION: "$DB_CONNECTION_STRING_NOTIFICATION"
     JWT_PRIVATE_PEM: "$JWT_PRIVATE_PEM"
     JWT_PUBLIC_PEM: "$JWT_PUBLIC_PEM"
 
@@ -208,12 +235,19 @@ deploy_staging:
         --from-literal=DB_CONNECTION_STRING_AUTH="${DB_CONNECTION_STRING_AUTH}" \
         --from-literal=DB_CONNECTION_STRING_MAINTENANCE="${DB_CONNECTION_STRING_MAINTENANCE}" \
         --from-literal=DB_CONNECTION_STRING_PROPERTY="${DB_CONNECTION_STRING_PROPERTY}" \
+        --from-literal=DB_CONNECTION_STRING_NOTIFICATION="${DB_CONNECTION_STRING_NOTIFICATION}" \
         --from-literal=JWT_PRIVATE_PEM="${JWT_PRIVATE_PEM}" \
         --from-literal=JWT_PUBLIC_PEM="${JWT_PUBLIC_PEM}" \
         --from-literal=NODE_ENV="${NODE_ENV}" \
         --from-literal=RABBITMQ_URL="${RABBITMQ_URL}" \
         --from-literal=RABBITMQ_DEFAULT_USER="${RABBITMQ_DEFAULT_USER}" \
         --from-literal=RABBITMQ_DEFAULT_PASS="${RABBITMQ_DEFAULT_PASS}" \
+        --from-literal=SMTP_HOST="${SMTP_HOST}" \
+        --from-literal=SMTP_PORT="${SMTP_PORT}" \
+        --from-literal=SMTP_USER="${SMTP_USER}" \
+        --from-literal=SMTP_PASS="${SMTP_PASS}" \
+        --from-literal=SMTP_FROM="${SMTP_FROM}" \
+        --from-literal=ADMIN_EMAIL="${ADMIN_EMAIL}" \
         -n "${NAMESPACE}" \
         --dry-run=client -o yaml | kubectl apply -f -
 
@@ -223,7 +257,8 @@ deploy_staging:
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:$CI_COMMIT_REF_SLUG \
         --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:$CI_COMMIT_REF_SLUG \
-        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend:$CI_COMMIT_REF_SLUG
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend:$CI_COMMIT_REF_SLUG \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:$CI_COMMIT_REF_SLUG
 
     - kubectl get deployments -n "${NAMESPACE}" || true
     - kubectl get pods -n "${NAMESPACE}" -o wide || true
@@ -270,6 +305,7 @@ deploy_production:
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend:${CI_COMMIT_REF_SLUG}" \
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}" \
         --images "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}" \
+        --images gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:$CI_COMMIT_REF_SLUG \
       echo "Waiting for deployments to rollout..."
       kubectl get deployments -n "${NAMESPACE}" || true
       kubectl get pods -n "${NAMESPACE}" -o wide || true
