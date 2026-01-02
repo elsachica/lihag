@@ -54,17 +54,7 @@ export class ApartmentController {
       const filter = {}
       if (area) filter.area = area
       if (type) filter.type = type
-
-      // Pagination
-      const rangeStart = parseInt(req.headers.range?.split('=')[1]?.split('-')[0] || 0, 10)
-      const rangeEnd = parseInt(req.headers.range?.split('=')[1]?.split('-')[1] || 9, 10)
-      const limit = rangeEnd - rangeStart + 1
-
-      const total = await ApartmentModel.countDocuments(filter)
-      const apartments = await ApartmentModel.find(filter).skip(rangeStart).limit(limit)
-
-      res.set('Content-Range', `items ${rangeStart}-${rangeStart + apartments.length - 1}/${total}`)
-      res.set('Access-Control-Expose-Headers', 'Content-Range')
+      const apartments = await ApartmentModel.find(filter)
       logger.silly('Loaded ApartmentModel documents')
       res.json(apartments)
     } catch (error) {

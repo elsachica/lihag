@@ -21,14 +21,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path=":apartmentId" element={<ApartmentDetailPage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="contact" element={<ContactPage />} />
-        <Route path="interest-form" element={<InterestFormPage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="tenant-dashboard" element={<TenantDashboardPage />} />
-        <Route path="report-form" element={<ReportFormPage />} />
-        <Route path="profile" element={<ProfilePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/tenant-dashboard" element={<TenantDashboardPage />} />
+        <Route path="/report-form" element={<ReportFormPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/apartment/:apartmentId" element={<ApartmentDetailPage />} />
+        <Route path="/interest-form/:apartmentId" element={<InterestFormPage />} />
       </Routes>
     </BrowserRouter>
   )
