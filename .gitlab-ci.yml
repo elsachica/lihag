@@ -15,13 +15,10 @@ build_property:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/property" --dockerfile "${CI_PROJECT_DIR}/services/property/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed property:${CI_COMMIT_REF_SLUG}"
 
-  # rules:
-  #   - changes:
-  #       - services/property/**
+  rules:
+    - changes:
+        - services/property/**
 
-# only:
-#   changes:
-#     - services/property/**/*
 
 # test_property:
 #   stage: test
@@ -43,9 +40,9 @@ build_auth:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/auth" --dockerfile "${CI_PROJECT_DIR}/services/auth/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed auth:${CI_COMMIT_REF_SLUG}"
 
-  # rules:
-  #   - changes:
-  #       - services/auth/**
+  rules:
+    - changes:
+        - services/auth/**
 
 # only:
 #   changes:
@@ -135,9 +132,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  # rules:
-  #   - changes:
-  #       - frontend/lihag-frontend/**
+  rules:
+    - changes:
+        - frontend/lihag-frontend/**
 
 # test_frontend:
 #   stage: test
@@ -169,9 +166,9 @@ build_admin-frontend:
       --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
 
-  rules:
-    - changes:
-        - frontend/admin-frontend/**
+  # rules:
+  #   - changes:
+  #       - frontend/admin-frontend/**
 
 # test_admin-frontend:
 #   stage: test
