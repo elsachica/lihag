@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { TenantHeader } from '../components/Header'
 
 /**
  * Profile Page - Edit tenant profile information
  */
-export const ProfilePage = ({ onNavigate }) => {
+export const ProfilePage = () => {
+  const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     firstName: 'Anna',
     lastName: 'Andersson',
@@ -24,18 +27,21 @@ export const ProfilePage = ({ onNavigate }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     setSubmitted(true)
+
+    // Simulera sparning + redirect
     setTimeout(() => {
-      onNavigate('tenant-dashboard')
+      navigate('/tenant-dashboard')
     }, 2000)
   }
 
   const handleLogout = () => {
-    onNavigate('landing')
+    localStorage.clear()
+    navigate('/') // landing page
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <TenantHeader onNavigate={onNavigate} onLogout={handleLogout} />
+      <TenantHeader onLogout={handleLogout} />
 
       <main className="max-w-2xl mx-auto px-6 py-12">
         <div className="bg-white rounded-xl shadow-lg p-8 md:p-12">
@@ -46,7 +52,9 @@ export const ProfilePage = ({ onNavigate }) => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Förnamn</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Förnamn
+                  </label>
                   <input
                     type="text"
                     name="firstName"
@@ -57,7 +65,9 @@ export const ProfilePage = ({ onNavigate }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Efternamn</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Efternamn
+                  </label>
                   <input
                     type="text"
                     name="lastName"
@@ -69,7 +79,9 @@ export const ProfilePage = ({ onNavigate }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">E-post</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  E-post
+                </label>
                 <input
                   type="email"
                   name="email"
@@ -80,7 +92,9 @@ export const ProfilePage = ({ onNavigate }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Telefonnummer</label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Telefonnummer
+                </label>
                 <input
                   type="tel"
                   name="phone"
@@ -100,9 +114,13 @@ export const ProfilePage = ({ onNavigate }) => {
           ) : (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">✓</div>
-              <h2 className="text-2xl font-bold text-green-600 mb-2">Profil uppdaterad!</h2>
+              <h2 className="text-2xl font-bold text-green-600 mb-2">
+                Profil uppdaterad!
+              </h2>
               <p className="text-gray-600">Dina ändringar har sparats.</p>
-              <p className="text-sm text-gray-500 mt-4">Du omdirigeras snart...</p>
+              <p className="text-sm text-gray-500 mt-4">
+                Du omdirigeras snart...
+              </p>
             </div>
           )}
         </div>

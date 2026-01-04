@@ -53,8 +53,7 @@ build_auth:
 #   image: node:20
 #   script:
 #     - cd services/auth
-#     - npm ci
-#     - npm run lint || echo "No linter configured"
+#     - npm ci --include=dev
 #     - npm test || echo "No tests yet"
 
 # Maintenance Service (commented out - not ready yet)
@@ -132,9 +131,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  rules:
-    - changes:
-        - frontend/lihag-frontend/**
+  # rules:
+  #   - changes:
+  #       - frontend/lihag-frontend/**
 
 # test_frontend:
 #   stage: test

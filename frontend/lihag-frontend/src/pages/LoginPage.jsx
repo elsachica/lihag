@@ -1,22 +1,22 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { LoginHeader, Navigation } from '../components/Header'
 
-/**
- * Login Page - User authentication
- */
-export const LoginPage = ({ onNavigate }) => {
+export const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate() // <-- React Router navigation
 
   const handleSubmit = async (e) => {
-    const url = import.meta.env.VITE_AUTH_SERVICE_URL
     e.preventDefault()
+    const url = import.meta.env.VITE_AUTH_SERVICE_URL
+
     if (email && password) {
       try {
         const response = await fetch(url + '/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email, password }),
         })
 
         const data = await response.json()
@@ -25,12 +25,11 @@ export const LoginPage = ({ onNavigate }) => {
           return
         }
 
-        // Spara token (eller session-id) lokalt
         localStorage.setItem('token', data.token)
         localStorage.setItem('apartmentId', data.apartmentId)
 
-        // Navigera vidare
-        onNavigate('tenant-dashboard')
+        // Navigera vidare med React Router
+        navigate('/tenant-dashboard')
       } catch (err) {
         console.error(err)
         alert('Something went wrong')
@@ -40,8 +39,8 @@ export const LoginPage = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col">
-      <LoginHeader onNavigate={onNavigate} />
-      <Navigation currentPage="login" onNavigate={onNavigate} />
+      <LoginHeader />
+      <Navigation currentPage="login" />
 
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
