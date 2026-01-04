@@ -3,8 +3,15 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: traefik
+  tls:
+    - hosts:
+        - lihag.admin.194.47.171.20.nip.io
+        - lihag.194.47.171.20.nip.io
+        - auth.lihag.194.47.171.20.nip.io
+      secretName: lihag-tls
   rules:
     - host: lihag.admin.194.47.171.20.nip.io
       http:
