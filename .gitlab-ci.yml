@@ -94,9 +94,9 @@ build_notification:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/notification" --dockerfile "${CI_PROJECT_DIR}/services/notification/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed notification:${CI_COMMIT_REF_SLUG}"
 
-  # rules:
-  #   - changes:
-  #       - services/notification/**
+  rules:
+    - changes:
+        - services/notification/**
 
   # test_notification:
   #   stage: test
@@ -132,9 +132,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  # rules:
-  #   - changes:
-  #       - frontend/lihag-frontend/**
+  rules:
+    - changes:
+        - frontend/lihag-frontend/**
 
 # test_frontend:
 #   stage: test
@@ -166,9 +166,9 @@ build_admin-frontend:
       --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
 
-  # rules:
-  #   - changes:
-  #       - frontend/admin-frontend/**
+  rules:
+    - changes:
+        - frontend/admin-frontend/**
 
 # test_admin-frontend:
 #   stage: test
