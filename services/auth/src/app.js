@@ -13,10 +13,17 @@ export const createApp = () => {
   const app = express()
 
   app.use(cors({
-    origin: ['http://lihag.194.47.171.149.nip.io', 'http://lihag.admin.194.47.171.149.nip.io'],
-    credentials: true // om du skickar cookies eller auth headers
+    origin: [
+      'http://lihag.194.47.171.149.nip.io',
+      'http://lihag.admin.194.47.171.149.nip.io',
+      'http://lihag.194.47.171.20.nip.io',
+      'http://lihag.admin.194.47.171.20.nip.io'
+    ],
+    exposedHeaders: ['Content-Range'],
+    credentials: true
   }))
   app.use(express.json())
+
   app.use(httpContext.middleware)
 
   app.use((req, res, next) => {

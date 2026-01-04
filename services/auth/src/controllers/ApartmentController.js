@@ -7,6 +7,13 @@ export class ApartmentController {
     try {
       const queryString = new URLSearchParams(req.query).toString()
       const response = await fetch(`${this.backendUrl}?${queryString}`)
+
+      // Forward Content-Range header for React-admin pagination
+      const contentRange = response.headers.get('Content-Range')
+      if (contentRange) {
+        res.set('Content-Range', contentRange)
+      }
+
       const data = await response.json()
       res.status(response.status).json(data)
     } catch (err) {
