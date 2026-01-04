@@ -1,53 +1,58 @@
 
-import { List, Datagrid, TextField, NumberField, EditButton, DeleteButton, Create, SimpleForm, TextInput, SelectInput, Edit } from 'react-admin';
+import { List, Datagrid, TextField, NumberField, BooleanField, EditButton, DeleteButton, Create, SimpleForm, TextInput, NumberInput, SelectInput, BooleanInput, Edit } from 'react-admin';
 
 export const PropertyList = () => (
     <List>
         <Datagrid rowClick="edit">
-            <TextField source="id" />
-            <TextField source="address" label="Adress" />
-            <TextField source="city" label="Stad" />
-            <NumberField source="apartments" label="Antal lägenheter" />
-            <TextField source="status" label="Status" />
+            <TextField source="_id" label="ID" />
+            <TextField source="number" label="Nummer" />
+            <NumberField source="size" label="Storlek (kvm)" />
+            <TextField source="area" label="Område" />
+            <TextField source="type" label="Typ" />
+            <NumberField source="price" label="Hyra (kr)" />
+            <BooleanField source="isAvailable" label="Ledig" />
             <EditButton />
             <DeleteButton />
         </Datagrid>
     </List>
 );
 
-export const PropertyCreate = (props) => (
-    <Create {...props}>
+export const PropertyCreate = () => (
+    <Create>
         <SimpleForm>
             <TextInput source="number" label="Nummer" required />
-            <NumberField source="size" label="Storlek (kvm)" required />
+            <NumberInput source="size" label="Storlek (kvm)" required />
             <TextInput source="propertyId" label="Property ID" required />
             <TextInput source="area" label="Område" required />
             <SelectInput source="type" label="Typ" choices={[
                 { id: 'apartment', name: 'Lägenhet' },
                 { id: 'locale', name: 'Lokal' }
             ]} required />
-            <NumberField source="price" label="Månadshyra" required />
-            <SelectInput source="isAvailable" label="Ledig" choices={[
-                { id: true, name: 'Ja' },
-                { id: false, name: 'Nej' }
-            ]} />
-            <TextInput source="description" label="Beskrivning" />
-            <NumberField source="floor" label="Våning" />
-            <NumberField source="roomCount" label="Antal rum" />
+            <NumberInput source="price" label="Månadshyra (kr)" required />
+            <BooleanInput source="isAvailable" label="Ledig" defaultValue={true} />
+            <TextInput source="description" label="Beskrivning" multiline />
+            <NumberInput source="floor" label="Våning" />
+            <NumberInput source="roomCount" label="Antal rum" />
         </SimpleForm>
     </Create>
 );
 
-export const PropertyEdit = (props) => (
-    <Edit {...props}>
+export const PropertyEdit = () => (
+    <Edit>
         <SimpleForm>
-            <TextInput source="address" label="Adress" />
-            <TextInput source="city" label="Stad" />
-            <NumberField source="apartments" label="Antal lägenheter" />
-            <SelectInput source="status" label="Status" choices={[
-                { id: 'active', name: 'Aktiv' },
-                { id: 'inactive', name: 'Inaktiv' }
-            ]} />
+            <TextInput source="number" label="Nummer" required />
+            <NumberInput source="size" label="Storlek (kvm)" required />
+            <TextInput source="propertyId" label="Property ID" required />
+            <TextInput source="area" label="Område" required />
+            <SelectInput source="type" label="Typ" choices={[
+                { id: 'apartment', name: 'Lägenhet' },
+                { id: 'locale', name: 'Lokal' }
+            ]} required />
+            <NumberInput source="price" label="Månadshyra (kr)" required />
+            <BooleanInput source="isAvailable" label="Ledig" />
+            <TextInput source="description" label="Beskrivning" multiline />
+            <NumberInput source="floor" label="Våning" />
+            <NumberInput source="roomCount" label="Antal rum" />
         </SimpleForm>
     </Edit>
 );

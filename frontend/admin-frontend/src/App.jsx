@@ -16,8 +16,8 @@ const adminDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_SERVICE_U
 // Map resource names to API endpoints
 const resourceMap = {
     properties: 'property/apartments',
-    maintenanceReports: 'maintenance',
-    accounts: '/'
+    maintenance: 'maintenance/reports',
+    users: 'auth/users'
 }
 
 const dataProvider = {
@@ -60,16 +60,16 @@ const dataProvider = {
 }
 
 function App() {
-        return (
-            <Admin
-                dataProvider={dataProvider}
-                layout={MyLayout}
-            >
-                <Resource name="accounts" list={UserList} create={UserCreate} edit={UserEdit} icon={PeopleIcon} />
-                <Resource name="properties" list={PropertyList} create={PropertyCreate} edit={PropertyEdit} icon={ApartmentIcon} />
-                <Resource name="maintenance" list={MaintenanceList} create={MaintenanceCreate} edit={MaintenanceEdit} icon={BuildIcon} />
-            </Admin>
-        )
+    return (
+        <Admin
+            dataProvider={dataProvider}
+            layout={MyLayout}
+        >
+            <Resource name="users" list={UserList} create={UserCreate} edit={UserEdit} icon={PeopleIcon} />
+            <Resource name="properties" list={PropertyList} create={PropertyCreate} edit={PropertyEdit} icon={ApartmentIcon} />
+            <Resource name="maintenance" list={MaintenanceList} create={MaintenanceCreate} edit={MaintenanceEdit} icon={BuildIcon} />
+        </Admin>
+    )
 }
 
 export default App

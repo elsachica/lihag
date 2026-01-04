@@ -10,6 +10,13 @@ export class MaintenanceController {
       const url = queryString ? `${this.backendUrl}?${queryString}` : this.backendUrl
       const response = await fetch(url)
       const data = await response.json()
+
+      // Forward Content-Range header if present
+      const contentRange = response.headers.get('content-range')
+      if (contentRange) {
+        res.set('Content-Range', contentRange)
+      }
+
       res.status(response.status).json(data)
     } catch (err) {
       next(err)
@@ -32,7 +39,7 @@ export class MaintenanceController {
     try {
       const response = await fetch(this.backendUrl, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req.body)
       })
 
@@ -48,7 +55,7 @@ export class MaintenanceController {
     try {
       const response = await fetch(`${this.backendUrl}/${req.params.id}`, {
         method: 'PATCH',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(req.body)
       })
 

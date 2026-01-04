@@ -22,31 +22,33 @@ export class MaintenanceService {
   /**
    * Retrieves all maintenance reports based on optional query filters.
    *
-   * @param {object} query - The query parameters for filtering and pagination.
+   * @param {object} options - The query parameters for filtering and pagination.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance reports.
    */
-  async getAllReports(query) {
+  async getAllReports(options = {}) {
+    const { skip = 0, limit = 20, sort, order } = options
     const filter = {}
 
-    // Example: filter by apartmentId or status if provided
-    if (query.apartmentId) {
-      filter.apartmentId = query.apartmentId
-    }
-    if (query.status) {
-      filter.status = query.status
+    const sortOptions = {}
+    if (sort) {
+      sortOptions[sort] = order === 'DESC' ? -1 : 1
     }
 
-    // Pagination
-    const page = parseInt(query.page, 10) || 1
-    const limit = Math.min(parseInt(query.limit, 10) || 20, 100)
-    const skip = (page - 1) * limit
-
-    // Fetch data
     const reports = await this.maintenanceRepository.getAllReports(filter, {
       skip,
-      limit
+      limit,
+      sort: sortOptions
     })
     return reports
+  }
+
+  /**
+   * Get total count of maintenance reports.
+   *
+   * @returns {Promise<number>} - The total count of reports.
+   */
+  async getReportCount() {
+    return await this.maintenanceRepository.getReportCount()
   }
 
   /**
