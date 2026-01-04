@@ -60,7 +60,8 @@ export class ApartmentController {
       const apartments = await ApartmentModel.find(filter)
 
       // Set Content-Range header for React-admin pagination
-      res.set('Content-Range', `items 0-${apartments.length - 1}/${total}`)
+      const end = apartments.length > 0 ? apartments.length - 1 : 0
+      res.set('Content-Range', `items 0-${end}/${total}`)
 
       logger.silly('Loaded ApartmentModel documents')
       res.json(apartments)
