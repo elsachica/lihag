@@ -54,7 +54,14 @@ export class ApartmentController {
       const filter = {}
       if (area) filter.area = area
       if (type) filter.type = type
+
+      // Get total count for pagination
+      const total = await ApartmentModel.countDocuments(filter)
       const apartments = await ApartmentModel.find(filter)
+
+      // Set Content-Range header for React-admin pagination
+      res.set('Content-Range', `items 0-${apartments.length - 1}/${total}`)
+
       logger.silly('Loaded ApartmentModel documents')
       res.json(apartments)
     } catch (error) {

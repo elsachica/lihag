@@ -11,7 +11,7 @@ import './App.css'
 
 import simpleRestProvider from 'ra-data-simple-rest'
 
-const adminDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_URL + '/property/apartments' || 'http://localhost:8891')
+const adminDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_SERVICE_URL + '/property/apartments' || 'http://localhost:8891')
 
 // Map resource names to API endpoints
 const resourceMap = {
