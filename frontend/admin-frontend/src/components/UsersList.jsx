@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchWithAuth } from '../utils/auth';
 
 const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
@@ -15,7 +16,7 @@ export const UsersList = () => {
     const fetchUsers = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/auth/users`);
+            const response = await fetchWithAuth(`${API_URL}/auth/users`);
             if (!response.ok) throw new Error('Failed to fetch users');
             const data = await response.json();
             setUsers(data);
@@ -30,7 +31,7 @@ export const UsersList = () => {
         if (!confirm('Är du säker på att du vill radera denna användare?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/auth/users/${id}`, {
+            const response = await fetchWithAuth(`${API_URL}/auth/users/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Failed to delete user');

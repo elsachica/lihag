@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { fetchWithAuth } from '../utils/auth';
 
 const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
@@ -26,7 +27,7 @@ export const UserForm = () => {
     const fetchUser = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/auth/users/${id}`);
+            const response = await fetchWithAuth(`${API_URL}/auth/users/${id}`);
             if (!response.ok) throw new Error('Failed to fetch user');
             const data = await response.json();
             setFormData({
@@ -64,7 +65,7 @@ export const UserForm = () => {
                 ? { email: formData.email, role: formData.role, propertyId: formData.propertyId }
                 : formData;
 
-            const response = await fetch(url, {
+            const response = await fetchWithAuth(url, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'

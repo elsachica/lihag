@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { fetchWithAuth } from '../utils/auth';
 
 const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
@@ -32,7 +33,7 @@ export const PropertyForm = () => {
     const fetchProperty = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/property/apartments/${id}`);
+            const response = await fetchWithAuth(`${API_URL}/property/apartments/${id}`);
             if (!response.ok) throw new Error('Failed to fetch property');
             const data = await response.json();
             setFormData(data);
@@ -61,7 +62,7 @@ export const PropertyForm = () => {
                 ? `${API_URL}/property/apartments/${id}`
                 : `${API_URL}/property/apartments`;
 
-            const response = await fetch(url, {
+            const response = await fetchWithAuth(url, {
                 method: isEdit ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'

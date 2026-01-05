@@ -65,7 +65,7 @@ body {
   background: white;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -169,7 +169,9 @@ body {
   background: #c0392b;
 }
 
-.status, .role, .priority {
+.status,
+.role,
+.priority {
   padding: 4px 12px;
   border-radius: 12px;
   font-size: 12px;
@@ -246,7 +248,7 @@ body {
   border-radius: 8px;
   padding: 30px;
   max-width: 800px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-container h2 {
@@ -300,7 +302,9 @@ body {
   border-top: 1px solid #ecf0f1;
 }
 
-.loading, .error, .empty-state {
+.loading,
+.error,
+.empty-state {
   text-align: center;
   padding: 40px;
   color: #7f8c8d;
@@ -317,4 +321,35 @@ body {
 .empty-state {
   background: #f8f9fa;
   border-radius: 8px;
+}
+
+/* Login page styles */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.btn-block {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
 }

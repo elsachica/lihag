@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { fetchWithAuth } from '../utils/auth';
 
 const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
@@ -28,7 +29,7 @@ export const MaintenanceForm = () => {
     const fetchReport = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/maintenance/${id}`);
+            const response = await fetchWithAuth(`${API_URL}/maintenance/${id}`);
             if (!response.ok) throw new Error('Failed to fetch report');
             const data = await response.json();
             setFormData(data);
@@ -57,7 +58,7 @@ export const MaintenanceForm = () => {
                 ? `${API_URL}/maintenance/${id}`
                 : `${API_URL}/maintenance`;
 
-            const response = await fetch(url, {
+            const response = await fetchWithAuth(url, {
                 method: isEdit ? 'PATCH' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'

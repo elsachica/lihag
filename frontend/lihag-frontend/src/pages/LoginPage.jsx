@@ -28,8 +28,12 @@ export const LoginPage = () => {
         localStorage.setItem('token', data.token)
         localStorage.setItem('apartmentId', data.apartmentId)
 
-        // Navigera vidare med React Router
-        navigate('/tenant-dashboard')
+        // Redirect baserat på roll
+        if (data.role === 'admin') {
+          window.location.href = 'http://admin.lihag.194.47.171.149.nip.io'
+        } else {
+          navigate('/tenant-dashboard')
+        }
       } catch (err) {
         console.error(err)
         alert('Something went wrong')

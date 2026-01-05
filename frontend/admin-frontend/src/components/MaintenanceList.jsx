@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchWithAuth } from '../utils/auth';
 
 const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
@@ -15,7 +16,7 @@ export const MaintenanceList = () => {
     const fetchReports = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/maintenance`);
+            const response = await fetchWithAuth(`${API_URL}/maintenance`);
             if (!response.ok) throw new Error('Failed to fetch maintenance reports');
             const data = await response.json();
             setReports(data);
@@ -30,7 +31,7 @@ export const MaintenanceList = () => {
         if (!confirm('Är du säker på att du vill radera denna rapport?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/maintenance/${id}`, {
+            const response = await fetchWithAuth(`${API_URL}/maintenance/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Failed to delete report');

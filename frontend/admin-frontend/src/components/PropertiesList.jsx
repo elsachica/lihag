@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchWithAuth } from '../utils/auth';
 
 const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
@@ -15,7 +16,7 @@ export const PropertiesList = () => {
     const fetchProperties = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_URL}/property/apartments`);
+            const response = await fetchWithAuth(`${API_URL}/property/apartments`);
             if (!response.ok) throw new Error('Failed to fetch properties');
             const data = await response.json();
             setProperties(data);
@@ -30,7 +31,7 @@ export const PropertiesList = () => {
         if (!confirm('Är du säker på att du vill radera denna lägenhet?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/property/apartments/${id}`, {
+            const response = await fetchWithAuth(`${API_URL}/property/apartments/${id}`, {
                 method: 'DELETE'
             });
             if (!response.ok) throw new Error('Failed to delete property');
