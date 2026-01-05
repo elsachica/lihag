@@ -19,7 +19,10 @@ export const PropertyForm = () => {
         isAvailable: true,
         description: '',
         floor: '',
-        roomCount: ''
+        rooms: '',
+        objnr: '',
+        address: '',
+        city: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -179,14 +182,50 @@ export const PropertyForm = () => {
                     </div>
 
                     <div className="form-group">
-                        <label>Antal rum</label>
+                        <label>Antal rum *</label>
                         <input
                             type="number"
-                            name="roomCount"
-                            value={formData.roomCount}
+                            name="rooms"
+                            value={formData.rooms}
                             onChange={handleChange}
+                            required
                         />
                     </div>
+                </div>
+
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Objektnummer *</label>
+                        <input
+                            type="text"
+                            name="objnr"
+                            value={formData.objnr}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Adress *</label>
+                        <input
+                            type="text"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <label>Stad *</label>
+                    <input
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        required
+                    />
                 </div>
 
                 <div className="form-group">
