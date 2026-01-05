@@ -25,13 +25,18 @@ export const LoginPage = () => {
           return
         }
 
+        console.log('Login response:', data)
+        console.log('User role:', data.role)
+
         localStorage.setItem('token', data.token)
         localStorage.setItem('apartmentId', data.apartmentId)
 
         // Redirect baserat på roll
         if (data.role === 'admin') {
+          console.log('Redirecting to admin frontend')
           window.location.href = 'http://admin.lihag.194.47.171.149.nip.io'
         } else {
+          console.log('Navigating to tenant dashboard')
           navigate('/tenant-dashboard')
         }
       } catch (err) {
