@@ -31,7 +31,9 @@ export const LandingPage = ({ onNavigate, onSelectApartment }) => {
         }
 
         const data = await response.json()
-        setApartments(data)
+        // Filtrera så att endast lediga lägenheter visas
+        const availableApartments = data.filter(apt => apt.isAvailable === true)
+        setApartments(availableApartments)
       } catch (err) {
         console.error(err)
         setError(err.message)

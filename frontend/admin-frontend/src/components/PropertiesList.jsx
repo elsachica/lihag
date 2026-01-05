@@ -81,11 +81,11 @@ export const PropertiesList = () => {
                                 </span>
                             </td>
                             <td className="actions">
-                                <Link to={`/properties/edit/${property._id}`} className="btn btn-sm btn-edit">
+                                <Link to={`/properties/edit/${property.id}`} className="btn btn-sm btn-edit">
                                     Redigera
                                 </Link>
                                 <button
-                                    onClick={() => handleDelete(property._id)}
+                                    onClick={() => handleDelete(property.id)}
                                     className="btn btn-sm btn-delete"
                                 >
                                     Radera
