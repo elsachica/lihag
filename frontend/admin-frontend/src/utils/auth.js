@@ -1,5 +1,5 @@
 // Simple auth utilities for admin panel
-const TOKEN_KEY = 'admin_token';
+const TOKEN_KEY = 'token'; // Använd samma nyckel som lihag-frontend
 
 export const auth = {
     // Save token to localStorage
