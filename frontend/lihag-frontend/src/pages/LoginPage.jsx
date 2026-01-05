@@ -39,8 +39,9 @@ export const LoginPage = () => {
         // Redirect baserat på roll
         if (data.role === 'admin') {
           console.log('Redirecting to admin frontend')
-          alert('Du är admin! Redirectar till admin-panel...')
-          window.location.href = 'http://lihag.admin.194.47.171.149.nip.io'
+          console.log('About to redirect to: http://lihag.admin.194.47.171.149.nip.io')
+          window.location.replace('http://lihag.admin.194.47.171.149.nip.io')
+          return
         } else {
           console.log('Navigating to tenant dashboard')
           navigate('/tenant-dashboard')
