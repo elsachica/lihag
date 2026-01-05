@@ -9,23 +9,28 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    console.log('Form submitted')
     const url = import.meta.env.VITE_AUTH_SERVICE_URL
+    console.log('Auth service URL:', url)
 
     if (email && password) {
       try {
+        console.log('Sending login request...')
         const response = await fetch(url + '/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
         })
 
+        console.log('Response status:', response.status)
         const data = await response.json()
+        console.log('Login response:', data)
+
         if (!response.ok) {
           alert(data.message || 'Login failed')
           return
         }
 
-        console.log('Login response:', data)
         console.log('User role:', data.role)
 
         localStorage.setItem('token', data.token)
@@ -34,14 +39,15 @@ export const LoginPage = () => {
         // Redirect baserat på roll
         if (data.role === 'admin') {
           console.log('Redirecting to admin frontend')
+          alert('Du är admin! Redirectar till admin-panel...')
           window.location.href = 'http://lihag.admin.194.47.171.149.nip.io'
         } else {
           console.log('Navigating to tenant dashboard')
           navigate('/tenant-dashboard')
         }
       } catch (err) {
-        console.error(err)
-        alert('Something went wrong')
+        console.error('Login error:', err)
+        alert('Something went wrong: ' + err.message)
       }
     }
   }
