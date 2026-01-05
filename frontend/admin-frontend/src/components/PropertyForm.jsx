@@ -70,9 +70,14 @@ export const PropertyForm = () => {
                 body: JSON.stringify(formData)
             });
 
-            if (!response.ok) throw new Error('Failed to save property');
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                console.error('Save failed:', response.status, errorData);
+                throw new Error(errorData.message || `Failed to save property (${response.status})`);
+            }
             navigate('/properties');
         } catch (err) {
+            console.error('Property save error:', err);
             setError(err.message);
         } finally {
             setLoading(false);
