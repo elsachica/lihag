@@ -22,7 +22,12 @@ export const PropertyForm = () => {
         rooms: '',
         objnr: '',
         address: '',
-        city: ''
+        city: '',
+        image: '',
+        built: '',
+        features: [],
+        available: '',
+        deadline: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -248,6 +253,64 @@ export const PropertyForm = () => {
                         onChange={handleChange}
                         rows="4"
                     />
+                </div>
+
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Bild-URL</label>
+                        <input
+                            type="text"
+                            name="image"
+                            value={formData.image}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Byggnadsår</label>
+                        <input
+                            type="number"
+                            name="built"
+                            value={formData.built}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </div>
+
+                <div className="form-group">
+                    <label>Egenskaper (kommaseparerat)</label>
+                    <input
+                        type="text"
+                        name="features"
+                        value={Array.isArray(formData.features) ? formData.features.join(', ') : ''}
+                        onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            features: e.target.value.split(',').map(f => f.trim()).filter(f => f)
+                        }))}
+                        placeholder="t.ex. Balkong, Hiss, Tvättstuga"
+                    />
+                </div>
+
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Tillgänglig från</label>
+                        <input
+                            type="date"
+                            name="available"
+                            value={formData.available ? formData.available.split('T')[0] : ''}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Ansökningsdeadline</label>
+                        <input
+                            type="date"
+                            name="deadline"
+                            value={formData.deadline ? formData.deadline.split('T')[0] : ''}
+                            onChange={handleChange}
+                        />
+                    </div>
                 </div>
 
                 <div className="form-actions">
