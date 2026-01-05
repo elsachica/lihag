@@ -22,31 +22,6 @@ export const auth = {
         return !!this.getToken();
     },
 
-    // Login
-    async login(email, password) {
-        const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
-        const response = await fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
-
-        if (!response.ok) {
-            throw new Error('Login failed');
-        }
-
-        const data = await response.json();
-        this.setToken(data.token);
-        return data;
-    },
-
-    // Logout
-    logout() {
-        this.removeToken();
-    },
-
     // Get headers with auth token
     getAuthHeaders() {
         const token = this.getToken();
@@ -67,10 +42,10 @@ export async function fetchWithAuth(url, options = {}) {
         },
     });
 
-    // If unauthorized, redirect to login
+    // If unauthorized, redirect to main site login
     if (response.status === 401) {
-        auth.logout();
-        window.location.href = '/login';
+        auth.removeToken();
+        window.location.href = 'http://lihag.194.47.171.149.nip.io/login';
     }
 
     return response;
