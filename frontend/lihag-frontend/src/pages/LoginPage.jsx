@@ -19,6 +19,7 @@ export const LoginPage = () => {
         const response = await fetch(url + '/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',  // Inkludera cookies i request
           body: JSON.stringify({ email, password }),
         })
 
@@ -36,12 +37,10 @@ export const LoginPage = () => {
         localStorage.setItem('token', data.token)
         localStorage.setItem('apartmentId', data.apartmentId)
 
-        // Redirect baserat på roll
+        // Redirect baserat på roll (token finns nu i cookie)
         if (data.role === 'admin') {
           console.log('Redirecting to admin frontend')
-          console.log('About to redirect to: http://lihag.admin.194.47.171.149.nip.io')
-          // Skicka token som query parameter eftersom localStorage inte delas mellan domäner
-          window.location.replace(`http://lihag.admin.194.47.171.149.nip.io?token=${data.token}`)
+          window.location.replace('http://lihag.admin.194.47.171.149.nip.io')
           return
         } else {
           console.log('Navigating to tenant dashboard')

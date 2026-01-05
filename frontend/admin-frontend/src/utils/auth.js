@@ -1,5 +1,13 @@
 // Simple auth utilities for admin panel
-const TOKEN_KEY = 'token'; // Använd samma nyckel som lihag-frontend
+const TOKEN_KEY = 'token';
+
+// Hjälpfunktion för att läsa cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
 
 export const auth = {
     // Save token to localStorage
@@ -7,9 +15,9 @@ export const auth = {
         localStorage.setItem(TOKEN_KEY, token);
     },
 
-    // Get token from localStorage
+    // Get token from cookie först, sedan localStorage som fallback
     getToken() {
-        return localStorage.getItem(TOKEN_KEY);
+        return getCookie('authToken') || localStorage.getItem(TOKEN_KEY);
     },
 
     // Remove token

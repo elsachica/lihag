@@ -20,18 +20,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
-    // Kolla om token finns i URL (från redirect efter login)
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const tokenFromUrl = urlParams.get('token');
-
-        if (tokenFromUrl) {
-            console.log('Token found in URL, saving to localStorage');
-            auth.setToken(tokenFromUrl);
-            // Ta bort token från URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-    }, []);
+    // Token finns nu i cookie, inget behov av att läsa från URL
 
     return (
         <BrowserRouter>

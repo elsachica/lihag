@@ -51,6 +51,15 @@ export class AuthController {
 
       console.log('Login successful for user:', user.email, 'role:', user.role)
 
+      // Sätt token som HTTP-only cookie som delas mellan subdömäner
+      res.cookie('authToken', token, {
+        httpOnly: true,     // Skyddar mot XSS
+        secure: process.env.NODE_ENV === 'production',  // Endast HTTPS i production
+        sameSite: 'lax',    // CSRF-skydd
+        domain: '.194.47.171.149.nip.io',  // Delas mellan alla subdömäner
+        maxAge: 3600000     // 1 timme
+      })
+
       res.status(200).json({
         token,
         apartmentId: user.propertyId,
