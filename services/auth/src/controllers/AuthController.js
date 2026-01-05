@@ -60,6 +60,8 @@ export class AuthController {
         maxAge: 3600000     // 1 timme
       })
 
+      console.log('Cookie set for domain: .194.47.171.149.nip.io')
+
       res.status(200).json({
         token,
         apartmentId: user.propertyId,

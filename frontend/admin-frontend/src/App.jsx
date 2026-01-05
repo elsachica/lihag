@@ -12,7 +12,12 @@ import { useEffect } from 'react';
 
 // Protected route wrapper - redirects till huvudsidan om ingen token
 const ProtectedRoute = ({ children }) => {
+    const token = auth.getToken();
+    console.log('ProtectedRoute check - token:', token ? 'found' : 'not found');
+    console.log('All cookies:', document.cookie);
+
     if (!auth.isAuthenticated()) {
+        console.log('Not authenticated, redirecting to login');
         window.location.href = 'http://lihag.194.47.171.149.nip.io/login';
         return null;
     }
