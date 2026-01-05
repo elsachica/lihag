@@ -69,7 +69,7 @@ export const PropertiesList = () => {
                 </thead>
                 <tbody>
                     {properties.map((property) => (
-                        <tr key={property._id}>
+                        <tr key={property.id}>
                             <td>{property.number}</td>
                             <td>{property.size}</td>
                             <td>{property.area}</td>
