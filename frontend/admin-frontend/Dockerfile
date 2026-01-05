@@ -1,6 +1,11 @@
 # --- Production Dockerfile for admin-frontend (Vite + React Admin) ---
 FROM node:20-alpine AS build
 WORKDIR /app
+
+# Declare build argument
+ARG VITE_AUTH_SERVICE_URL
+ENV VITE_AUTH_SERVICE_URL=${VITE_AUTH_SERVICE_URL}
+
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
