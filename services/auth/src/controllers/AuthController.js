@@ -49,19 +49,6 @@ export class AuthController {
       // Skapa JWT med RS256
       const token = await JsonWebToken.encodeUser(user, JWT_PRIVATE_KEY, JWT_EXPIRES_IN)
 
-      console.log('Login successful for user:', user.email, 'role:', user.role)
-
-      // Sätt token som HTTP-only cookie som delas mellan subdömäner
-      res.cookie('authToken', token, {
-        httpOnly: true,     // Skyddar mot XSS
-        secure: process.env.NODE_ENV === 'production',  // Endast HTTPS i production
-        sameSite: 'lax',    // CSRF-skydd
-        domain: '.194.47.171.149.nip.io',  // Delas mellan alla subdömäner
-        maxAge: 3600000     // 1 timme
-      })
-
-      console.log('Cookie set for domain: .194.47.171.149.nip.io')
-
       res.status(200).json({
         token,
         apartmentId: user.propertyId,

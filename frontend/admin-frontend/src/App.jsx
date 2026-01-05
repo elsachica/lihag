@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './Layout';
+import { Login } from './components/Login';
 import { PropertiesList } from './components/PropertiesList';
 import { PropertyForm } from './components/PropertyForm';
 import { MaintenanceList } from './components/MaintenanceList';
@@ -8,28 +9,20 @@ import { UsersList } from './components/UsersList';
 import { UserForm } from './components/UserForm';
 import { auth } from './utils/auth';
 import './App.css';
-import { useEffect } from 'react';
 
-// Protected route wrapper - redirects till huvudsidan om ingen token
+// Protected route wrapper - redirects till /login på samma domän
 const ProtectedRoute = ({ children }) => {
-    const token = auth.getToken();
-    console.log('ProtectedRoute check - token:', token ? 'found' : 'not found');
-    console.log('All cookies:', document.cookie);
-
     if (!auth.isAuthenticated()) {
-        console.log('Not authenticated, redirecting to login');
-        window.location.href = 'http://lihag.194.47.171.149.nip.io/login';
-        return null;
+        return <Navigate to="/login" replace />;
     }
     return children;
 };
 
 function App() {
-    // Token finns nu i cookie, inget behov av att läsa från URL
-
     return (
         <BrowserRouter>
             <Routes>
+                <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Navigate to="/properties" replace />} />
 
                 <Route path="/properties" element={

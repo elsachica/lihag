@@ -19,7 +19,6 @@ export const LoginPage = () => {
         const response = await fetch(url + '/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',  // Inkludera cookies i request
           body: JSON.stringify({ email, password }),
         })
 
@@ -32,20 +31,11 @@ export const LoginPage = () => {
           return
         }
 
-        console.log('User role:', data.role)
-
         localStorage.setItem('token', data.token)
         localStorage.setItem('apartmentId', data.apartmentId)
 
-        // Redirect baserat på roll (token finns nu i cookie)
-        if (data.role === 'admin') {
-          console.log('Redirecting to admin frontend')
-          window.location.replace('http://lihag.admin.194.47.171.149.nip.io')
-          return
-        } else {
-          console.log('Navigating to tenant dashboard')
-          navigate('/tenant-dashboard')
-        }
+        // Navigera till tenant dashboard (admins loggar in på lihag.admin istället)
+        navigate('/tenant-dashboard')
       } catch (err) {
         console.error('Login error:', err)
         alert('Something went wrong: ' + err.message)
