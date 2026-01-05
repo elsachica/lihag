@@ -8,6 +8,7 @@ import { UsersList } from './components/UsersList';
 import { UserForm } from './components/UserForm';
 import { auth } from './utils/auth';
 import './App.css';
+import { useEffect } from 'react';
 
 // Protected route wrapper - redirects till huvudsidan om ingen token
 const ProtectedRoute = ({ children }) => {
@@ -19,6 +20,19 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+    // Kolla om token finns i URL (från redirect efter login)
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = urlParams.get('token');
+
+        if (tokenFromUrl) {
+            console.log('Token found in URL, saving to localStorage');
+            auth.setToken(tokenFromUrl);
+            // Ta bort token från URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    }, []);
+
     return (
         <BrowserRouter>
             <Routes>
