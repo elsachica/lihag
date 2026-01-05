@@ -1,76 +1,107 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-import { List, Datagrid, TextField, DateField, EditButton, DeleteButton, Create, SimpleForm, TextInput, SelectInput, Edit } from 'react-admin';
+const API_URL = import.meta.env.VITE_AUTH_SERVICE_URL;
 
-export const MaintenanceList = () => (
-    <List>
-        <Datagrid rowClick="edit">
-            <TextField source="_id" label="ID" />
-            <TextField source="apartmentId" label="Lägenhet" />
-            <TextField source="category" label="Kategori" />
-            <TextField source="description" label="Beskrivning" />
-            <TextField source="status" label="Status" />
-            <TextField source="priority" label="Prioritet" />
-            <DateField source="createdAt" label="Skapad" showTime />
-            <EditButton />
-            <DeleteButton />
-        </Datagrid>
-    </List>
-);
+export const MaintenanceList = () => {
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-export const MaintenanceCreate = () => (
-    <Create>
-        <SimpleForm>
-            <TextInput source="apartmentId" label="Lägenhet ID" required />
-            <SelectInput source="category" label="Kategori" choices={[
-                { id: 'electrical', name: 'El' },
-                { id: 'plumbing', name: 'VVS' },
-                { id: 'heating', name: 'Värme' },
-                { id: 'ventilation', name: 'Ventilation' },
-                { id: 'other', name: 'Övrigt' }
-            ]} required />
-            <TextInput source="description" label="Beskrivning" multiline required />
-            <SelectInput source="status" label="Status" choices={[
-                { id: 'new', name: 'Ny' },
-                { id: 'in_progress', name: 'Pågående' },
-                { id: 'completed', name: 'Klar' },
-                { id: 'cancelled', name: 'Avbruten' }
-            ]} defaultValue="new" />
-            <SelectInput source="priority" label="Prioritet" choices={[
-                { id: 'low', name: 'Låg' },
-                { id: 'medium', name: 'Medium' },
-                { id: 'high', name: 'Hög' },
-                { id: 'urgent', name: 'Akut' }
-            ]} />
-            <TextInput source="assignedTo" label="Tilldelad till" />
-        </SimpleForm>
-    </Create>
-);
+    useEffect(() => {
+        fetchReports();
+    }, []);
 
-export const MaintenanceEdit = () => (
-    <Edit>
-        <SimpleForm>
-            <TextInput source="apartmentId" label="Lägenhet ID" disabled />
-            <SelectInput source="category" label="Kategori" choices={[
-                { id: 'electrical', name: 'El' },
-                { id: 'plumbing', name: 'VVS' },
-                { id: 'heating', name: 'Värme' },
-                { id: 'ventilation', name: 'Ventilation' },
-                { id: 'other', name: 'Övrigt' }
-            ]} required />
-            <TextInput source="description" label="Beskrivning" multiline required />
-            <SelectInput source="status" label="Status" choices={[
-                { id: 'new', name: 'Ny' },
-                { id: 'in_progress', name: 'Pågående' },
-                { id: 'completed', name: 'Klar' },
-                { id: 'cancelled', name: 'Avbruten' }
-            ]} />
-            <SelectInput source="priority" label="Prioritet" choices={[
-                { id: 'low', name: 'Låg' },
-                { id: 'medium', name: 'Medium' },
-                { id: 'high', name: 'Hög' },
-                { id: 'urgent', name: 'Akut' }
-            ]} />
-            <TextInput source="assignedTo" label="Tilldelad till" />
-        </SimpleForm>
-    </Edit>
-);
+    const fetchReports = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`${API_URL}/maintenance`);
+            if (!response.ok) throw new Error('Failed to fetch maintenance reports');
+            const data = await response.json();
+            setReports(data);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!confirm('Är du säker på att du vill radera denna rapport?')) return;
+
+        try {
+            const response = await fetch(`${API_URL}/maintenance/${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Failed to delete report');
+            fetchReports();
+        } catch (err) {
+            alert('Kunde inte radera: ' + err.message);
+        }
+    };
+
+    if (loading) return <div className="loading">Laddar...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
+
+    return (
+        <div className="resource-container">
+            <div className="header">
+                <h2>Felanmälningar</h2>
+                <Link to="/maintenance/create" className="btn btn-primary">
+                    + Skapa ny rapport
+                </Link>
+            </div>
+
+            <table className="data-table">
+                <thead>
+                    <tr>
+                        <th>Lägenhet</th>
+                        <th>Kategori</th>
+                        <th>Beskrivning</th>
+                        <th>Status</th>
+                        <th>Prioritet</th>
+                        <th>Skapad</th>
+                        <th>Åtgärder</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {reports.map((report) => (
+                        <tr key={report._id}>
+                            <td>{report.apartmentId}</td>
+                            <td>{report.category}</td>
+                            <td className="description">{report.description}</td>
+                            <td>
+                                <span className={`status status-${report.status}`}>
+                                    {report.status}
+                                </span>
+                            </td>
+                            <td>
+                                <span className={`priority priority-${report.priority}`}>
+                                    {report.priority || 'N/A'}
+                                </span>
+                            </td>
+                            <td>{new Date(report.createdAt).toLocaleDateString('sv-SE')}</td>
+                            <td className="actions">
+                                <Link to={`/maintenance/edit/${report._id}`} className="btn btn-sm btn-edit">
+                                    Redigera
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(report._id)}
+                                    className="btn btn-sm btn-delete"
+                                >
+                                    Radera
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {reports.length === 0 && (
+                <div className="empty-state">
+                    <p>Inga felanmälningar hittades</p>
+                </div>
+            )}
+        </div>
+    );
+};

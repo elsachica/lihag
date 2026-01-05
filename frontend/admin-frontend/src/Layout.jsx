@@ -1,36 +1,32 @@
-import * as React from 'react';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import {
-    AppBar,
-    Layout,
-    Menu,
-    InspectorButton,
-    TitlePortal,
-} from 'react-admin';
+import { Link, useLocation } from 'react-router-dom';
+import './App.css';
 
-const MyAppBar = () => (
-    <AppBar>
-        <TitlePortal />
-        <InspectorButton />
-    </AppBar>
-);
+export const Layout = ({ children }) => {
+  const location = useLocation();
+  
+  const isActive = (path) => {
+    return location.pathname.startsWith(path);
+  };
 
-const MyMenu = () => (
-    <Menu>
-        <Menu.ResourceItem name="accounts" keyboardShortcut="g>u" />
-        <Menu.ResourceItem name="properties" keyboardShortcut="g>p" />
-        <Menu.ResourceItem name="maintenance" keyboardShortcut="g>m" />
-    </Menu>
-);
-
-export default ({ children }) => (
-    <>
-        <Layout appBar={MyAppBar} menu={MyMenu}>
-            {children}
-        </Layout>
-        <ReactQueryDevtools
-            initialIsOpen={false}
-            buttonPosition="bottom-left"
-        />
-    </>
-);
+  return (
+    <div className="admin-layout">
+      <nav className="admin-nav">
+        <h1>Lihag Admin Panel</h1>
+        <ul>
+          <li className={isActive('/properties') ? 'active' : ''}>
+            <Link to="/properties">🏠 Properties</Link>
+          </li>
+          <li className={isActive('/maintenance') ? 'active' : ''}>
+            <Link to="/maintenance">🔧 Maintenance</Link>
+          </li>
+          <li className={isActive('/users') ? 'active' : ''}>
+            <Link to="/users">👤 Users</Link>
+          </li>
+        </ul>
+      </nav>
+      <main className="admin-content">
+        {children}
+      </main>
+    </div>
+  );
+};

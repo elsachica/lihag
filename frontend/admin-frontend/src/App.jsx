@@ -1,75 +1,35 @@
-import React from 'react'
-import { Admin, Resource } from 'react-admin'
-import PeopleIcon from '@mui/icons-material/People'
-import ApartmentIcon from '@mui/icons-material/Apartment'
-import BuildIcon from '@mui/icons-material/Build'
-import MyLayout from './Layout'
-import { UserList, UserCreate, UserEdit } from './components/UserList'
-import { PropertyList, PropertyCreate, PropertyEdit } from './components/PropertyList'
-import { MaintenanceList, MaintenanceCreate, MaintenanceEdit } from './components/MaintenanceList'
-import './App.css'
-
-import simpleRestProvider from 'ra-data-simple-rest'
-
-const adminDataProvider = simpleRestProvider(import.meta.env.VITE_AUTH_SERVICE_URL || 'http://localhost:8891')
-
-// Map resource names to API endpoints
-const resourceMap = {
-    properties: 'property/apartments',
-    maintenance: 'maintenance/reports',
-    users: 'auth/users'
-}
-
-const dataProvider = {
-    getList: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.getList(mapped, params)
-    },
-    getOne: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.getOne(mapped, params)
-    },
-    getMany: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.getMany(mapped, params)
-    },
-    getManyReference: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.getManyReference(mapped, params)
-    },
-    create: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.create(mapped, params)
-    },
-    update: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.update(mapped, params)
-    },
-    updateMany: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.updateMany(mapped, params)
-    },
-    delete: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.delete(mapped, params)
-    },
-    deleteMany: (resource, params) => {
-        const mapped = resourceMap[resource] || resource
-        return adminDataProvider.deleteMany(mapped, params)
-    }
-}
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from './Layout';
+import { PropertiesList } from './components/PropertiesList';
+import { PropertyForm } from './components/PropertyForm';
+import { MaintenanceList } from './components/MaintenanceList';
+import { MaintenanceForm } from './components/MaintenanceForm';
+import { UsersList } from './components/UsersList';
+import { UserForm } from './components/UserForm';
+import './App.css';
 
 function App() {
-    return (
-        <Admin
-            dataProvider={dataProvider}
-            layout={MyLayout}
-        >
-            <Resource name="users" list={UserList} create={UserCreate} edit={UserEdit} icon={PeopleIcon} />
-            <Resource name="properties" list={PropertyList} create={PropertyCreate} edit={PropertyEdit} icon={ApartmentIcon} />
-            <Resource name="maintenance" list={MaintenanceList} create={MaintenanceCreate} edit={MaintenanceEdit} icon={BuildIcon} />
-        </Admin>
-    )
+  return (
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Navigate to="/properties" replace />} />
+          
+          <Route path="/properties" element={<PropertiesList />} />
+          <Route path="/properties/create" element={<PropertyForm />} />
+          <Route path="/properties/edit/:id" element={<PropertyForm />} />
+          
+          <Route path="/maintenance" element={<MaintenanceList />} />
+          <Route path="/maintenance/create" element={<MaintenanceForm />} />
+          <Route path="/maintenance/edit/:id" element={<MaintenanceForm />} />
+          
+          <Route path="/users" element={<UsersList />} />
+          <Route path="/users/create" element={<UserForm />} />
+          <Route path="/users/edit/:id" element={<UserForm />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
