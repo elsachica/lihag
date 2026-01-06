@@ -94,14 +94,14 @@ build_notification:
   #   - changes:
   #       - services/notification/**
 
-  test_notification:
-    stage: test
-    image: node:20
-    script:
-      - cd services/maintenance
-      - npm ci
-      - npm run lint || echo "No linter configured"
-      - npm test || echo "No tests yet"
+test_notification:
+  stage: test
+  image: node:20
+  script:
+    - cd services/maintenance
+    - npm ci
+    - npm run lint || echo "No linter configured"
+    - npm test || echo "No tests yet"
 
 
 # Lihag-frontend (commented out - not ready yet)
