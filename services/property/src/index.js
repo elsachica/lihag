@@ -7,13 +7,13 @@
 
 import 'dotenv/config'
 import express from 'express'
+import cors from 'cors'
 import { connectToDatabase } from './config/mongoose.js'
 import './config/rabbitmq.js'
 import { router } from './routes/router.js'
 import { morganLogger } from './config/morgan.js'
 import { logger } from './config/winston.js'
 import { errorHandler } from './middleware/errorHandler.js'
-import cors from 'cors'
 
 const app = express()
 app.use(express.json())
@@ -41,7 +41,8 @@ async function start () {
       origin: [
         'http://lihag.admin.194.47.171.149.nip.io',
         'http://lihag.admin.194.47.171.20.nip.io',
-        'http://lihag.194.47.171.20.nip.io'
+        'http://lihag.194.47.171.20.nip.io',
+        'http://lihag.admin.194.47.171.20.nip.io'
       ],
       exposedHeaders: ['Content-Range']
     }))

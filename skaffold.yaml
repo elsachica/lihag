@@ -37,6 +37,7 @@ manifests:
     - infra/k3s/maintenance/service.yaml
     - infra/k3s/admin-frontend/deployment.yaml
     - infra/k3s/notification/deployment.yaml
+    - infra/k3s/letsencrypt-prod.yaml
     
 deploy:
   kubectl: {}
