@@ -7,8 +7,7 @@ const reportSchema = new mongoose.Schema(
   {
     apartmentId: {
       // by which property and tenant/reporter can be identified
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Apartment',
+      type: String,
       required: true
     },
     category: {
