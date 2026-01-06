@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
   res.send('Maintenance service is running')
 })
 
-app.use('/maintenance', router)
+app.use('/', router)
 
 // Error handler.
 app.use((err, req, res, next) => {
