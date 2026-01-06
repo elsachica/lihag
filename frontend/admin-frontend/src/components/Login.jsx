@@ -51,20 +51,23 @@ export const Login = () => {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Admin Panel</h2>
-                <p style={{ textAlign: 'center', color: '#7f8c8d', marginBottom: '20px' }}>
-                    Logga in med ditt admin-konto
-                </p>
+                <div className="login-header">
+                    <div className="login-icon">🏠</div>
+                    <h2>Lihag Admin</h2>
+                    <p className="login-subtitle">
+                        Välkommen tillbaka! Logga in för att hantera fastigheter.
+                    </p>
+                </div>
 
                 {error && (
                     <div className="error">
-                        {error}
+                        ⚠️ {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label>E-post</label>
+                        <label>📧 E-postadress</label>
                         <input
                             type="email"
                             value={email}
@@ -72,11 +75,12 @@ export const Login = () => {
                             placeholder="admin@lihag.se"
                             required
                             disabled={loading}
+                            className="login-input"
                         />
                     </div>
 
                     <div className="form-group">
-                        <label>Lösenord</label>
+                        <label>🔒 Lösenord</label>
                         <input
                             type="password"
                             value={password}
@@ -84,6 +88,7 @@ export const Login = () => {
                             placeholder="••••••••"
                             required
                             disabled={loading}
+                            className="login-input"
                         />
                     </div>
 
@@ -92,9 +97,13 @@ export const Login = () => {
                         className="btn btn-primary btn-block"
                         disabled={loading}
                     >
-                        {loading ? 'Loggar in...' : 'Logga in'}
+                        {loading ? '⏳ Loggar in...' : '🚀 Logga in'}
                     </button>
                 </form>
+
+                <div className="login-footer">
+                    <p>🔐 Endast för administratörer</p>
+                </div>
             </div>
         </div>
     );
