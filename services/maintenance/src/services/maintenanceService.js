@@ -25,20 +25,8 @@ export class MaintenanceService {
    * @param {object} options - The query parameters for filtering and pagination.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance reports.
    */
-  async getAllReports(options = {}) {
-    const { skip = 0, limit = 20, sort, order } = options
-    const filter = {}
-
-    const sortOptions = {}
-    if (sort) {
-      sortOptions[sort] = order === 'DESC' ? -1 : 1
-    }
-
-    const reports = await this.maintenanceRepository.getAllReports(filter, {
-      skip,
-      limit,
-      sort: sortOptions
-    })
+  async getAllReports() {
+    const reports = await this.maintenanceRepository.getAllReports()
     return reports
   }
 

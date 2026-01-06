@@ -27,11 +27,7 @@ export class MaintenanceController {
    */
   async getAllReports(req, res) {
     try {
-
-      const reports = await this.maintenanceService.getAllReports({
-        sort: _sort,
-        order: _order
-      })
+      const reports = await this.maintenanceService.getAllReports()
 
       const dto = reports.map(report => this._toDTO(report))
 
