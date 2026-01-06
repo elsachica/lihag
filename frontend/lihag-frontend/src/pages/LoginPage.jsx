@@ -9,22 +9,17 @@ export const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Form submitted')
     const url = import.meta.env.VITE_AUTH_SERVICE_URL
-    console.log('Auth service URL:', url)
 
     if (email && password) {
       try {
-        console.log('Sending login request...')
         const response = await fetch(url + '/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
         })
 
-        console.log('Response status:', response.status)
         const data = await response.json()
-        console.log('Login response:', data)
 
         if (!response.ok) {
           alert(data.message || 'Login failed')
@@ -37,7 +32,6 @@ export const LoginPage = () => {
         // Navigera till tenant dashboard (admins loggar in på lihag.admin istället)
         navigate('/tenant-dashboard')
       } catch (err) {
-        console.error('Login error:', err)
         alert('Something went wrong: ' + err.message)
       }
     }

@@ -27,20 +27,13 @@ export class MaintenanceController {
    */
   async getAllReports(req, res) {
     try {
-      const { _start = 0, _end = 20, _sort, _order } = req.query
 
       const reports = await this.maintenanceService.getAllReports({
-        skip: parseInt(_start),
-        limit: parseInt(_end) - parseInt(_start),
         sort: _sort,
         order: _order
       })
 
-      const total = await this.maintenanceService.getReportCount()
       const dto = reports.map(report => this._toDTO(report))
-
-      const end = Math.min(parseInt(_end) - 1, total - 1)
-      res.set('Content-Range', `reports ${_start}-${end}/${total}`)
 
       return res.status(200).json(dto)
     } catch (error) {
