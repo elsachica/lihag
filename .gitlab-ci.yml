@@ -15,19 +15,19 @@ build_property:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/property" --dockerfile "${CI_PROJECT_DIR}/services/property/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed property:${CI_COMMIT_REF_SLUG}"
 
-  rules:
-    - changes:
-        - services/property/**
+  # rules:
+  #   - changes:
+  #       - services/property/**
 
 
-# test_property:
-#   stage: test
-#   image: node:20
-#   script:
-#     - cd services/property
-#     - npm ci
-#     - npm run lint || echo "No linter configured"
-#     - npm test || echo "No tests yet"
+test_property:
+  stage: test
+  image: node:20
+  script:
+    - cd services/property
+    - npm ci
+    - npm run lint || echo "No linter configured"
+    - npm test || echo "No tests yet"
 
 # Auth Service (commented out - not ready yet)
 build_auth:
@@ -69,14 +69,14 @@ build_maintenance:
   #       - services/maintenance/**
 
 
-# test_maintenance:
-#   stage: test
-#   image: node:20
-#   script:
-#     - cd services/maintenance
-#     - npm ci
-#     - npm run lint || echo "No linter configured"
-#     - npm test || echo "No tests yet"
+test_maintenance:
+  stage: test
+  image: node:20
+  script:
+    - cd services/maintenance
+    - npm ci
+    - npm run lint || echo "No linter configured"
+    - npm test || echo "No tests yet"
 
 # Notification Service
 build_notification:
@@ -90,18 +90,18 @@ build_notification:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/notification" --dockerfile "${CI_PROJECT_DIR}/services/notification/Dockerfile" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed notification:${CI_COMMIT_REF_SLUG}"
 
-  rules:
-    - changes:
-        - services/notification/**
+  # rules:
+  #   - changes:
+  #       - services/notification/**
 
-  # test_notification:
-  #   stage: test
-  #   image: node:20
-  #   script:
-  #     - cd services/maintenance
-  #     - npm ci
-  #     - npm run lint || echo "No linter configured"
-  #     - npm test || echo "No tests yet"
+  test_notification:
+    stage: test
+    image: node:20
+    script:
+      - cd services/maintenance
+      - npm ci
+      - npm run lint || echo "No linter configured"
+      - npm test || echo "No tests yet"
 
 
 # Lihag-frontend (commented out - not ready yet)
@@ -128,18 +128,9 @@ build_frontend:
         --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed lihag-frontend:${IMAGE_TAG}"
 
-  rules:
-    - changes:
-        - frontend/lihag-frontend/**
-
-# test_frontend:
-#   stage: test
-#   image: node:20
-#   script:
-#     - cd frontend
-#     - npm ci
-#     - npm run lint || echo "No linter configured"
-#     - npm test || echo "No tests yet"
+  # rules:
+  #   - changes:
+  #       - frontend/lihag-frontend/**
 
 
 build_admin-frontend:
@@ -162,18 +153,9 @@ build_admin-frontend:
       --build-arg VITE_AUTH_SERVICE_URL="${AUTH_URL}"
     - echo "✓ Successfully built and pushed admin-frontend:${IMAGE_TAG}"
 
-  rules:
-    - changes:
-        - frontend/admin-frontend/**
-
-# test_admin-frontend:
-#   stage: test
-#   image: node:20
-#   script:
-#     - cd frontend
-#     - npm ci
-#     - npm run lint || echo "No linter configured"
-#     - npm test || echo "No tests yet"
+  # rules:
+  #   - changes:
+  #       - frontend/admin-frontend/**
 
 # Kubernetes Deployment
 deploy_staging:
