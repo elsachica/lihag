@@ -64,9 +64,9 @@ build_maintenance:
     - /kaniko/executor --context "${CI_PROJECT_DIR}/services/maintenance" --dockerfile "${CI_PROJECT_DIR}/services/maintenance/Dockerfile.production" --destination "gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance:${CI_COMMIT_REF_SLUG}"
     - echo "✓ Successfully built and pushed maintenance:${CI_COMMIT_REF_SLUG}"
 
-  rules:
-    - changes:
-        - services/maintenance/**
+  # rules:
+  #   - changes:
+  #       - services/maintenance/**
 
 
 # test_maintenance:
