@@ -80,7 +80,6 @@ export const PropertyForm = () => {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                console.error('Save failed:', response.status, errorData);
                 throw new Error(errorData.message || `Failed to save property (${response.status})`);
             }
             navigate('/properties');

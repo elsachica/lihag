@@ -19,8 +19,6 @@ export const PropertiesList = () => {
             const response = await fetchWithAuth(`${API_URL}/property/apartments`);
             if (!response.ok) throw new Error('Failed to fetch properties');
             const data = await response.json();
-            console.log('Fetched properties:', data);
-            console.log('First property:', data[0]);
             setProperties(data);
         } catch (err) {
             setError(err.message);

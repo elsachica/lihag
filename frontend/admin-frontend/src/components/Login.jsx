@@ -43,7 +43,6 @@ export const Login = () => {
             // Redirect till admin panel
             navigate('/properties');
         } catch (err) {
-            console.error('Login error:', err);
             setError('An error occurred. Please try again.');
             setLoading(false);
         }
