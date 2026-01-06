@@ -71,12 +71,18 @@ export class MaintenanceService {
 
     const newReport = await this.maintenanceRepository.createReport(reportData)
 
-    await publishEvent('maintenance.created', {
-      reportId: newReport._id,
-      apartmentId: newReport.apartmentId,
-      category: newReport.category,
-      status: newReport.status || 'new'
-    })
+    // Publish event to RabbitMQ (non-blocking - don't fail if RabbitMQ is down)
+    try {
+      await publishEvent('maintenance.created', {
+        reportId: newReport._id,
+        apartmentId: newReport.apartmentId,
+        category: newReport.category,
+        status: newReport.status || 'new'
+      })
+    } catch (error) {
+      console.error('Failed to publish maintenance.created event:', error.message)
+      // Continue anyway - the report is already saved
+    }
 
     return newReport
   }
@@ -94,10 +100,16 @@ export class MaintenanceService {
       changes
     )
 
-    await publishEvent('maintenance.updated', {
-      reportId: updatedReport._id,
-      ...changes
-    })
+    // Publish event to RabbitMQ (non-blocking - don't fail if RabbitMQ is down)
+    try {
+      await publishEvent('maintenance.updated', {
+        reportId: updatedReport._id,
+        ...changes
+      })
+    } catch (error) {
+      console.error('Failed to publish maintenance.updated event:', error.message)
+      // Continue anyway - the report is already updated
+    }
 
     return updatedReport
   }
@@ -105,9 +117,15 @@ export class MaintenanceService {
   async deleteReport(report) {
     await this.maintenanceRepository.deleteReport(report)
 
-    await publishEvent('maintenance.deleted', {
-      reportId: report._id,
-      apartmentId: report.apartmentId
-    })
+    // Publish event to RabbitMQ (non-blocking - don't fail if RabbitMQ is down)
+    try {
+      await publishEvent('maintenance.deleted', {
+        reportId: report._id,
+        apartmentId: report.apartmentId
+      })
+    } catch (error) {
+      console.error('Failed to publish maintenance.deleted event:', error.message)
+      // Continue anyway - the report is already deleted
+    }
   }
 }
