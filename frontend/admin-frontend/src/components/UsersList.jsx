@@ -53,47 +53,47 @@ export const UsersList = () => {
                 </Link>
             </div>
 
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th>Email</th>
-                        <th>Roll</th>
-                        <th>Property ID</th>
-                        <th>Skapad</th>
-                        <th>Åtgärder</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user._id}>
-                            <td>{user.email}</td>
-                            <td>
-                                <span className={`role role-${user.role}`}>
-                                    {user.role}
-                                </span>
-                            </td>
-                            <td>{user.propertyId || 'N/A'}</td>
-                            <td>{new Date(user.createdAt).toLocaleDateString('sv-SE')}</td>
-                            <td className="actions">
-                                <Link to={`/users/edit/${user._id}`} className="btn btn-sm btn-edit">
-                                    Redigera
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(user._id)}
-                                    className="btn btn-sm btn-delete"
-                                >
-                                    Radera
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {users.length === 0 && (
+            {users.length === 0 ? (
                 <div className="empty-state">
-                    <p>Inga användare hittades</p>
+                    <p>Inga användare att visa. Skapa en ny användare för att komma igång.</p>
                 </div>
+            ) : (
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Roll</th>
+                            <th>Property ID</th>
+                            <th>Skapad</th>
+                            <th>Åtgärder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr key={user._id}>
+                                <td>{user.email}</td>
+                                <td>
+                                    <span className={`role role-${user.role}`}>
+                                        {user.role}
+                                    </span>
+                                </td>
+                                <td>{user.propertyId || 'N/A'}</td>
+                                <td>{new Date(user.createdAt).toLocaleDateString('sv-SE')}</td>
+                                <td className="actions">
+                                    <Link to={`/users/edit/${user._id}`} className="btn btn-sm btn-edit">
+                                        Redigera
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(user._id)}
+                                        className="btn btn-sm btn-delete"
+                                    >
+                                        Radera
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );

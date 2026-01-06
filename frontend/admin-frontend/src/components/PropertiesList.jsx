@@ -55,51 +55,51 @@ export const PropertiesList = () => {
                 </Link>
             </div>
 
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th>Nummer</th>
-                        <th>Storlek (kvm)</th>
-                        <th>Område</th>
-                        <th>Typ</th>
-                        <th>Hyra (kr)</th>
-                        <th>Status</th>
-                        <th>Åtgärder</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {properties.map((property) => (
-                        <tr key={property.id}>
-                            <td>{property.number}</td>
-                            <td>{property.size}</td>
-                            <td>{property.area}</td>
-                            <td>{property.type}</td>
-                            <td>{property.price}</td>
-                            <td>
-                                <span className={`status ${property.isAvailable ? 'available' : 'occupied'}`}>
-                                    {property.isAvailable ? 'Ledig' : 'Uthyrd'}
-                                </span>
-                            </td>
-                            <td className="actions">
-                                <Link to={`/properties/edit/${property.id}`} className="btn btn-sm btn-edit">
-                                    Redigera
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(property.id)}
-                                    className="btn btn-sm btn-delete"
-                                >
-                                    Radera
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {properties.length === 0 && (
+            {properties.length === 0 ? (
                 <div className="empty-state">
-                    <p>Inga lägenheter hittades</p>
+                    <p>Inga lägenheter att visa. Skapa en ny lägenhet för att komma igång.</p>
                 </div>
+            ) : (
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nummer</th>
+                            <th>Storlek (kvm)</th>
+                            <th>Område</th>
+                            <th>Typ</th>
+                            <th>Hyra (kr)</th>
+                            <th>Status</th>
+                            <th>Åtgärder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {properties.map((property) => (
+                            <tr key={property.id}>
+                                <td>{property.number}</td>
+                                <td>{property.size}</td>
+                                <td>{property.area}</td>
+                                <td>{property.type}</td>
+                                <td>{property.price}</td>
+                                <td>
+                                    <span className={`status ${property.isAvailable ? 'available' : 'occupied'}`}>
+                                        {property.isAvailable ? 'Ledig' : 'Uthyrd'}
+                                    </span>
+                                </td>
+                                <td className="actions">
+                                    <Link to={`/properties/edit/${property.id}`} className="btn btn-sm btn-edit">
+                                        Redigera
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(property.id)}
+                                        className="btn btn-sm btn-delete"
+                                    >
+                                        Radera
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );

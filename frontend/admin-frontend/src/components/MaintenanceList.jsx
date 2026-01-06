@@ -53,55 +53,55 @@ export const MaintenanceList = () => {
                 </Link>
             </div>
 
-            <table className="data-table">
-                <thead>
-                    <tr>
-                        <th>Lägenhet</th>
-                        <th>Kategori</th>
-                        <th>Beskrivning</th>
-                        <th>Status</th>
-                        <th>Prioritet</th>
-                        <th>Skapad</th>
-                        <th>Åtgärder</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {reports.map((report) => (
-                        <tr key={report._id}>
-                            <td>{report.apartmentId}</td>
-                            <td>{report.category}</td>
-                            <td className="description">{report.description}</td>
-                            <td>
-                                <span className={`status status-${report.status}`}>
-                                    {report.status}
-                                </span>
-                            </td>
-                            <td>
-                                <span className={`priority priority-${report.priority}`}>
-                                    {report.priority || 'N/A'}
-                                </span>
-                            </td>
-                            <td>{new Date(report.createdAt).toLocaleDateString('sv-SE')}</td>
-                            <td className="actions">
-                                <Link to={`/maintenance/edit/${report._id}`} className="btn btn-sm btn-edit">
-                                    Redigera
-                                </Link>
-                                <button
-                                    onClick={() => handleDelete(report._id)}
-                                    className="btn btn-sm btn-delete"
-                                >
-                                    Radera
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {reports.length === 0 && (
+            {reports.length === 0 ? (
                 <div className="empty-state">
-                    <p>Inga felanmälningar hittades</p>
+                    <p>Inga felanmälningar att visa. Skapa en ny rapport för att komma igång.</p>
                 </div>
+            ) : (
+                <table className="data-table">
+                    <thead>
+                        <tr>
+                            <th>Lägenhet</th>
+                            <th>Kategori</th>
+                            <th>Beskrivning</th>
+                            <th>Status</th>
+                            <th>Prioritet</th>
+                            <th>Skapad</th>
+                            <th>Åtgärder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {reports.map((report) => (
+                            <tr key={report._id}>
+                                <td>{report.apartmentId}</td>
+                                <td>{report.category}</td>
+                                <td className="description">{report.description}</td>
+                                <td>
+                                    <span className={`status status-${report.status}`}>
+                                        {report.status}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span className={`priority priority-${report.priority}`}>
+                                        {report.priority || 'N/A'}
+                                    </span>
+                                </td>
+                                <td>{new Date(report.createdAt).toLocaleDateString('sv-SE')}</td>
+                                <td className="actions">
+                                    <Link to={`/maintenance/edit/${report._id}`} className="btn btn-sm btn-edit">
+                                        Redigera
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(report._id)}
+                                        className="btn btn-sm btn-delete"
+                                    >
+                                        Radera
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );
