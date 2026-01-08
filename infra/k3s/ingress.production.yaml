@@ -8,12 +8,12 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - lihag.admin.194.47.171.20.nip.io
-        - lihag.194.47.171.20.nip.io
-        - auth.lihag.194.47.171.20.nip.io
+        - lihag.admin.172.27.60.122.nip.io
+        - lihag.172.27.60.122.nip.io
+        - auth.lihag.172.27.60.122.nip.io
       secretName: lihag-tls
   rules:
-    - host: lihag.admin.194.47.171.20.nip.io
+    - host: lihag.admin.172.27.60.122.nip.io
       http:
         paths:
           - path: /
@@ -23,7 +23,7 @@ spec:
                 name: admin-frontend
                 port:
                   number: 8004
-    - host: lihag.194.47.171.20.nip.io
+    - host: lihag.172.27.60.122.nip.io
       http:
         paths:
           - path: /
@@ -33,7 +33,7 @@ spec:
                 name: lihag-frontend
                 port:
                   number: 8888
-    - host: auth.lihag.194.47.171.20.nip.io
+    - host: auth.lihag.172.27.60.122.nip.io
       http:
         paths:
           - path: /

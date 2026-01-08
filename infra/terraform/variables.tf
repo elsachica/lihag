@@ -12,7 +12,7 @@ variable "identity_file" {
 variable "external_network_name" {
   description = "The name of the external network to be used"
   type        = string
-  default     = "public"
+  default     = "campus"
 }
 
 variable "subnet_cidr" {

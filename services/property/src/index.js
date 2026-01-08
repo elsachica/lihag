@@ -39,10 +39,10 @@ async function start () {
 
     app.use(cors({
       origin: [
-        'http://lihag.admin.194.47.171.149.nip.io',
-        'http://lihag.admin.194.47.171.20.nip.io',
-        'http://lihag.194.47.171.20.nip.io',
-        'http://lihag.admin.194.47.171.20.nip.io'
+        'http://lihag.admin.172.27.62.133.nip.io',
+        'http://lihag.172.27.62.133.nip.io',
+        'http://lihag.172.27.60.122.nip.io',
+        'http://lihag.admin.172.27.60.122.nip.io'
       ],
       exposedHeaders: ['Content-Range']
     }))
