@@ -3,43 +3,44 @@ kind: Ingress
 metadata:
   name: ingress
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - lihag.admin.172.27.60.122.nip.io
+        - lihag.172.27.60.122.nip.io
+        - auth.lihag.172.27.60.122.nip.io
+      secretName: lihag-tls
   rules:
-    - http:
+    - host: lihag.admin.172.27.60.122.nip.io
+      http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: admin-frontend
+                port:
+                  number: 8004
+    - host: lihag.172.27.60.122.nip.io
+      http:
+         paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lihag-frontend
                 port:
                   number: 8888
-          - path: /auth
+    - host: auth.lihag.172.27.60.122.nip.io
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: auth
                 port:
-                  number: 8000
-          - path: /property
-            pathType: Prefix
-            backend:
-              service:
-                name: property
-                port:
-                  number: 8003
-          - path: /maintenance
-            pathType: Prefix
-            backend:
-              service:
-                name: maintenance
-                port:
-                  number: 8002
-          - path: /notification
-            pathType: Prefix
-            backend:
-              service:
-                name: notification
-                port:
-                  number: 8005
+                  number: 3000
 # lägg till frontend i ingressen?

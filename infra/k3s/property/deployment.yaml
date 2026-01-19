@@ -13,20 +13,35 @@ spec:
         app: property
     spec:
       imagePullSecrets:
-        - name: gitlab-registry-secret
+        - name: regcred
       containers:
         - name: property
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property:main
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
           imagePullPolicy: Always
           ports:
             - containerPort: 8003
-          envFrom:
-            - configMapRef:
-                name: property-config
+          env:
+          - name: DB_CONNECTION_STRING_PROPERTY
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: DB_CONNECTION_STRING_PROPERTY
+          - name: PORT
+            value: "8003"
+          - name: PROPERTY_URL
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: PROPERTY_URL
+          - name: RABBITMQ_URL
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: RABBITMQ_URL
           resources:
             limits:
-              memory: "256Mi"
+              memory: "1Gi"
               cpu: "250m"
             requests:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "125m"

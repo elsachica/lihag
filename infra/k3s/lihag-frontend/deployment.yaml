@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lihag-frontend
+  labels:
+    app: lihag-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lihag-frontend
+  template:
+    metadata:
+      labels:
+        app: lihag-frontend
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: lihag-frontend
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5173
+          env:
+          - name: NODE_ENV
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: NODE_ENV
+          - name: PROPERTY_URL
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: PROPERTY_URL
+          - name: AUTH_URL
+            valueFrom:
+              secretKeyRef:
+                name: lihag-env-vars
+                key: AUTH_URL
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lihag-frontend
+spec:
+  selector:
+    app: lihag-frontend
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 5173
+  type: ClusterIP

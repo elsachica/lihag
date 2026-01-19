@@ -184,6 +184,7 @@ services:
     environment:
       NODE_ENV: development
       VITE_API_URL: http://localhost:8003
+      VITE_AUTH_SERVICE_URL: http://localhost:8000
     volumes:
       - ./frontend/tenant:/usr/src/app
       - /usr/src/app/node_modules

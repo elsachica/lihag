@@ -4,8 +4,7 @@ import fs from 'fs'
 import path from 'path'
 
 // Läs private key från fil (lokalt under utveckling)
-const privateKeyPath = path.resolve('./private.pem')
-const JWT_PRIVATE_KEY = fs.readFileSync(privateKeyPath, 'utf8')
+const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_PEM
 
 // Expiration time från .env
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h'
@@ -16,11 +15,10 @@ export class AuthController {
    */
   async register(req, res) {
     try {
-      const { username, password, email, role, propertyId } = req.body
+      const { password, email, role, propertyId } = req.body
 
       // Skapa ny användare
       const user = new UserModel({
-        username,
         password,
         email,
         role: role || 'tenant',
@@ -43,22 +41,26 @@ export class AuthController {
    */
   async login(req, res) {
     try {
-      const { username, password } = req.body
+      const { email, password } = req.body
 
       // Autentisera användare
-      const user = await UserModel.authenticate(username, password)
+      const user = await UserModel.authenticate(email, password)
 
       // Skapa JWT med RS256
       const token = await JsonWebToken.encodeUser(user, JWT_PRIVATE_KEY, JWT_EXPIRES_IN)
 
-      res.status(200).json({ token })
+      res.status(200).json({
+        token,
+        apartmentId: user.propertyId,
+        role: user.role
+      })
     } catch (err) {
       console.error(err)
       res.status(401).json({ message: err.message })
     }
   }
 
- async test(req, res) {
+  async test(req, res) {
     res.status(200).json({ status: 'ok' })
   }
 }

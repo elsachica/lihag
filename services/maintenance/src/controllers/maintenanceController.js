@@ -25,12 +25,13 @@ export class MaintenanceController {
    * @param {object} res - Express response object.
    * @returns {Promise<void>} - A promise that resolves when the operation is complete.
    */
-  async getAllReports (req, res) {
+  async getAllReports(req, res) {
     try {
-      const reports = await this.maintenanceService.getAllReports(req.query)
-      const dto = reports.map(this._toDTO)
+      const reports = await this.maintenanceService.getAllReports()
 
-      return res.status(200).json({ data: dto })
+      const dto = reports.map(report => this._toDTO(report))
+
+      return res.status(200).json(dto)
     } catch (error) {
       console.error('Failed to fetch maintenance reports:', error)
       return res.status(500).json({
@@ -47,10 +48,10 @@ export class MaintenanceController {
    * @param {object} res - Express response object.
    * @returns {Promise<void>} - A promise that resolves when the operation is complete.
    */
-  async getReport (req, res) {
+  async getReport(req, res) {
     try {
       const dto = this._toDTO(req.doc)
-      return res.status(200).json({ data: dto })
+      return res.status(200).json(dto)
     } catch (error) {
       console.error('Failed to fetch maintenance reports:', error)
       return res.status(500).json({
@@ -60,14 +61,14 @@ export class MaintenanceController {
     }
   }
 
-  async createReport (req, res) {
+  async createReport(req, res) {
     try {
       const reportData = req.body
 
       const newReport = await this.maintenanceService.createReport(reportData)
 
       const dto = this._toDTO(newReport)
-      return res.status(201).json({ data: dto })
+      return res.status(201).json(dto)
     } catch (error) {
       console.error('Failed to create maintenance report:', error)
       return res.status(500).json({
@@ -77,7 +78,7 @@ export class MaintenanceController {
     }
   }
 
-  async updateReport (req, res) {
+  async updateReport(req, res) {
     try {
       const existingReport = req.doc
       const changes = req.body
@@ -87,7 +88,7 @@ export class MaintenanceController {
       )
 
       const dto = this._toDTO(updatedReport)
-      return res.status(200).json({ data: dto })
+      return res.status(200).json(dto)
     } catch (error) {
       console.error('Failed to update maintenance report:', error)
       return res.status(500).json({
@@ -97,7 +98,7 @@ export class MaintenanceController {
     }
   }
 
-  async deleteReport (req, res) {
+  async deleteReport(req, res) {
     try {
       const existingReport = req.doc
       await this.maintenanceService.deleteReport(existingReport)
@@ -118,9 +119,10 @@ export class MaintenanceController {
    * @param {object} report - The maintenance report document.
    * @returns {object} - The maintenance report DTO.
    */
-  _toDTO (report) {
+  _toDTO(report) {
     return {
-      id: report._id,
+      _id: report._id,
+      id: report._id.toString(),
       apartmentId: report.apartmentId,
       category: report.category,
       description: report.description,
@@ -128,18 +130,8 @@ export class MaintenanceController {
       assignedTo: report.assignedTo || null,
       priority: report.priority || null,
       images: report.images || [],
-      createdAt: report.createdAt.toLocaleString('sv-SE', {
-        dateStyle: 'short',
-        timeStyle: 'short'
-      }),
-      ...(report.updatedAt.getTime() !== report.createdAt.getTime()
-        ? {
-            updatedAt: report.updatedAt.toLocaleString('sv-SE', {
-              dateStyle: 'short',
-              timeStyle: 'short'
-            })
-          }
-        : {})
+      createdAt: report.createdAt.toISOString(),
+      updatedAt: report.updatedAt.toISOString()
     }
   }
 }

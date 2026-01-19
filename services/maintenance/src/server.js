@@ -14,7 +14,7 @@ import { router } from './routes/maintenanceRouter.js'
 dotenv.config()
 
 // Connect to MongoDB.
-await connectToDatabase(process.env.DB_CONNECTION_STRING)
+await connectToDatabase(process.env.DB_CONNECTION_STRING_MAINTENANCE || 'mongodb://localhost:27017/lihag-maintenance')
 
 // Create an Express application.
 const app = express()
@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
   res.send('Maintenance service is running')
 })
 
-app.use('/maintenance', router)
+app.use('/', router)
 
 // Error handler.
 app.use((err, req, res, next) => {
@@ -71,7 +71,7 @@ app.use((err, req, res, next) => {
 })
 
 // Starts the HTTP server listening for connections.
-const server = app.listen(process.env.PORT || 3000, () => {
+const server = app.listen(process.env.PORT || 8002, () => {
   console.log(
     `Server running at http://localhost:${server.address().port}/maintenance`
   )

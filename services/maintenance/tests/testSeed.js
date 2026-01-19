@@ -9,7 +9,7 @@ dotenv.config()
  */
 async function seed () {
   try {
-    await mongoose.connect(process.env.DB_CONNECTION_STRING)
+    await mongoose.connect(process.env.DB_CONNECTION_STRING_MAINTENANCE)
     console.log('Connected to MongoDB Atlas!')
 
     // Clear the collection first

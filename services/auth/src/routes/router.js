@@ -9,12 +9,14 @@ import http from 'node:http'
 import { router as authRouter } from './authRouter.js'
 import { router as apartmentRouter } from './apartmentRouter.js'
 import { router as maintenanceRouter } from './maintenanceRouter.js'
+import { router as userRouter } from './userRouter.js'
 
 export const router = express.Router()
 
 router.use('/', authRouter)
 router.use('/property', apartmentRouter)
 router.use('/maintenance', maintenanceRouter)
+router.use('/auth/users', userRouter)
 
 // Catch 404 (ALWAYS keep this as the last route).
 router.use('*', (req, res, next) => {

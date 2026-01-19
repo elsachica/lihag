@@ -9,7 +9,7 @@ router.get('/apartments/statistics', authenticateJWT, authorizeRoles('admin'), (
 
 router.get('/apartments', (req, res, next) => controller.index(req, res, next))
 
-router.get('/apartments/:id', authenticateJWT, (req, res, next) => controller.show(req, res, next))
+router.get('/apartments/:id', (req, res, next) => controller.show(req, res, next))
 
 router.post('/apartments', authenticateJWT, authorizeRoles('admin'), (req, res, next) => controller.create(req, res, next))
 

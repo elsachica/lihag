@@ -12,8 +12,18 @@ import { router } from './routes/router.js'
 export const createApp = () => {
   const app = express()
 
-  app.use(cors())
+  app.use(cors({
+    origin: [
+      'http://lihag.172.27.62.133.nip.io',
+      'http://lihag.admin.172.27.62.133.nip.io',
+      'http://lihag.172.27.60.122.nip.io',
+      'http://lihag.admin.172.27.60.122.nip.io'
+    ],
+    exposedHeaders: ['Content-Range'],
+    credentials: true
+  }))
   app.use(express.json())
+
   app.use(httpContext.middleware)
 
   app.use((req, res, next) => {

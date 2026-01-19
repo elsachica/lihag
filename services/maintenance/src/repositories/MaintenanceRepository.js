@@ -14,15 +14,26 @@ export class MaintenanceRepository {
    * Finds maintenance reports based on filter and pagination.
    *
    * @param {object} filter - The filter criteria for querying maintenance reports.
-   * @param {object} options - The pagination options, including limit and skip.
+   * @param {object} options - The pagination options, including limit, skip, and sort.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance report documents.
    */
   async getAllReports(filter = {}, options = {}) {
+    const sortOptions = options.sort || { createdAt: -1 }
+
     return ReportModel.find(filter)
-      .sort({ createdAt: -1 })
+      .sort(sortOptions)
       .skip(options.skip || 0)
       .limit(options.limit || 20)
       .exec()
+  }
+
+  /**
+   * Get total count of all maintenance reports.
+   *
+   * @returns {Promise<number>} - The total count of reports.
+   */
+  async getReportCount() {
+    return ReportModel.countDocuments().exec()
   }
 
   /**

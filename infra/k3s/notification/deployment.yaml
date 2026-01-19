@@ -13,22 +13,74 @@ spec:
         app: notification
     spec:
       imagePullSecrets:
-        - name: gitlab-registry-secret
+        - name: regcred
       containers:
         - name: notification
-          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:main
+          image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8005
-          envFrom:
-            - configMapRef:
-                name: notification-config
-            - secretRef:
-                name: notification-secrets
+            - containerPort: 8004
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "8004"
+            - name: SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: SMTP_HOST
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: SMTP_PORT
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: SMTP_USER
+            - name: SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: SMTP_PASS
+            - name: SMTP_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: SMTP_FROM
+            - name: ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: ADMIN_EMAIL
+            - name: DB_CONNECTION_STRING_NOTIFICATION
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: DB_CONNECTION_STRING_NOTIFICATION
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  name: lihag-env-vars
+                  key: RABBITMQ_URL
           resources:
             limits:
-              memory: "256Mi"
+              memory: "1Gi"
               cpu: "250m"
             requests:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "125m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8004
+      targetPort: 8004
+  selector:
+    app: notification

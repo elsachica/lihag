@@ -7,6 +7,7 @@
 
 import 'dotenv/config'
 import express from 'express'
+import cors from 'cors'
 import { connectToDatabase } from './config/mongoose.js'
 import './config/rabbitmq.js'
 import { router } from './routes/router.js'
@@ -18,7 +19,7 @@ const app = express()
 app.use(express.json())
 app.use(morganLogger)
 
-const port = process.env.PORT || 8888
+const port = process.env.PORT || 8003
 
 /**
  * Starts the Property service by connecting to the MongoDB database,
@@ -30,11 +31,21 @@ const port = process.env.PORT || 8888
  */
 async function start () {
   try {
-    if (!process.env.DB_CONNECTION_STRING) {
-      throw new Error('DB_CONNECTION_STRING environment variable is not defined')
+    if (!process.env.DB_CONNECTION_STRING_PROPERTY) {
+      throw new Error('DB_CONNECTION_STRING_PROPERTY environment variable is not defined')
     }
-    await connectToDatabase(process.env.DB_CONNECTION_STRING)
+    await connectToDatabase(process.env.DB_CONNECTION_STRING_PROPERTY)
     logger.info('MongoDB connected')
+
+    app.use(cors({
+      origin: [
+        'http://lihag.admin.172.27.62.133.nip.io',
+        'http://lihag.172.27.62.133.nip.io',
+        'http://lihag.172.27.60.122.nip.io',
+        'http://lihag.admin.172.27.60.122.nip.io'
+      ],
+      exposedHeaders: ['Content-Range']
+    }))
 
     app.use('/', router)
 

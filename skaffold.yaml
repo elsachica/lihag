@@ -4,22 +4,40 @@ metadata:
   name: lihag-system
 build:
   artifacts:
-    # - image: taskit
-    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/frontend
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/lihag-frontend
       docker:
-        dockerfile: frontend/Dockerfile
-    #- image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
-      #docker:
-        #dockerfile: services/auth/Dockerfile
+        dockerfile: frontend/lihag-frontend/Dockerfile.production
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/auth
+      docker:
+        dockerfile: services/auth/Dockerfile
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/property
+      docker:
+        dockerfile: services/property/Dockerfile.production
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/maintenance
+      docker:
+        dockerfile: services/maintenance/Dockerfile.production
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/admin-frontend
+      docker:
+        dockerfile: frontend/admin-frontend/Dockerfile
+    - image: gitlab.lnu.se:5050/2dv013/student/team-2025-07-4chics/lihag-system/notification
+      docker:
+        dockerfile: services/notification/Dockerfile
 manifests:
   rawYaml:
     - infra/k3s/ingress.yaml
     - infra/k3s/mongodb/pvc.yaml
     - infra/k3s/mongodb/deployment.yaml
-    - infra/k3s/frontend/deployment.yaml
-    #- infra/k3s/auth/deployment.yaml
-    #- infra/k3s/auth/mongo-pvc.yaml
-    #- infra/k3s/auth/mongo-deployment.yaml
+    - infra/k3s/mongodb/service.yaml
+    - infra/k3s/auth/deployment.yaml
+    - infra/k3s/lihag-frontend/deployment.yaml
+    - infra/k3s/property/deployment.yaml
+    - infra/k3s/property/service.yaml
+    - infra/k3s/rabbitmq/deployment.yaml
+    - infra/k3s/maintenance/deployment.yaml
+    - infra/k3s/maintenance/service.yaml
+    - infra/k3s/admin-frontend/deployment.yaml
+    - infra/k3s/notification/deployment.yaml
+    - infra/k3s/letsencrypt-prod.yaml
     
 deploy:
   kubectl: {}

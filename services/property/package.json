@@ -21,6 +21,7 @@
   "dependencies": {
     "@lnu/json-js-cycle": "^2.0.5",
     "amqplib": "^0.10.3",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.21.0",
     "express-http-context": "^2.0.1",

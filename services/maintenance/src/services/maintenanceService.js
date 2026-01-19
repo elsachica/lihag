@@ -22,31 +22,21 @@ export class MaintenanceService {
   /**
    * Retrieves all maintenance reports based on optional query filters.
    *
-   * @param {object} query - The query parameters for filtering and pagination.
+   * @param {object} options - The query parameters for filtering and pagination.
    * @returns {Promise<Array>} - A promise that resolves to an array of maintenance reports.
    */
-  async getAllReports(query) {
-    const filter = {}
-
-    // Example: filter by apartmentId or status if provided
-    if (query.apartmentId) {
-      filter.apartmentId = query.apartmentId
-    }
-    if (query.status) {
-      filter.status = query.status
-    }
-
-    // Pagination
-    const page = parseInt(query.page, 10) || 1
-    const limit = Math.min(parseInt(query.limit, 10) || 20, 100)
-    const skip = (page - 1) * limit
-
-    // Fetch data
-    const reports = await this.maintenanceRepository.getAllReports(filter, {
-      skip,
-      limit
-    })
+  async getAllReports() {
+    const reports = await this.maintenanceRepository.getAllReports()
     return reports
+  }
+
+  /**
+   * Get total count of maintenance reports.
+   *
+   * @returns {Promise<number>} - The total count of reports.
+   */
+  async getReportCount() {
+    return await this.maintenanceRepository.getReportCount()
   }
 
   /**
@@ -69,26 +59,24 @@ export class MaintenanceService {
 
     const newReport = await this.maintenanceRepository.createReport(reportData)
 
-    await publishEvent('maintenance.created', {
-      reportId: newReport._id,
-      apartmentId: newReport.apartmentId,
-      category: newReport.category,
-      description: newReport.description,
-      status: newReport.status || 'new'
-    })
+    // Publish event to RabbitMQ (non-blocking - don't fail if RabbitMQ is down)
+    try {
+      await publishEvent('maintenance.created', {
+        reportId: newReport._id,
+        apartmentId: newReport.apartmentId,
+        category: newReport.category,
+        status: newReport.status || 'new'
+      })
+    } catch (error) {
+      console.error('Failed to publish maintenance.created event:', error.message)
+      // Continue anyway - the report is already saved
+    }
 
     return newReport
   }
 
   async updateReport(existingReport, changes) {
-    const allowedChanges = [
-      'category',
-      'description',
-      'status',
-      'priority',
-      'assignedTo',
-      'images'
-    ]
+    const allowedChanges = ['category', 'description', 'status', 'priority', 'assignedTo', 'images']
     for (const key of allowedChanges) {
       if (key in changes) {
         existingReport[key] = changes[key]
@@ -100,10 +88,16 @@ export class MaintenanceService {
       changes
     )
 
-    await publishEvent('maintenance.updated', {
-      reportId: updatedReport._id,
-      ...changes
-    })
+    // Publish event to RabbitMQ (non-blocking - don't fail if RabbitMQ is down)
+    try {
+      await publishEvent('maintenance.updated', {
+        reportId: updatedReport._id,
+        ...changes
+      })
+    } catch (error) {
+      console.error('Failed to publish maintenance.updated event:', error.message)
+      // Continue anyway - the report is already updated
+    }
 
     return updatedReport
   }
@@ -111,9 +105,15 @@ export class MaintenanceService {
   async deleteReport(report) {
     await this.maintenanceRepository.deleteReport(report)
 
-    await publishEvent('maintenance.deleted', {
-      reportId: report._id,
-      apartmentId: report.apartmentId
-    })
+    // Publish event to RabbitMQ (non-blocking - don't fail if RabbitMQ is down)
+    try {
+      await publishEvent('maintenance.deleted', {
+        reportId: report._id,
+        apartmentId: report.apartmentId
+      })
+    } catch (error) {
+      console.error('Failed to publish maintenance.deleted event:', error.message)
+      // Continue anyway - the report is already deleted
+    }
   }
 }

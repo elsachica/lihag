@@ -1,12 +1,19 @@
 export class ApartmentController {
   constructor() {
-    this.backendUrl = process.env.APARTMENT_SERVICE_URL
+    this.backendUrl = process.env.PROPERTY_URL
   }
 
   async index(req, res, next) {
     try {
       const queryString = new URLSearchParams(req.query).toString()
       const response = await fetch(`${this.backendUrl}?${queryString}`)
+
+      // Forward Content-Range header for React-admin pagination
+      const contentRange = response.headers.get('Content-Range')
+      if (contentRange) {
+        res.set('Content-Range', contentRange)
+      }
+
       const data = await response.json()
       res.status(response.status).json(data)
     } catch (err) {

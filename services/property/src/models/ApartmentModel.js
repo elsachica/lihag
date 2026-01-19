@@ -47,9 +47,42 @@ const schema = new mongoose.Schema({
     type: Number,
     default: null
   },
-  roomCount: {
+  image: {
+    type: String,
+    default: null
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  address: {
+    type: String,
+    required: true
+  },
+  rooms: {
+    type: Number,
+    required: true
+  },
+  built: {
     type: Number,
     default: null
+  },
+  features: {
+    type: [String],
+    default: []
+  },
+  available: {
+    type: Date,
+    default: null
+  },
+  deadline: {
+    type: Date,
+    default: null
+  },
+  objnr: {
+    type: String,
+    required: true,
+    trim: true
   }
 })
 

@@ -50,12 +50,28 @@ export class ApartmentController {
       logger.silly('Loading ApartmentModel documents with filter', {
         query: req.query
       })
-      const { area, type } = req.query
+      const { area, type, _start = 0, _end = 10, _sort = 'number', _order = 'ASC' } = req.query
       const filter = {}
       if (area) filter.area = area
       if (type) filter.type = type
-      const apartments = await ApartmentModel.find(filter)
-      logger.silly('Loaded ApartmentModel documents')
+
+      // Get total count for pagination
+      const total = await ApartmentModel.countDocuments(filter)
+
+      // Apply pagination and sorting
+      const sortOrder = _order === 'DESC' ? -1 : 1
+      const apartments = await ApartmentModel
+        .find(filter)
+        .sort({ [_sort]: sortOrder })
+        .skip(parseInt(_start))
+        .limit(parseInt(_end) - parseInt(_start))
+
+      // Set Content-Range header for React-admin pagination
+      const start = parseInt(_start)
+      const end = Math.min(start + apartments.length - 1, total - 1)
+      res.set('Content-Range', `apartments ${start}-${end}/${total}`)
+
+      logger.silly('Loaded ApartmentModel documents', { count: apartments.length, total })
       res.json(apartments)
     } catch (error) {
       next(error)
