@@ -120,3 +120,15 @@ A web application with different views (routes) for:
 - **RabbitMQ** (event/message broker)
 - **Docker, Kubernetes, Terraform, Ansible** (infrastructure)
 - **GitLab CI/CD**
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+Copyright (c) 2026 4Chics Team
+- Elsa Gas Wikström
+- Anna Ståhlberg
+- Cecilia Nilsson
+- Liv Åberg
