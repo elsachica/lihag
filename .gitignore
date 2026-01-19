@@ -1,4 +1,6 @@
-# Terraform
+# ============================================================================
+# TERRAFORM
+# ============================================================================
 *.tfstate
 *.tfstate.*
 .terraform/
@@ -10,65 +12,172 @@ terraform.tfvars
 terraform.tfvars.json
 *.auto.tfvars
 *.auto.tfvars.json
-infra/ansible/inventory.ini
-infra/ansible/inventory-generated
+myvars.auto.tfvars
+tfplan
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
 
-# Ansible
-*.retry
-*.log
-*.vault
-*.secret
-
-# Kubernetes
+# ============================================================================
+# KUBERNETES
+# ============================================================================
 kubeconfig.yaml
 kubeconfig-external.yaml
+kubeconfig*.yaml
+kubeconfig*.yml
+k3s.yaml
+infra/k3s/**/*secret*.yaml
+infra/k3s/**/*credentials*.yaml
 
-# Python
-__pycache__/
-*.pyc
-venv/
-
-# Node.js
-node_modules/
-dist/
-build/
-yarn.lock
-package-lock.json.bak
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-services/**/.env
-
-# MacOS
-.DS_Store
-
-# Editor/IDE
-.vscode/
-.idea/
-*.swp
-*~
-
-# Secrets/nycklar
+# ============================================================================
+# SECRETS & CREDENTIALS 
+# ============================================================================
 *.pem
 *.key
 *.crt
 *.pfx
+*.p12
+*.p8
+.env
+.env.local
+.env.*.local
+.env.production.local
+.env.staging.local
+services/**/.env
+frontend/**/.env
+frontend/**/.env.local
+frontend/**/.env.*.local
+.ssh/
+.aws/credentials
+.aws/config
+vault-pass.txt
+*.vault.yml
+.vault
 
-# Logs
+# ============================================================================
+# DOCKER
+# ============================================================================
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/
+docker-secrets/
+docker-volumes/
+.dockerignore
+
+# ============================================================================
+# NODE.JS
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.npm
+.yarn-cache/
+pnpm-lock.yaml
+
+# ============================================================================
+# BUILD ARTIFACTS
+# ============================================================================
+dist/
+build/
+*.bundle.js
+.next/
+out/
+frontend/**/dist/
+frontend/**/build/
+services/**/dist/
+services/**/build/
+
+# ============================================================================
+# ANSIBLE
+# ============================================================================
+*.retry
 *.log
+*.secret
+infra/ansible/inventory.ini
+infra/ansible/inventory-generated
+infra/ansible/inventory.ini.bak
+hosts.tmp
 
-# System
+# ============================================================================
+# IDE & EDITOR
+# ============================================================================
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.idea/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/shelf/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*~
+.#*
+*.iml
+
+# ============================================================================
+# OS-SPECIFIC
+# ============================================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+.directory
 
-# Terraform specifics
-myvars.auto.tfvars
-inventory-generated
-terraform/terraform.tfvars
-terraform/terraform.tfstate
-terraform/terraform.tfstate.backup
-tfplan
-terraform.tfstate
-terraform.tfstate.backup
-.terraform.lock.hcl
+# ============================================================================
+# TEST & COVERAGE
+# ============================================================================
+coverage/
+.nyc_output/
+*.lcov
+loadTesting/reports/
+loadTesting/*.csv
+loadTesting/*.log
+locust*.log
+**/*.test.local.js
+test-data/
+fixtures/
+
+# ============================================================================
+# DATABASES & CACHE
+# ============================================================================
+*.db
+*.sqlite
+*.sqlite3
+mongodb/
+postgres/
+redis/
+
+# ============================================================================
+# TEMPORARY FILES
+# ============================================================================
+*.tmp
+*.bak
+*.orig
+*.rej
+*.backup
+.cache/
+
+# ============================================================================
+# CI/CD
+# ============================================================================
+.gitlab/variables.json
+ci-variables.env
+ci-secrets.env
+ci-reports/
+.github/workflows/*.local.yml
+
+# ============================================================================
+# MISC
+# ============================================================================
+package-lock.json.bak
+yarn.lock.bak
+*.swp
+*~
